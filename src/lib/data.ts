@@ -33,6 +33,22 @@ export function loadYtdRoi(asset = "btc"): YearSeries[] {
   return loadJson<YearSeries[]>("metrics", asset, "ytd-roi.json");
 }
 
+export interface EventRoiFile {
+  halvings: { label: string; points: { day: number; pct: number }[] }[];
+  bottoms: { label: string; points: { day: number; pct: number }[] }[];
+  peaks: { label: string; points: { day: number; pct: number }[] }[];
+  latestPeak: { label: string; points: { day: number; pct: number }[] }[];
+  deviation: { day: number; pct: number }[];
+}
+
+export function loadEventRoi(asset = "btc"): EventRoiFile {
+  return loadJson("metrics", asset, "event-roi.json");
+}
+
+export function loadRoiBands(asset = "btc"): { multiple: number; days: (number | null)[] }[] {
+  return loadJson("metrics", asset, "roi-bands.json");
+}
+
 export interface TaRow {
   date: string;
   close: number;
@@ -50,6 +66,9 @@ export interface TaRow {
   sma200d: number | null;
   sma111d: number | null;
   sma350x2: number | null;
+  bubble: number | null;
+  stUp: number | null;
+  stDown: number | null;
 }
 
 export function loadTa(asset = "btc"): { rows: TaRow[] } {
@@ -80,6 +99,10 @@ export interface DistributionsFile {
   milestones: { date: string; level: number }[];
   quarterly: { year: number; quarter: number; pct: number }[];
   avgDaily: { day: number; avg: number }[];
+  riskLevels: { risk: number; price: number }[];
+  dcaWeekday: { dow: number; avgExt: number }[];
+  smaTopBreakouts: { date: string; prevTop: number }[];
+  cyclePeaks: string[];
 }
 
 export function loadDistributions(asset = "btc"): DistributionsFile {

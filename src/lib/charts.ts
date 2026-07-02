@@ -33,6 +33,136 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "risk-colorcoded",
+    title: "Price Color Coded By Risk",
+    category: "Risk",
+    description: "The full price history, colored by the risk metric at each point in time.",
+    explanation: [
+      "Same data as the Risk Metric chart, painted directly onto price: green stretches are low-risk accumulation zones, red stretches are euphoric extension. The mapping makes the strategy visceral — the green you'd want to have bought is always at the bottom of crashes, which is exactly when buying feels worst.",
+      "This is also the fastest way to sanity-check the risk model itself: if red doesn't line up with what you'd call tops in hindsight, the model needs recalibrating (ours is v1 and slated for the quantile-regression upgrade).",
+    ],
+  },
+  {
+    slug: "risk-time",
+    title: "Time In Risk Bands",
+    category: "Risk",
+    description: "The number of days price has spent in each risk band.",
+    explanation: [
+      "Each bar counts the days spent in one 0.1-wide risk band across the full history. The shape tells you what \"normal\" looks like: most of Bitcoin's life is spent mid-band, and the extreme bands are rare by construction.",
+      "Practical use: it calibrates patience. If the sub-0.1 band holds only a small fraction of all days, then deep-value windows are short — when the metric gets there, hesitation has historically been expensive. The same logic applies in reverse for the 0.9+ band.",
+    ],
+  },
+  {
+    slug: "risk-levels",
+    title: "Current Risk Levels",
+    category: "Risk",
+    description: "Today's risk bands projected onto the price scale.",
+    explanation: [
+      "The horizontal lines answer \"what price would move risk to 0.3? To 0.8?\" — each line is the price that corresponds to a given risk level under today's model state, drawn over the recent price action.",
+      "This turns the risk metric into a planning tool: instead of watching the score, you can set alerts or ladder orders at the prices where your strategy says to act. The levels drift slowly as the regression and the trailing window update, so they're stable enough to plan around week to week.",
+    ],
+  },
+  {
+    slug: "short-term-bubble-risk",
+    title: "Short Term Bubble Risk",
+    category: "Risk",
+    description: "Risk metric based on the extension from the 20W moving average.",
+    explanation: [
+      "Where the main risk metric measures extension from a multi-year fair value, this one measures extension from the 20-week SMA — the same baseline as the Bull Market Support Band — percentile-ranked the same way. It captures short-term froth rather than cycle-scale valuation.",
+      "The two risks disagree in useful ways: mid-bull, cycle risk can be moderate while short-term bubble risk pins near 1.0 after a vertical few weeks — historically a local-top warning even when the larger trend had further to run.",
+    ],
+  },
+  {
+    slug: "roi-after-halving",
+    title: "ROI After Halving",
+    category: "Cycles",
+    description: "The return on investment after each time the block mining reward is halved.",
+    explanation: [
+      "Each line starts at 0% on a halving day (2012, 2016, 2020, 2024) and tracks the return from that day forward, on a shared days-since axis. This is the chart behind the entire halving-cycle thesis: historically, the 12–18 months after each halving contained the bulk of the cycle's gains.",
+      "Note the shrinking amplitude — each successive halving cycle has delivered a smaller multiple, consistent with diminishing returns as market cap grows. Comparing the current halving line against its predecessors at the same day-count is the cleanest \"where are we in the cycle\" view this framework offers.",
+    ],
+  },
+  {
+    slug: "roi-after-cycle-bottom",
+    title: "ROI After Cycle Bottom",
+    category: "Cycles",
+    description: "The return on investment as measured from each market cycle bottom.",
+    explanation: [
+      "Each line starts at a bear-market bottom (2011, 2015, 2018, 2022) and shows the recovery path from that low on a days-since axis. Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.",
+      "The recoveries rhyme: roughly two years of choppy appreciation, then a steep leg. Overlaying the current cycle on the old ones shows whether the market is running hot or cold against its own precedent — and the shrinking peak multiples echo the same diminishing-returns story as the halving chart.",
+    ],
+  },
+  {
+    slug: "roi-after-cycle-peak",
+    title: "ROI After Cycle Peak",
+    category: "Cycles",
+    description: "The return on investment as measured from each market cycle peak.",
+    explanation: [
+      "The mirror image of ROI After Cycle Bottom: each line starts at a cycle top (2011, 2013, 2017, 2021) and tracks the drawdown-and-recovery path from that day. It answers the question every top-buyer asks: how long until break-even?",
+      "History's answer has been two to three years underwater, with the depth of the trough shrinking each cycle. It's also the best illustration of why the risk metric emphasizes selling into strength — the cost of buying the top is measured in years, not percent.",
+    ],
+  },
+  {
+    slug: "roi-after-latest-cycle-peak",
+    title: "ROI After Latest Cycle Peak",
+    category: "Cycles",
+    description: "The return on investment as measured from the most recent all-time-high close.",
+    explanation: [
+      "A single line tracking return from the most recent peak close to today — the current cycle's version of the ROI After Cycle Peak chart, updated daily.",
+      "Reading it against the historical peak paths shows whether this drawdown is tracking a typical post-top trajectory or breaking the pattern — both in depth and in elapsed time.",
+    ],
+  },
+  {
+    slug: "cycles-deviation",
+    title: "Cycles Deviation",
+    category: "Cycles",
+    description: "How far the current cycle's ROI deviates from the average of past cycles.",
+    explanation: [
+      "The line is the current cycle's return (from the 2022 bottom) minus the average return of the three prior cycles at the same day-count. Above zero: running hotter than the historical average; below: colder.",
+      "It compresses the whole overlay-the-cycles exercise into one series. Persistent negative deviation is the quantitative form of the \"lengthening/weakening cycles\" argument; a crossover back above zero would mean the current cycle started outperforming its precedent.",
+    ],
+  },
+  {
+    slug: "roi-bands",
+    title: "ROI Bands",
+    category: "Cycles",
+    description: "The amount of days it took to 2×, 4×, 10× and 100× a purchase from each date.",
+    explanation: [
+      "For every historical buy date, the lines show how many days that purchase took to double, 4×, 10×, or 100× — with gaps where it simply never happened (yet). The y-axis is days, so lower means faster.",
+      "The pattern is stark: buys made in bear-market depths multiplied within a few hundred days, while buys near tops show multi-thousand-day waits or open gaps. The 100× line ends early — no purchase after 2013 has ever 100×'d, the bluntest possible statement of diminishing returns.",
+    ],
+  },
+  {
+    slug: "sma-cycle-top-breakout",
+    title: "SMA Cycle-Top Breakout",
+    category: "Cycles",
+    description: "Marks where the 20W SMA crosses above the previous cycle's top price.",
+    explanation: [
+      "Each marker flags the day the 20-week SMA — not price itself, but its smoothed trend — climbed above the previous cycle's peak close. Price crosses old highs many times amid volatility; the slow average doing it is a stronger statement that the market has durably outgrown the last cycle.",
+      "Historically these breakouts have landed early in the steep phase of bull markets (2013, 2017, 2021), making this one of the simpler regime-confirmation signals in the cycle toolkit.",
+    ],
+  },
+  {
+    slug: "best-day-to-dca",
+    title: "Best Day To DCA",
+    category: "Returns",
+    description: "The best day of the week to DCA, based on average extension from a moving average.",
+    explanation: [
+      "Each bar is the average extension of price above its 50-day SMA for that weekday, across the full history. The weekday with the lowest average extension has, historically, offered slightly cheaper buys relative to trend.",
+      "Honest framing: the differences are tiny — fractions of a percent against daily volatility measured in whole percents. If a weekday edge exists (weekend closes have historically been marginally softer), it's a tie-breaker for an existing DCA habit, not a strategy.",
+    ],
+  },
+  {
+    slug: "supertrend",
+    title: "Supertrend",
+    category: "Momentum",
+    description: "The Supertrend indicator is used to identify the current trend direction.",
+    explanation: [
+      "Supertrend places a trailing stop line a multiple of Average True Range (here 3× the 10-day ATR) below price in uptrends and above it in downtrends, flipping sides when price crosses it. Green segments mark uptrend support; red segments mark downtrend resistance.",
+      "Because ATR widens with volatility, the stop gives more room in wild markets and tightens in calm ones. It shines as a trend-following exit discipline; it chops badly in sideways markets, like every trend indicator. Series starts in 2017, when true daily high/low data begins.",
+    ],
+  },
+  {
     slug: "mayer",
     title: "Mayer Multiple",
     category: "Valuation",

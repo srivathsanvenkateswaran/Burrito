@@ -280,6 +280,86 @@ export function quarterlyReturns(
   return out;
 }
 
+/** ROI paths from a list of event dates, each capped at the next event (or capDays). */
+export function eventRoi(
+  rows: { date: string; close: number }[],
+  eventDates: string[],
+  capDays = 1460,
+): { label: string; points: { day: number; pct: number }[] }[] {
+  const out: { label: string; points: { day: number; pct: number }[] }[] = [];
+  const sorted = [...eventDates].sort();
+  for (let e = 0; e < sorted.length; e++) {
+    const start = rows.findIndex((r) => r.date >= sorted[e]);
+    if (start === -1) continue;
+    const nextStart = e + 1 < sorted.length ? rows.findIndex((r) => r.date >= sorted[e + 1]) : rows.length;
+    const end = Math.min(start + capDays, nextStart === -1 ? rows.length : nextStart, rows.length);
+    const base = rows[start].close;
+    const points = [];
+    for (let i = start; i < end; i++) {
+      points.push({ day: i - start, pct: Number(((rows[i].close / base - 1) * 100).toFixed(1)) });
+    }
+    out.push({ label: sorted[e].slice(0, 4), points });
+  }
+  return out;
+}
+
+/** For each date, days until close first reaches multiple × close (null if never). */
+export function daysToMultiple(
+  closes: number[],
+  multiple: number,
+): (number | null)[] {
+  const out: (number | null)[] = new Array(closes.length).fill(null);
+  for (let i = 0; i < closes.length; i++) {
+    const target = closes[i] * multiple;
+    for (let j = i + 1; j < closes.length; j++) {
+      if (closes[j] >= target) {
+        out[i] = j - i;
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+/** Supertrend (ATR period / multiplier); returns the stop line and trend direction. */
+export function supertrend(
+  rows: { high: number; low: number; close: number }[],
+  period = 10,
+  mult = 3,
+): { value: number | null; up: boolean }[] {
+  const n = rows.length;
+  const atr: number[] = new Array(n).fill(0);
+  let prevAtr = 0;
+  for (let i = 1; i < n; i++) {
+    const tr = Math.max(
+      rows[i].high - rows[i].low,
+      Math.abs(rows[i].high - rows[i - 1].close),
+      Math.abs(rows[i].low - rows[i - 1].close),
+    );
+    prevAtr = i <= period ? (prevAtr * (i - 1) + tr) / i : (prevAtr * (period - 1) + tr) / period;
+    atr[i] = prevAtr;
+  }
+  const out: { value: number | null; up: boolean }[] = [];
+  let fu = Infinity;
+  let fl = -Infinity;
+  let up = true;
+  for (let i = 0; i < n; i++) {
+    if (i <= period) {
+      out.push({ value: null, up });
+      continue;
+    }
+    const hl2 = (rows[i].high + rows[i].low) / 2;
+    const bu = hl2 + mult * atr[i];
+    const bl = hl2 - mult * atr[i];
+    fu = bu < fu || rows[i - 1].close > fu ? bu : fu;
+    fl = bl > fl || rows[i - 1].close < fl ? bl : fl;
+    if (rows[i].close > fu) up = true;
+    else if (rows[i].close < fl) up = false;
+    out.push({ value: up ? fl : fu, up });
+  }
+  return out;
+}
+
 /** Average daily % change for each day-of-month (1–31). */
 export function averageDailyReturns(
   rows: { date: string; close: number }[],

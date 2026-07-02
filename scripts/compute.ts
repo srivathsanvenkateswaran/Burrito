@@ -12,7 +12,9 @@ import {
   bollinger,
   crossDates,
   daysSinceMove,
+  daysToMultiple,
   ema,
+  eventRoi,
   fitLogRegression,
   macd,
   milestoneCrossings,
@@ -22,7 +24,12 @@ import {
   rollingVolatility,
   rsi,
   sma,
+  supertrend,
 } from "./lib/metrics";
+
+const HALVINGS = ["2012-11-28", "2016-07-09", "2020-05-11", "2024-04-19"];
+const CYCLE_BOTTOMS = ["2011-11-18", "2015-01-14", "2018-12-15", "2022-11-21"];
+const CYCLE_PEAKS = ["2011-06-08", "2013-11-30", "2017-12-17", "2021-11-10"];
 
 const BTC_GENESIS = Date.parse("2009-01-03T00:00:00Z");
 const DAY_MS = 86_400_000;
@@ -109,6 +116,19 @@ function main() {
   const sma50d = sma(closes, 50);
   const sma111d = sma(closes, 111);
   const sma350x2 = sma(closes, 350).map((v) => (v === null ? null : v * 2));
+
+  // short-term bubble risk: percentile-ranked extension from the 20W SMA
+  const bubbleStart = sma20w.findIndex((v) => v !== null);
+  const bubbleTail = riskMetric(
+    closes.slice(bubbleStart),
+    sma20w.slice(bubbleStart) as number[],
+  );
+  const bubble = new Array(bubbleStart).fill(null).concat(bubbleTail);
+
+  // supertrend needs true OHLC — Binance era only
+  const ohlcStart = rows.findIndex((r) => r.date >= "2017-08-17");
+  const st = supertrend(rows.slice(ohlcStart));
+
   let ath = 0;
   const ta = rows.map((r, i) => {
     ath = Math.max(ath, r.close);
@@ -129,6 +149,9 @@ function main() {
       sma200d: round(sma200d[i], 2),
       sma111d: round(sma111d[i], 2),
       sma350x2: round(sma350x2[i], 2),
+      bubble: round(bubble[i] ?? null, 3),
+      stUp: i >= ohlcStart && st[i - ohlcStart].up ? round(st[i - ohlcStart].value, 2) : null,
+      stDown: i >= ohlcStart && !st[i - ohlcStart].up ? round(st[i - ohlcStart].value, 2) : null,
     };
   });
   fs.writeFileSync(
@@ -171,6 +194,92 @@ function main() {
       milestones: milestoneCrossings(dates, closes, MILESTONES),
       quarterly: quarterlyReturns(rows).map((q) => ({ ...q, pct: Number(q.pct.toFixed(1)) })),
       avgDaily: averageDailyReturns(rows).map((d) => ({ ...d, avg: Number(d.avg.toFixed(3)) })),
+    }),
+  );
+
+  // --- event-anchored ROI paths + cycle deviation
+  const halvings = eventRoi(rows, HALVINGS);
+  const bottoms = eventRoi(rows, CYCLE_BOTTOMS);
+  const peaks = eventRoi(rows, CYCLE_PEAKS);
+  const athIdx = closes.indexOf(Math.max(...closes));
+  const latestPeak = eventRoi(rows, [rows[athIdx].date], 100000);
+  // current cycle ROI vs the average of prior cycles at the same day-count
+  const current = bottoms.at(-1)!;
+  const priors = bottoms.slice(0, -1);
+  const deviation = current.points.map(({ day, pct }) => {
+    const at = priors
+      .map((c) => c.points[day]?.pct)
+      .filter((v): v is number => v !== undefined);
+    if (at.length === 0) return null;
+    return { day, pct: Number((pct - at.reduce((a, b) => a + b, 0) / at.length).toFixed(1)) };
+  }).filter((p): p is { day: number; pct: number } => p !== null);
+  fs.writeFileSync(
+    path.join(dir, "event-roi.json"),
+    JSON.stringify({ halvings, bottoms, peaks, latestPeak, deviation }),
+  );
+
+  // --- ROI bands: days until each buy N-times'd
+  const MULTIPLES = [2, 4, 10, 100];
+  fs.writeFileSync(
+    path.join(dir, "roi-bands.json"),
+    JSON.stringify(
+      MULTIPLES.map((m) => ({
+        multiple: m,
+        days: daysToMultiple(closes, m),
+      })).map((b) => ({ ...b })),
+    ),
+  );
+
+  // --- current risk levels: window quantiles of ln-deviation mapped back to price
+  const dLn = closes.map((c, i) => Math.log(c / fairs[i]));
+  const win = dLn.slice(-1460).sort((a, b) => a - b);
+  const q = (p: number) => win[Math.min(win.length - 1, Math.floor(p * win.length))];
+  const fairNow = fairs[fairs.length - 1];
+  const riskLevels = Array.from({ length: 9 }, (_, i) => {
+    const r = (i + 1) / 10;
+    return { risk: r, price: Number((fairNow * Math.exp(q(r))).toFixed(0)) };
+  });
+
+  // --- best day to DCA: average extension from 50d SMA per weekday
+  const extByDow: number[][] = Array.from({ length: 7 }, () => []);
+  rows.forEach((r, i) => {
+    if (sma50d[i] === null) return;
+    extByDow[new Date(`${r.date}T00:00:00Z`).getUTCDay()].push(
+      Math.log(r.close / sma50d[i]!) * 100,
+    );
+  });
+  const dcaWeekday = extByDow.map((vals, dow) => ({
+    dow,
+    avgExt: Number((vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(3)),
+  }));
+
+  // --- 20W SMA crossing previous cycle top
+  const peakCloses = CYCLE_PEAKS.map((d) => {
+    const i = rows.findIndex((r) => r.date >= d);
+    return { date: d, close: closes[i] };
+  });
+  const breakouts: { date: string; prevTop: number }[] = [];
+  for (let p = 0; p < peakCloses.length; p++) {
+    const from = rows.findIndex((r) => r.date >= peakCloses[p].date);
+    const until = p + 1 < peakCloses.length ? rows.findIndex((r) => r.date >= peakCloses[p + 1].date) : rows.length;
+    for (let i = from + 1; i < until; i++) {
+      if (sma20w[i] !== null && sma20w[i - 1] !== null &&
+          sma20w[i - 1]! < peakCloses[p].close && sma20w[i]! >= peakCloses[p].close) {
+        breakouts.push({ date: rows[i].date, prevTop: peakCloses[p].close });
+        break;
+      }
+    }
+  }
+
+  const dist = JSON.parse(fs.readFileSync(path.join(dir, "distributions.json"), "utf8"));
+  fs.writeFileSync(
+    path.join(dir, "distributions.json"),
+    JSON.stringify({
+      ...dist,
+      riskLevels,
+      dcaWeekday,
+      smaTopBreakouts: breakouts,
+      cyclePeaks: CYCLE_PEAKS,
     }),
   );
 

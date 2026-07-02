@@ -24,7 +24,8 @@ export interface SeriesDef {
   lineWidth?: number;
   /** left = secondary axis (e.g. log price behind an indicator) */
   scale?: "right" | "left";
-  points: { date: string; value: number }[];
+  /** null values render as gaps in the line */
+  points: { date: string; value: number | null }[];
 }
 
 export interface ChartMarker {
@@ -120,7 +121,11 @@ export default function MultiSeriesChart({
           crosshairMarkerVisible: idx === 0,
         });
       }
-      s.setData(def.points.map((p) => ({ time: ts(p.date), value: p.value })));
+      s.setData(
+        def.points.map((p) =>
+          p.value === null ? { time: ts(p.date) } : { time: ts(p.date), value: p.value },
+        ),
+      );
       if (idx === 0) firstSeries = s;
     });
 

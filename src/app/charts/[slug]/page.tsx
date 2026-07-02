@@ -3,14 +3,19 @@ import { CHARTS, chartBySlug } from "@/lib/charts";
 import {
   loadDaysSince,
   loadDistributions,
+  loadEventRoi,
   loadEvents,
   loadMetrics,
   loadMonthlyReturns,
+  loadRoiBands,
   loadTa,
   loadYtdRoi,
   metricPoints,
   taPoints,
 } from "@/lib/data";
+import { riskColor } from "@/lib/colors";
+import DaysAxisChart from "@/components/DaysAxisChart";
+import RiskColoredPrice from "@/components/RiskColoredPrice";
 import YtdRoiChart from "@/components/YtdRoiChart";
 import PriceChart from "@/components/PriceChart";
 import MetricChart from "@/components/MetricChart";
@@ -299,9 +304,167 @@ function ChartBody({ slug }: { slug: string }) {
       return daysSinceBody("declines");
     case "days-since-percentage-gain":
       return daysSinceBody("gains");
+    case "risk-colorcoded":
+      return (
+        <RiskColoredPrice
+          points={rows.map((r) => ({ date: r.date, close: r.close, risk: r.risk }))}
+        />
+      );
+    case "risk-time": {
+      const counts = new Array(10).fill(0);
+      for (const r of rows) {
+        if (r.risk === null) continue;
+        counts[Math.min(9, Math.floor(r.risk * 10))]++;
+      }
+      return (
+        <CategoryBars
+          categories={counts.map((_, i) => `${(i / 10).toFixed(1)}–${((i + 1) / 10).toFixed(1)}`)}
+          series={[{ label: "days", color: "#e6a144", values: counts }]}
+          unit=" days"
+          showValues
+        />
+      );
+    }
+    case "risk-levels": {
+      const { riskLevels } = loadDistributions();
+      const recent = rows.filter((r) => r.date >= "2024-01-01");
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "close", color: "#e6a144", points: recent.map((r) => ({ date: r.date, value: r.close })) },
+          ]}
+          thresholds={riskLevels.map((l) => ({
+            value: l.price,
+            color: riskColor(l.risk),
+            label: `risk ${l.risk.toFixed(1)}`,
+          }))}
+          showLegend={false}
+        />
+      );
+    }
+    case "short-term-bubble-risk": {
+      const ta = loadTa().rows;
+      return (
+        <MetricChart
+          points={taPoints(ta, (r) => r.bubble)}
+          colorByValue
+          height={460}
+          thresholds={[
+            { value: 0.9, color: "rgba(222,107,90,0.7)", label: "frothy" },
+            { value: 0.1, color: "rgba(130,181,122,0.7)", label: "washed out" },
+          ]}
+        />
+      );
+    }
+    case "roi-after-halving":
+      return <DaysAxisChart series={eventSeries(loadEventRoi().halvings)} />;
+    case "roi-after-cycle-bottom":
+      return <DaysAxisChart series={eventSeries(loadEventRoi().bottoms)} />;
+    case "roi-after-cycle-peak":
+      return (
+        <DaysAxisChart
+          series={eventSeries(loadEventRoi().peaks)}
+          thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "break even" }]}
+        />
+      );
+    case "roi-after-latest-cycle-peak":
+      return (
+        <DaysAxisChart
+          series={eventSeries(loadEventRoi().latestPeak)}
+          thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "break even" }]}
+        />
+      );
+    case "cycles-deviation":
+      return (
+        <DaysAxisChart
+          series={[{ label: "current cycle vs. prior-cycle average", color: "#e6a144", points: loadEventRoi().deviation.map((p) => ({ day: p.day, value: p.pct })) }]}
+          thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "on trend" }]}
+        />
+      );
+    case "roi-bands": {
+      const bands = loadRoiBands();
+      const dates = rows.map((r) => r.date);
+      const colors = ["#82b57a", "#8ba7c9", "#e6a144", "#de6b5a"];
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={bands.map((b, i) => ({
+            label: `days to ${b.multiple}×`,
+            color: colors[i % colors.length],
+            lineWidth: 1,
+            points: dates.map((date, j) => ({ date, value: b.days[j] })),
+          }))}
+        />
+      );
+    }
+    case "sma-cycle-top-breakout": {
+      const { smaTopBreakouts, cyclePeaks } = loadDistributions();
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "close", color: "rgba(230,161,68,0.85)", points: rows.map((r) => ({ date: r.date, value: r.close })) },
+            { label: "20W SMA", color: "#8ba7c9", lineWidth: 1, points: metricPoints(rows, (r) => r.sma20w) },
+          ]}
+          markers={[
+            ...cyclePeaks.map((d) => ({
+              date: d,
+              position: "aboveBar" as const,
+              color: "rgba(162,147,130,0.9)",
+              shape: "arrowDown" as const,
+              text: "cycle top",
+            })),
+            ...smaTopBreakouts.map((b) => ({
+              date: b.date,
+              position: "belowBar" as const,
+              color: "#82b57a",
+              shape: "arrowUp" as const,
+              text: "MA > prev top",
+            })),
+          ].sort((a, b) => a.date.localeCompare(b.date))}
+        />
+      );
+    }
+    case "best-day-to-dca": {
+      const { dcaWeekday } = loadDistributions();
+      const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      return (
+        <CategoryBars
+          categories={dcaWeekday.map((d) => DOW[d.dow])}
+          series={[{ label: "avg extension above 50d SMA", color: "#e6a144", values: dcaWeekday.map((d) => d.avgExt) }]}
+          showValues
+        />
+      );
+    }
+    case "supertrend": {
+      const ta = loadTa().rows.filter((r) => r.date >= "2017-08-17");
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "close", color: "rgba(230,161,68,0.85)", points: ta.map((r) => ({ date: r.date, value: r.close })) },
+            { label: "uptrend stop", color: "#82b57a", lineWidth: 1, points: ta.map((r) => ({ date: r.date, value: r.stUp })) },
+            { label: "downtrend stop", color: "#de6b5a", lineWidth: 1, points: ta.map((r) => ({ date: r.date, value: r.stDown })) },
+          ]}
+        />
+      );
+    }
     default:
       notFound();
   }
+}
+
+const EVENT_COLORS = ["#8ba7c9", "#82b57a", "#e6a144", "#de6b5a", "#b391bf"];
+
+function eventSeries(
+  groups: { label: string; points: { day: number; pct: number }[] }[],
+) {
+  return groups.map((g, i) => ({
+    label: g.label,
+    color: EVENT_COLORS[i % EVENT_COLORS.length],
+    points: g.points.map((p) => ({ day: p.day, value: p.pct })),
+  }));
 }
 
 export default async function ChartPage({
