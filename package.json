@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "data:backfill": "tsx scripts/backfill.ts",
-    "data:update": "tsx scripts/update.ts"
+    "data:update": "tsx scripts/update.ts",
+    "data:compute": "tsx scripts/compute.ts"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",

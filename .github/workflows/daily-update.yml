@@ -24,6 +24,8 @@ jobs:
 
       - run: npm run data:update
 
+      - run: npm run data:compute
+
       - name: Commit and push if data changed
         run: |
           if git diff --quiet -- data/; then
