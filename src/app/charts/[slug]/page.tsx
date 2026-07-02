@@ -4,6 +4,7 @@ import { loadMetrics, loadMonthlyReturns, metricPoints } from "@/lib/data";
 import PriceChart from "@/components/PriceChart";
 import MetricChart from "@/components/MetricChart";
 import MonthlyHeatmap from "@/components/MonthlyHeatmap";
+import ChartCard from "@/components/ChartCard";
 
 export function generateStaticParams() {
   return CHARTS.map((c) => ({ slug: c.slug }));
@@ -60,7 +61,11 @@ function ChartBody({ slug }: { slug: string }) {
         />
       );
     case "monthly-returns":
-      return <MonthlyHeatmap returns={loadMonthlyReturns()} />;
+      return (
+        <ChartCard>
+          <MonthlyHeatmap returns={loadMonthlyReturns()} />
+        </ChartCard>
+      );
     default:
       notFound();
   }

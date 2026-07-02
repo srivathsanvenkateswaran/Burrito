@@ -101,5 +101,9 @@ export default function MetricChart({
     };
   }, [points, color, colorByValue, thresholds]);
 
-  return <div ref={containerRef} style={{ height }} className="w-full" />;
+  return (
+    <div className="rounded-xl border border-neutral-800 bg-neutral-900/30 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+      <div ref={containerRef} style={{ height }} className="w-full" />
+    </div>
+  );
 }

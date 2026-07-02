@@ -164,8 +164,8 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
     }`;
 
   return (
-    <div>
-      <div className="mb-3 flex flex-wrap items-center gap-4">
+    <div className="rounded-xl border border-neutral-800 bg-neutral-900/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+      <div className="flex flex-wrap items-center gap-4 border-b border-neutral-800/70 px-4 py-3">
         <div className="flex gap-0.5 rounded-md bg-neutral-900 p-0.5">
           {RANGES.map((r) => (
             <button key={r} className={btn(range === r)} onClick={() => setRange(r)}>
@@ -203,7 +203,9 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
           ))}
         </div>
       </div>
-      <div ref={containerRef} className="h-[60vh] min-h-[380px] w-full" />
+      <div className="p-3">
+        <div ref={containerRef} className="h-[58vh] min-h-[380px] w-full" />
+      </div>
     </div>
   );
 }
