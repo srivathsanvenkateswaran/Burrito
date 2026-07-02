@@ -70,6 +70,26 @@ function main() {
     JSON.stringify(monthlyReturns(rows)),
   );
 
+  // YTD ROI: per-year % return since that year's first close, keyed by MM-DD
+  // so different years can overlay on a shared Jan–Dec axis.
+  const byYear = new Map<number, { md: string; pct: number }[]>();
+  let curYear = 0;
+  let yearBase = 0;
+  for (const r of rows) {
+    const y = Number(r.date.slice(0, 4));
+    if (y !== curYear) {
+      curYear = y;
+      yearBase = r.close;
+      byYear.set(y, []);
+    }
+    byYear.get(y)!.push({
+      md: r.date.slice(5),
+      pct: Number(((r.close / yearBase - 1) * 100).toFixed(1)),
+    });
+  }
+  const ytd = [...byYear.entries()].map(([year, points]) => ({ year, points }));
+  fs.writeFileSync(path.join(dir, "ytd-roi.json"), JSON.stringify(ytd));
+
   const latest = daily.at(-1)!;
   console.log(
     `BTC metrics through ${latest.date}: close=$${latest.close} fair=$${latest.fair} risk=${latest.risk} mayer=${latest.mayer} rsi=${latest.rsi14}`,

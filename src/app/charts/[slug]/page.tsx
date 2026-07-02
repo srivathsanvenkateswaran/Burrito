@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { CHARTS, chartBySlug } from "@/lib/charts";
-import { loadMetrics, loadMonthlyReturns, metricPoints } from "@/lib/data";
+import { loadMetrics, loadMonthlyReturns, loadYtdRoi, metricPoints } from "@/lib/data";
+import YtdRoiChart from "@/components/YtdRoiChart";
 import PriceChart from "@/components/PriceChart";
 import MetricChart from "@/components/MetricChart";
 import MonthlyHeatmap from "@/components/MonthlyHeatmap";
@@ -60,6 +61,8 @@ function ChartBody({ slug }: { slug: string }) {
           thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "breakeven" }]}
         />
       );
+    case "ytd-roi":
+      return <YtdRoiChart data={loadYtdRoi()} />;
     case "monthly-returns":
       return (
         <ChartCard>
@@ -92,7 +95,19 @@ export default async function ChartPage({
         <p className="mt-1.5 max-w-2xl text-sm text-muted">{def.description}</p>
       </header>
       <ChartBody slug={slug} />
-      <footer className="mt-6 text-xs text-faint">
+
+      <section className="mt-8 max-w-3xl border-t border-line pt-6">
+        <h2 className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
+          Understanding this chart
+        </h2>
+        <div className="space-y-3 text-sm leading-relaxed text-muted">
+          {def.explanation.map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+        </div>
+      </section>
+
+      <footer className="mt-8 text-xs text-faint">
         data through {metrics.updatedThrough} · updates daily
       </footer>
     </main>

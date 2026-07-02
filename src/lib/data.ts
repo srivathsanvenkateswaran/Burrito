@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { MetricRow } from "@/components/PriceChart";
 import type { MonthlyReturn } from "@/components/MonthlyHeatmap";
+import type { YearSeries } from "@/components/YtdRoiChart";
 
 export interface FullMetricRow extends MetricRow {
   risk: number | null;
@@ -26,6 +27,10 @@ export function loadMetrics(asset = "btc"): MetricsFile {
 
 export function loadMonthlyReturns(asset = "btc"): MonthlyReturn[] {
   return loadJson<MonthlyReturn[]>("metrics", asset, "monthly-returns.json");
+}
+
+export function loadYtdRoi(asset = "btc"): YearSeries[] {
+  return loadJson<YearSeries[]>("metrics", asset, "ytd-roi.json");
 }
 
 export function metricPoints(
