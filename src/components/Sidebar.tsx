@@ -18,8 +18,8 @@ function NavLink({
       href={href}
       className={`block rounded-md px-3 py-1.5 text-sm transition-colors ${
         active
-          ? "bg-neutral-800 text-neutral-100"
-          : "text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200"
+          ? "bg-raise text-fg"
+          : "text-muted hover:bg-surface hover:text-fg"
       }`}
     >
       {children}
@@ -31,10 +31,12 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col overflow-y-auto border-r border-neutral-900 px-3 py-5">
-      <Link href="/" className="mb-6 block px-3">
-        <span className="text-lg font-bold tracking-tight">🌯 burrito</span>
-        <span className="mt-0.5 block text-xs text-neutral-500">
+    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col overflow-y-auto border-r border-line px-3 py-5">
+      <Link href="/" className="mb-7 block px-3">
+        <span className="font-display text-[26px] italic tracking-wide text-fg">
+          burrito<span className="not-italic text-accent">.</span>
+        </span>
+        <span className="mt-0.5 block text-xs text-faint">
           every market, one tortilla
         </span>
       </Link>
@@ -46,7 +48,7 @@ export default function Sidebar() {
 
         {CATEGORIES.map((cat) => (
           <div key={cat} className="mt-4">
-            <div className="mb-1 px-3 text-[11px] font-medium uppercase tracking-wider text-neutral-600">
+            <div className="mb-1 px-3 font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
               {cat}
             </div>
             {CHARTS.filter((c) => c.category === cat).map((c) => (
@@ -62,7 +64,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="mt-auto px-3 pt-6 text-[11px] leading-relaxed text-neutral-600">
+      <div className="mt-auto px-3 pt-6 text-[11px] leading-relaxed text-faint">
         BTC · more assets soon
         <br />
         not financial advice, just a burrito

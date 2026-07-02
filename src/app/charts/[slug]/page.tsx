@@ -22,8 +22,8 @@ function ChartBody({ slug }: { slug: string }) {
           colorByValue
           height={460}
           thresholds={[
-            { value: 0.8, color: "rgba(239,68,68,0.6)", label: "take profit" },
-            { value: 0.2, color: "rgba(34,197,94,0.6)", label: "accumulate" },
+            { value: 0.8, color: "rgba(222,107,90,0.7)", label: "take profit" },
+            { value: 0.2, color: "rgba(130,181,122,0.7)", label: "accumulate" },
           ]}
         />
       );
@@ -31,11 +31,11 @@ function ChartBody({ slug }: { slug: string }) {
       return (
         <MetricChart
           points={metricPoints(rows, (r) => r.mayer, "2013-01-01")}
-          color="#3b82f6"
+          color="#8ba7c9"
           height={460}
           thresholds={[
-            { value: 2.4, color: "rgba(239,68,68,0.6)", label: "hot" },
-            { value: 0.8, color: "rgba(34,197,94,0.6)", label: "cheap" },
+            { value: 2.4, color: "rgba(222,107,90,0.7)", label: "hot" },
+            { value: 0.8, color: "rgba(130,181,122,0.7)", label: "cheap" },
           ]}
         />
       );
@@ -43,11 +43,11 @@ function ChartBody({ slug }: { slug: string }) {
       return (
         <MetricChart
           points={metricPoints(rows, (r) => r.rsi14)}
-          color="#a855f7"
+          color="#b391bf"
           height={460}
           thresholds={[
-            { value: 70, color: "rgba(239,68,68,0.6)", label: "overbought" },
-            { value: 30, color: "rgba(34,197,94,0.6)", label: "oversold" },
+            { value: 70, color: "rgba(222,107,90,0.7)", label: "overbought" },
+            { value: 30, color: "rgba(130,181,122,0.7)", label: "oversold" },
           ]}
         />
       );
@@ -55,9 +55,9 @@ function ChartBody({ slug }: { slug: string }) {
       return (
         <MetricChart
           points={metricPoints(rows, (r) => r.roi1y, "2013-01-01")}
-          color="#10b981"
+          color="#82b57a"
           height={460}
-          thresholds={[{ value: 0, color: "rgba(139,139,150,0.5)", label: "breakeven" }]}
+          thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "breakeven" }]}
         />
       );
     case "monthly-returns":
@@ -85,14 +85,14 @@ export default async function ChartPage({
   return (
     <main className="px-8 py-8">
       <header className="mb-6">
-        <div className="text-xs uppercase tracking-wider text-neutral-600">
+        <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
           {def.category} · BTC
         </div>
-        <h1 className="mt-1 text-xl font-bold tracking-tight">{def.title}</h1>
-        <p className="mt-1 max-w-2xl text-sm text-neutral-500">{def.description}</p>
+        <h1 className="mt-1 font-display text-3xl italic tracking-wide">{def.title}</h1>
+        <p className="mt-1.5 max-w-2xl text-sm text-muted">{def.description}</p>
       </header>
       <ChartBody slug={slug} />
-      <footer className="mt-6 text-xs text-neutral-600">
+      <footer className="mt-6 text-xs text-faint">
         data through {metrics.updatedThrough} · updates daily
       </footer>
     </main>

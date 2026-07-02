@@ -30,11 +30,24 @@ type OverlayKey = "regression" | "bmsb" | "sma50w" | "sma200w";
 const RANGES = ["1Y", "2Y", "4Y", "8Y", "ALL"] as const;
 type Range = (typeof RANGES)[number];
 
+const C = {
+  text: "#a29382",
+  grid: "rgba(237, 227, 212, 0.05)",
+  accent: "#e6a144",
+  accentFillTop: "rgba(230, 161, 68, 0.18)",
+  regression: "#c9bba6",
+  regressionBand: "rgba(201, 187, 166, 0.32)",
+  gain: "#82b57a",
+  loss: "#de6b5a",
+  sma50w: "#8ba7c9",
+  sma200w: "#b391bf",
+};
+
 const OVERLAYS: { key: OverlayKey; label: string; dots: string[] }[] = [
-  { key: "regression", label: "log regression", dots: ["#d4d4d8"] },
-  { key: "bmsb", label: "BMSB 20w/21w", dots: ["#22c55e", "#ef4444"] },
-  { key: "sma50w", label: "50W SMA", dots: ["#3b82f6"] },
-  { key: "sma200w", label: "200W SMA", dots: ["#a855f7"] },
+  { key: "regression", label: "log regression", dots: [C.regression] },
+  { key: "bmsb", label: "BMSB 20w/21w", dots: [C.gain, C.loss] },
+  { key: "sma50w", label: "50W SMA", dots: [C.sma50w] },
+  { key: "sma200w", label: "200W SMA", dots: [C.sma200w] },
 ];
 
 function ts(date: string): UTCTimestamp {
@@ -70,27 +83,27 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: "#8b8b96",
+        textColor: C.text,
         attributionLogo: false,
       },
       grid: {
-        vertLines: { color: "rgba(139, 139, 150, 0.08)" },
-        horzLines: { color: "rgba(139, 139, 150, 0.08)" },
+        vertLines: { color: C.grid },
+        horzLines: { color: C.grid },
       },
       rightPriceScale: { borderVisible: false },
       timeScale: { borderVisible: false, minBarSpacing: 0.001 },
       crosshair: {
-        horzLine: { labelBackgroundColor: "#e8590c" },
-        vertLine: { labelBackgroundColor: "#e8590c" },
+        horzLine: { labelBackgroundColor: C.accent },
+        vertLine: { labelBackgroundColor: C.accent },
       },
     });
     chartRef.current = chart;
 
     const price = chart.addSeries(AreaSeries, {
-      lineColor: "#e8590c",
+      lineColor: C.accent,
       lineWidth: 2,
-      topColor: "rgba(232, 89, 12, 0.25)",
-      bottomColor: "rgba(232, 89, 12, 0.0)",
+      topColor: C.accentFillTop,
+      bottomColor: "rgba(230, 161, 68, 0.0)",
       priceLineVisible: false,
     });
     price.setData(lineData(rows, (r) => r.close));
@@ -114,13 +127,13 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
     };
 
     seriesRef.current = {};
-    addLine("regression", (r) => r.fair, "#d4d4d8", LineStyle.Dashed);
-    addLine("regression", (r) => r.bandLow, "rgba(212, 212, 216, 0.35)");
-    addLine("regression", (r) => r.bandHigh, "rgba(212, 212, 216, 0.35)");
-    addLine("bmsb", (r) => r.sma20w, "#22c55e");
-    addLine("bmsb", (r) => r.ema21w, "#ef4444");
-    addLine("sma50w", (r) => r.sma50w, "#3b82f6");
-    addLine("sma200w", (r) => r.sma200w, "#a855f7");
+    addLine("regression", (r) => r.fair, C.regression, LineStyle.Dashed);
+    addLine("regression", (r) => r.bandLow, C.regressionBand);
+    addLine("regression", (r) => r.bandHigh, C.regressionBand);
+    addLine("bmsb", (r) => r.sma20w, C.gain);
+    addLine("bmsb", (r) => r.ema21w, C.loss);
+    addLine("sma50w", (r) => r.sma50w, C.sma50w);
+    addLine("sma200w", (r) => r.sma200w, C.sma200w);
 
     const raf = requestAnimationFrame(() => chart.timeScale().fitContent());
     return () => {
@@ -157,23 +170,21 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
   }, [range, rows]);
 
   const btn = (active: boolean) =>
-    `rounded px-2.5 py-1 text-xs font-medium transition-colors ${
-      active
-        ? "bg-neutral-100 text-neutral-900"
-        : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+    `rounded px-2.5 py-1 font-mono text-xs transition-colors ${
+      active ? "bg-fg text-ink" : "text-muted hover:bg-raise hover:text-fg"
     }`;
 
   return (
-    <div className="rounded-xl border border-neutral-800 bg-neutral-900/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-      <div className="flex flex-wrap items-center gap-4 border-b border-neutral-800/70 px-4 py-3">
-        <div className="flex gap-0.5 rounded-md bg-neutral-900 p-0.5">
+    <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
+      <div className="flex flex-wrap items-center gap-4 border-b border-line/70 px-4 py-3">
+        <div className="flex gap-0.5 rounded-md bg-ink p-0.5">
           {RANGES.map((r) => (
             <button key={r} className={btn(range === r)} onClick={() => setRange(r)}>
               {r}
             </button>
           ))}
         </div>
-        <div className="flex gap-0.5 rounded-md bg-neutral-900 p-0.5">
+        <div className="flex gap-0.5 rounded-md bg-ink p-0.5">
           {(["log", "linear"] as const).map((s) => (
             <button key={s} className={btn(scale === s)} onClick={() => setScale(s)}>
               {s}
@@ -187,8 +198,8 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
               onClick={() => setOverlays((o) => ({ ...o, [key]: !o[key] }))}
               className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors ${
                 overlays[key]
-                  ? "border-neutral-600 text-neutral-200"
-                  : "border-neutral-800 text-neutral-500 hover:border-neutral-700"
+                  ? "border-faint/60 text-fg"
+                  : "border-line text-faint hover:border-faint/60"
               }`}
             >
               {dots.map((d) => (

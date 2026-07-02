@@ -24,12 +24,12 @@ interface Props {
   height?: number;
 }
 
-/** green → yellow → red across 0..1 */
+/** salsa → queso → chile across 0..1 */
 export function riskColor(v: number): string {
   const stops: [number, number[]][] = [
-    [0, [34, 197, 94]],
-    [0.5, [234, 179, 8]],
-    [1, [239, 68, 68]],
+    [0, [130, 181, 122]],
+    [0.5, [230, 161, 68]],
+    [1, [222, 107, 90]],
   ];
   const upper = stops.findIndex(([s]) => v <= s);
   if (upper <= 0) return `rgb(${stops[upper === 0 ? 0 : stops.length - 1][1].join(",")})`;
@@ -42,7 +42,7 @@ export function riskColor(v: number): string {
 
 export default function MetricChart({
   points,
-  color = "#e8590c",
+  color = "#e6a144",
   colorByValue = false,
   thresholds = [],
   height = 220,
@@ -57,12 +57,12 @@ export default function MetricChart({
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: "#8b8b96",
+        textColor: "#a29382",
         attributionLogo: false,
       },
       grid: {
         vertLines: { visible: false },
-        horzLines: { color: "rgba(139, 139, 150, 0.08)" },
+        horzLines: { color: "rgba(237, 227, 212, 0.05)" },
       },
       rightPriceScale: { borderVisible: false },
       timeScale: { borderVisible: false, minBarSpacing: 0.001 },
@@ -102,7 +102,7 @@ export default function MetricChart({
   }, [points, color, colorByValue, thresholds]);
 
   return (
-    <div className="rounded-xl border border-neutral-800 bg-neutral-900/30 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+    <div className="rounded-xl border border-line bg-surface/50 p-3 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
       <div ref={containerRef} style={{ height }} className="w-full" />
     </div>
   );

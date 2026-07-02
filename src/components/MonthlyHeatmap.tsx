@@ -11,7 +11,7 @@ function cellStyle(pct: number | undefined) {
   const alpha = Math.min(Math.abs(pct) / 30, 1) * 0.55 + 0.08;
   return {
     backgroundColor:
-      pct >= 0 ? `rgba(16, 185, 129, ${alpha})` : `rgba(239, 68, 68, ${alpha})`,
+      pct >= 0 ? `rgba(130, 181, 122, ${alpha})` : `rgba(222, 107, 90, ${alpha})`,
   };
 }
 
@@ -28,9 +28,9 @@ export default function MonthlyHeatmap({ returns }: { returns: MonthlyReturn[] }
       <table className="w-full border-separate border-spacing-0.5 font-mono text-xs">
         <thead>
           <tr>
-            <th className="px-2 py-1 text-left font-medium text-neutral-500">Year</th>
+            <th className="px-2 py-1 text-left font-medium text-muted">Year</th>
             {MONTHS.map((m) => (
-              <th key={m} className="px-1 py-1 text-right font-medium text-neutral-500">
+              <th key={m} className="px-1 py-1 text-right font-medium text-muted">
                 {m}
               </th>
             ))}
@@ -39,7 +39,7 @@ export default function MonthlyHeatmap({ returns }: { returns: MonthlyReturn[] }
         <tbody>
           {years.map((y) => (
             <tr key={y}>
-              <td className="px-2 py-1 text-neutral-400">{y}</td>
+              <td className="px-2 py-1 text-muted">{y}</td>
               {MONTHS.map((_, i) => {
                 const pct = byYear.get(y)!.get(i + 1);
                 return (

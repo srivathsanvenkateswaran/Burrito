@@ -8,7 +8,7 @@ export default function ChartCard({
 }) {
   return (
     <div
-      className={`rounded-xl border border-neutral-800 bg-neutral-900/30 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] ${className}`}
+      className={`rounded-xl border border-line bg-surface/50 p-4 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)] ${className}`}
     >
       {children}
     </div>

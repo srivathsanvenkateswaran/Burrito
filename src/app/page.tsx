@@ -4,16 +4,16 @@ import { loadMetrics } from "@/lib/data";
 import PriceChart from "@/components/PriceChart";
 
 function riskTone(risk: number): string {
-  if (risk < 0.25) return "text-emerald-400";
-  if (risk < 0.5) return "text-lime-400";
-  if (risk < 0.75) return "text-amber-400";
-  return "text-red-400";
+  if (risk < 0.25) return "text-gain";
+  if (risk < 0.5) return "text-fg";
+  if (risk < 0.75) return "text-accent";
+  return "text-loss";
 }
 
 function Stat({
   label,
   value,
-  tone = "text-neutral-100",
+  tone = "text-fg",
   sub,
 }: {
   label: string;
@@ -22,10 +22,12 @@ function Stat({
   sub?: string;
 }) {
   return (
-    <div className="rounded-lg border border-neutral-800 bg-neutral-900/50 px-4 py-3">
-      <div className="text-xs uppercase tracking-wider text-neutral-500">{label}</div>
+    <div className="rounded-lg border border-line bg-surface/50 px-4 py-3">
+      <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
+        {label}
+      </div>
       <div className={`mt-1 font-mono text-lg ${tone}`}>{value}</div>
-      {sub && <div className="mt-0.5 text-xs text-neutral-500">{sub}</div>}
+      {sub && <div className="mt-0.5 text-xs text-faint">{sub}</div>}
     </div>
   );
 }
@@ -41,15 +43,17 @@ export default function Home() {
     <main className="px-8 py-8">
       <header className="mb-6 flex items-baseline justify-between">
         <div>
-          <div className="text-xs uppercase tracking-wider text-neutral-600">Dashboard</div>
-          <h1 className="mt-1 text-xl font-bold tracking-tight">Bitcoin</h1>
+          <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
+            Dashboard
+          </div>
+          <h1 className="mt-1 font-display text-3xl italic tracking-wide">Bitcoin</h1>
         </div>
         <div className="text-right">
           <div className="font-mono text-xl">
             ${latest.close.toLocaleString("en-US", { maximumFractionDigits: 0 })}
           </div>
           <div
-            className={`font-mono text-sm ${dayChange >= 0 ? "text-emerald-500" : "text-red-500"}`}
+            className={`font-mono text-sm ${dayChange >= 0 ? "text-gain" : "text-loss"}`}
           >
             {dayChange >= 0 ? "+" : ""}
             {dayChange.toFixed(2)}% · {latest.date}
@@ -90,7 +94,7 @@ export default function Home() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-medium uppercase tracking-wider text-neutral-500">
+        <h2 className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
           All charts
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -98,13 +102,13 @@ export default function Home() {
             <Link
               key={c.slug}
               href={`/charts/${c.slug}`}
-              className="rounded-lg border border-neutral-800 bg-neutral-900/50 p-4 transition-colors hover:border-neutral-700 hover:bg-neutral-900"
+              className="rounded-lg border border-line bg-surface/50 p-4 transition-colors hover:border-faint/60 hover:bg-raise"
             >
-              <div className="text-[11px] uppercase tracking-wider text-neutral-600">
+              <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
                 {c.category}
               </div>
-              <div className="mt-1 text-sm font-medium text-neutral-200">{c.title}</div>
-              <p className="mt-1 line-clamp-2 text-xs text-neutral-500">{c.description}</p>
+              <div className="mt-1 text-sm font-medium text-fg">{c.title}</div>
+              <p className="mt-1 line-clamp-2 text-xs text-muted">{c.description}</p>
             </Link>
           ))}
         </div>
