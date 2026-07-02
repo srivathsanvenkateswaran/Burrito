@@ -110,7 +110,7 @@ export const CHARTS: ChartDef[] = [
     category: "Cycles",
     description: "The return on investment as measured from each market cycle peak.",
     explanation: [
-      "The mirror image of ROI After Cycle Bottom: each line starts at a cycle top (2011, 2013, 2017, 2021) and tracks the drawdown-and-recovery path from that day. It answers the question every top-buyer asks: how long until break-even?",
+      "The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top (2011, 2013, 2017, 2021, 2025) and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?",
       "History's answer has been two to three years underwater, with the depth of the trough shrinking each cycle. It's also the best illustration of why the risk metric emphasizes selling into strength — the cost of buying the top is measured in years, not percent.",
     ],
   },

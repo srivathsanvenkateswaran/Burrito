@@ -398,8 +398,9 @@ function ChartBody({ slug }: { slug: string }) {
     case "roi-after-cycle-peak":
       return (
         <DaysAxisChart
-          series={eventSeries(loadEventRoi().peaks)}
-          thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "break even" }]}
+          log
+          series={multipleSeries(loadEventRoi().peaks)}
+          thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "1× (break even)" }]}
         />
       );
     case "roi-after-latest-cycle-peak":

@@ -31,7 +31,8 @@ import {
 
 const HALVINGS = ["2012-11-28", "2016-07-09", "2020-05-11", "2024-04-19"];
 const CYCLE_BOTTOMS = ["2011-11-18", "2015-01-14", "2018-12-15", "2022-11-21"];
-const CYCLE_PEAKS = ["2011-06-08", "2013-11-30", "2017-12-17", "2021-11-10"];
+// 2025-10-06 = ATH close of the 2024-25 cycle; treated as the latest cycle peak
+const CYCLE_PEAKS = ["2011-06-08", "2013-11-30", "2017-12-17", "2021-11-10", "2025-10-06"];
 
 const BTC_GENESIS = Date.parse("2009-01-03T00:00:00Z");
 const DAY_MS = 86_400_000;
