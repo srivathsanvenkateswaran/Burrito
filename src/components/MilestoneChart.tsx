@@ -2,9 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { useChartColors } from "./ThemeProvider";
+import { DateRangeBar, ExpandButton } from "./ChartControls";
 import {
   ColorType,
   createChart,
+  type IChartApi,
   LineSeries,
   PriceScaleMode,
   type UTCTimestamp,
@@ -33,6 +35,7 @@ export default function MilestoneChart({
   dates: string[];
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
   const cc = useChartColors();
 
   useEffect(() => {
@@ -89,16 +92,37 @@ export default function MilestoneChart({
       );
     });
 
+    chartRef.current = chart;
     const raf = requestAnimationFrame(() => chart.timeScale().fitContent());
     return () => {
       cancelAnimationFrame(raf);
       chart.remove();
+      chartRef.current = null;
     };
   }, [events, dates, cc]);
 
   return (
-    <div className="rounded-xl border border-line bg-surface/50 p-3 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
-      <div ref={containerRef} className="h-[460px] w-full" />
+    <div
+      data-chart-card
+      className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]"
+    >
+      <div className="flex flex-wrap items-center justify-end gap-2 border-b border-line/70 px-4 py-2">
+        <DateRangeBar
+          min={dates[0] ?? ""}
+          max={dates.at(-1) ?? ""}
+          onApply={(from, to) =>
+            chartRef.current?.timeScale().setVisibleRange({
+              from: (Date.parse(`${from}T00:00:00Z`) / 1000) as UTCTimestamp,
+              to: (Date.parse(`${to}T00:00:00Z`) / 1000) as UTCTimestamp,
+            })
+          }
+          onReset={() => chartRef.current?.timeScale().fitContent()}
+        />
+        <ExpandButton />
+      </div>
+      <div className="p-3">
+        <div ref={containerRef} className="chart-host h-[460px] w-full" />
+      </div>
     </div>
   );
 }

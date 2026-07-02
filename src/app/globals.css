@@ -48,10 +48,27 @@
   --font-display: var(--font-bricolage);
 }
 
+:root {
+  color-scheme: dark;
+}
+.light {
+  color-scheme: light;
+}
+
 body {
   background: var(--ink);
   color: var(--fg);
   font-family: var(--font-sans);
+}
+
+/* fullscreened chart cards: solid backdrop, chart canvas fills the screen */
+[data-chart-card]:fullscreen {
+  background: var(--ink);
+  padding: 1.5rem;
+  overflow: auto;
+}
+[data-chart-card]:fullscreen .chart-host {
+  height: calc(100vh - 9rem) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

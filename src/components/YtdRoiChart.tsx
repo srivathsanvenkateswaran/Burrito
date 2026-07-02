@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useChartColors } from "./ThemeProvider";
+import { ExpandButton } from "./ChartControls";
 import {
   ColorType,
   createChart,
@@ -153,7 +154,10 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
     );
 
   return (
-    <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
+    <div
+      data-chart-card
+      className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]"
+    >
       <div className="flex flex-wrap items-center gap-3 border-b border-line/70 px-4 py-3">
         {PRESET_GROUPS.map(({ name, presets }) => (
           <div key={name} className="flex items-center gap-1.5">
@@ -204,9 +208,12 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
           );
         })}
         </div>
+        <div className="ml-auto">
+          <ExpandButton />
+        </div>
       </div>
       <div className="p-3">
-        <div ref={containerRef} className="h-[52vh] min-h-[360px] w-full" />
+        <div ref={containerRef} className="chart-host h-[52vh] min-h-[360px] w-full" />
       </div>
     </div>
   );

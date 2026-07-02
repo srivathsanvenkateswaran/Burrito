@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useChartColors } from "./ThemeProvider";
+import { ExpandButton } from "./ChartControls";
 import {
   ColorType,
   createChart,
@@ -114,7 +115,10 @@ export default function DaysAxisChart({
     setHidden((h) => (h.includes(label) ? h.filter((l) => l !== label) : [...h, label]));
 
   return (
-    <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
+    <div
+      data-chart-card
+      className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]"
+    >
       <div className="flex flex-wrap items-center gap-1.5 border-b border-line/70 px-4 py-3">
         {series.map((s) => {
           const active = !hidden.includes(s.label);
@@ -139,9 +143,10 @@ export default function DaysAxisChart({
         <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
           x-axis: days since event
         </span>
+        <ExpandButton />
       </div>
       <div className="p-3">
-        <div ref={containerRef} style={{ height }} className="w-full" />
+        <div ref={containerRef} style={{ height }} className="chart-host w-full" />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useChartColors } from "./ThemeProvider";
+import { DateRangeBar, ExpandButton } from "./ChartControls";
 import {
   AreaSeries,
   ColorType,
@@ -176,8 +177,14 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
       active ? "bg-fg text-ink" : "text-muted hover:bg-raise hover:text-fg"
     }`;
 
+  const applyRange = (from: string, to: string) =>
+    chartRef.current?.timeScale().setVisibleRange({ from: ts(from), to: ts(to) });
+
   return (
-    <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
+    <div
+      data-chart-card
+      className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]"
+    >
       <div className="flex flex-wrap items-center gap-4 border-b border-line/70 px-4 py-3">
         <div className="flex gap-0.5 rounded-md bg-ink p-0.5">
           {RANGES.map((r) => (
@@ -215,9 +222,18 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
             </button>
           ))}
         </div>
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+          <DateRangeBar
+            min={rows[0]?.date ?? ""}
+            max={rows.at(-1)?.date ?? ""}
+            onApply={applyRange}
+            onReset={() => chartRef.current?.timeScale().fitContent()}
+          />
+          <ExpandButton />
+        </div>
       </div>
       <div className="p-3">
-        <div ref={containerRef} className="h-[58vh] min-h-[380px] w-full" />
+        <div ref={containerRef} className="chart-host h-[58vh] min-h-[380px] w-full" />
       </div>
     </div>
   );

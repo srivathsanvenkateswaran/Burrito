@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { useChartColors } from "./ThemeProvider";
+import { DateRangeBar, ExpandButton } from "./ChartControls";
 import {
   AreaSeries,
   ColorType,
   createChart,
   createSeriesMarkers,
   HistogramSeries,
+  type IChartApi,
   type ISeriesApi,
   LineSeries,
   LineStyle,
@@ -62,6 +64,7 @@ export default function MultiSeriesChart({
   showLegend = true,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
   const cc = useChartColors();
 
   useEffect(() => {
@@ -154,18 +157,27 @@ export default function MultiSeriesChart({
       }
     }
 
+    chartRef.current = chart;
     const raf = requestAnimationFrame(() => chart.timeScale().fitContent());
     return () => {
       cancelAnimationFrame(raf);
       chart.remove();
+      chartRef.current = null;
     };
   }, [series, markers, thresholds, rightLog, leftLog, cc]);
 
+  const dates = series.flatMap((s) => [s.points[0]?.date, s.points.at(-1)?.date]).filter(Boolean) as string[];
+  const minDate = dates.length ? dates.reduce((a, b) => (a < b ? a : b)) : "";
+  const maxDate = dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : "";
+
   return (
-    <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
-      {showLegend && (
-        <div className="flex flex-wrap items-center gap-3 border-b border-line/70 px-4 py-2.5">
-          {series.map((s) => (
+    <div
+      data-chart-card
+      className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]"
+    >
+      <div className="flex flex-wrap items-center gap-3 border-b border-line/70 px-4 py-2.5">
+        {showLegend &&
+          series.map((s) => (
             <span key={s.label} className="flex items-center gap-1.5 text-xs text-muted">
               <span
                 className="inline-block h-2 w-2 rounded-full"
@@ -174,10 +186,20 @@ export default function MultiSeriesChart({
               {s.label}
             </span>
           ))}
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+          <DateRangeBar
+            min={minDate}
+            max={maxDate}
+            onApply={(from, to) =>
+              chartRef.current?.timeScale().setVisibleRange({ from: ts(from), to: ts(to) })
+            }
+            onReset={() => chartRef.current?.timeScale().fitContent()}
+          />
+          <ExpandButton />
         </div>
-      )}
+      </div>
       <div className="p-3">
-        <div ref={containerRef} style={{ height }} className="w-full" />
+        <div ref={containerRef} style={{ height }} className="chart-host w-full" />
       </div>
     </div>
   );
