@@ -33,6 +33,15 @@ export function loadYtdRoi(asset = "btc"): YearSeries[] {
   return loadJson<YearSeries[]>("metrics", asset, "ytd-roi.json");
 }
 
+export interface FanFile {
+  taus: number[];
+  rows: { date: string; q: number[] }[];
+}
+
+export function loadFan(asset = "btc"): FanFile {
+  return loadJson("metrics", asset, "fan.json");
+}
+
 export interface EventRoiFile {
   halvings: { label: string; points: { day: number; pct: number }[] }[];
   bottoms: { label: string; points: { day: number; pct: number }[] }[];

@@ -75,7 +75,7 @@ export default function Home() {
               ? "—"
               : `$${latest.fair.toLocaleString("en-US", { maximumFractionDigits: 0 })}`
           }
-          sub="log regression"
+          sub="fan median (τ 0.5)"
         />
         <Stat
           label="Mayer Multiple"

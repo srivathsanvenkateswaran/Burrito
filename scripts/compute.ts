@@ -15,8 +15,10 @@ import {
   daysToMultiple,
   ema,
   eventRoi,
+  fanPosition,
   fitLogRegression,
   macd,
+  quantileFan,
   milestoneCrossings,
   monthlyReturns,
   quarterlyReturns,
@@ -48,8 +50,17 @@ function main() {
   );
 
   const reg = fitLogRegression(days, closes);
-  const fairs = days.map((t) => reg.fair(t));
-  const risk = riskMetric(closes, fairs);
+
+  // Asymmetric quantile regression fan (quadratic, log-log, rearranged).
+  // The median curve is fair value; risk = price's percentile inside the fan.
+  const TAUS = [0.01, 0.05, 0.15, 0.3, 0.5, 0.7, 0.85, 0.95, 0.99];
+  console.log("Fitting quantile regression fan…");
+  const fan = quantileFan(days, closes, TAUS);
+  const fanRows = days.map((t) => TAUS.map((_, k) => fan.predict(t, k)));
+  const fairs = fanRows.map((levels) => levels[Math.floor(TAUS.length / 2)]);
+  const risk = closes.map((c, i) =>
+    i < 365 ? null : fanPosition(c, fanRows[i], TAUS),
+  );
   const sma20w = sma(closes, 140);
   const ema21w = ema(closes, 147);
   const sma50w = sma(closes, 350);
@@ -61,8 +72,8 @@ function main() {
     date: r.date,
     close: r.close,
     fair: round(fairs[i], 2),
-    bandLow: round(fairs[i] * Math.exp(-reg.sigma), 2),
-    bandHigh: round(fairs[i] * Math.exp(reg.sigma), 2),
+    bandLow: round(fanRows[i][3], 2), // τ=0.30
+    bandHigh: round(fanRows[i][5], 2), // τ=0.70
     risk: round(risk[i], 3),
     sma20w: round(sma20w[i], 2),
     ema21w: round(ema21w[i], 2),
@@ -197,6 +208,17 @@ function main() {
     }),
   );
 
+  // --- fan curves for the chart (thinned to every 3rd day to keep the file lean)
+  fs.writeFileSync(
+    path.join(dir, "fan.json"),
+    JSON.stringify({
+      taus: TAUS,
+      rows: rows
+        .map((r, i) => ({ date: r.date, q: fanRows[i].map((v) => Number(v.toFixed(2))) }))
+        .filter((_, i) => i % 3 === 0 || i === rows.length - 1),
+    }),
+  );
+
   // --- event-anchored ROI paths + cycle deviation
   const halvings = eventRoi(rows, HALVINGS);
   const bottoms = eventRoi(rows, CYCLE_BOTTOMS);
@@ -230,14 +252,23 @@ function main() {
     ),
   );
 
-  // --- current risk levels: window quantiles of ln-deviation mapped back to price
-  const dLn = closes.map((c, i) => Math.log(c / fairs[i]));
-  const win = dLn.slice(-1460).sort((a, b) => a - b);
-  const q = (p: number) => win[Math.min(win.length - 1, Math.floor(p * win.length))];
-  const fairNow = fairs[fairs.length - 1];
+  // --- current risk levels: invert the fan — price at which risk would equal r
+  const todayLevels = fanRows[fanRows.length - 1];
+  const lnLv = todayLevels.map(Math.log);
+  const priceAtRisk = (r: number): number => {
+    if (r <= TAUS[0]) return todayLevels[0];
+    if (r >= TAUS[TAUS.length - 1]) return todayLevels[TAUS.length - 1];
+    for (let i = 1; i < TAUS.length; i++) {
+      if (r <= TAUS[i]) {
+        const f = (r - TAUS[i - 1]) / (TAUS[i] - TAUS[i - 1]);
+        return Math.exp(lnLv[i - 1] + f * (lnLv[i] - lnLv[i - 1]));
+      }
+    }
+    return todayLevels[TAUS.length - 1];
+  };
   const riskLevels = Array.from({ length: 9 }, (_, i) => {
     const r = (i + 1) / 10;
-    return { risk: r, price: Number((fairNow * Math.exp(q(r))).toFixed(0)) };
+    return { risk: r, price: Number(priceAtRisk(r).toFixed(0)) };
   });
 
   // --- best day to DCA: average extension from 50d SMA per weekday

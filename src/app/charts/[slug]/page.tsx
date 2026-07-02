@@ -5,6 +5,7 @@ import {
   loadDistributions,
   loadEventRoi,
   loadEvents,
+  loadFan,
   loadMetrics,
   loadMonthlyReturns,
   loadRoiBands,
@@ -304,6 +305,27 @@ function ChartBody({ slug }: { slug: string }) {
       return daysSinceBody("declines");
     case "days-since-percentage-gain":
       return daysSinceBody("gains");
+    case "asymmetric-quantile-regression-fan": {
+      const fan = loadFan();
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            {
+              label: "close",
+              color: "rgba(237,227,212,0.9)",
+              points: rows.map((r) => ({ date: r.date, value: r.close })),
+            },
+            ...fan.taus.map((tau, k) => ({
+              label: `τ ${tau}`,
+              color: riskColor(tau),
+              lineWidth: 1,
+              points: fan.rows.map((r) => ({ date: r.date, value: r.q[k] })),
+            })),
+          ]}
+        />
+      );
+    }
     case "risk-colorcoded":
       return (
         <RiskColoredPrice

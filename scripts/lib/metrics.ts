@@ -280,6 +280,110 @@ export function quarterlyReturns(
   return out;
 }
 
+/**
+ * Quadratic quantile regression in log-log space: fits ln(price) =
+ * a + b·z + c·z² (z = standardized ln(days since genesis)) by minimizing
+ * pinball loss with Adam on the subgradient. Initialized from the OLS fit
+ * shifted to the residual quantile, so a few thousand steps converge.
+ */
+export function quantileFan(
+  daysSinceGenesis: number[],
+  closes: number[],
+  taus: number[],
+  iters = 4000,
+): { taus: number[]; predict: (t: number, tauIdx: number) => number } {
+  const xs = daysSinceGenesis.map((t) => Math.log(t));
+  const ys = closes.map((c) => Math.log(c));
+  const n = xs.length;
+  const mx = xs.reduce((a, b) => a + b, 0) / n;
+  const sx = Math.sqrt(xs.reduce((a, b) => a + (b - mx) ** 2, 0) / n);
+  const zs = xs.map((x) => (x - mx) / sx);
+
+  // OLS quadratic via normal equations for initialization
+  const X = zs.map((z) => [1, z, z * z]);
+  const XtX = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ];
+  const Xty = [0, 0, 0];
+  for (let i = 0; i < n; i++) {
+    for (let r = 0; r < 3; r++) {
+      Xty[r] += X[i][r] * ys[i];
+      for (let c = 0; c < 3; c++) XtX[r][c] += X[i][r] * X[i][c];
+    }
+  }
+  const ols = solve3(XtX, Xty);
+  const olsResiduals = ys.map((y, i) => y - (ols[0] + ols[1] * zs[i] + ols[2] * zs[i] ** 2));
+  const sortedRes = [...olsResiduals].sort((a, b) => a - b);
+
+  const fits: number[][] = taus.map((tau) => {
+    const p = [...ols];
+    p[0] += sortedRes[Math.min(n - 1, Math.floor(tau * n))];
+    // Adam
+    const m = [0, 0, 0];
+    const v = [0, 0, 0];
+    const lr = 0.02;
+    for (let it = 1; it <= iters; it++) {
+      const g = [0, 0, 0];
+      for (let i = 0; i < n; i++) {
+        const r = ys[i] - (p[0] + p[1] * zs[i] + p[2] * zs[i] * zs[i]);
+        const w = (r < 0 ? 1 : 0) - tau;
+        g[0] += w;
+        g[1] += w * zs[i];
+        g[2] += w * zs[i] * zs[i];
+      }
+      for (let k = 0; k < 3; k++) {
+        const gk = g[k] / n;
+        m[k] = 0.9 * m[k] + 0.1 * gk;
+        v[k] = 0.999 * v[k] + 0.001 * gk * gk;
+        p[k] -= (lr * m[k]) / (Math.sqrt(v[k]) + 1e-9);
+      }
+    }
+    return p;
+  });
+
+  return {
+    taus,
+    predict: (t: number, tauIdx: number) => {
+      const z = (Math.log(t) - mx) / sx;
+      // rearrangement: evaluate all quantiles at t and sort (prevents crossing)
+      const vals = fits.map((p) => p[0] + p[1] * z + p[2] * z * z).sort((a, b) => a - b);
+      return Math.exp(vals[tauIdx]);
+    },
+  };
+}
+
+function solve3(A: number[][], b: number[]): number[] {
+  const m = A.map((row, i) => [...row, b[i]]);
+  for (let col = 0; col < 3; col++) {
+    let piv = col;
+    for (let r = col + 1; r < 3; r++) if (Math.abs(m[r][col]) > Math.abs(m[piv][col])) piv = r;
+    [m[col], m[piv]] = [m[piv], m[col]];
+    for (let r = 0; r < 3; r++) {
+      if (r === col) continue;
+      const f = m[r][col] / m[col][col];
+      for (let c = col; c < 4; c++) m[r][c] -= f * m[col][c];
+    }
+  }
+  return [m[0][3] / m[0][0], m[1][3] / m[1][1], m[2][3] / m[2][2]];
+}
+
+/** Interpolated quantile position (0..1) of a value within sorted fan levels. */
+export function fanPosition(value: number, levels: number[], taus: number[]): number {
+  const ln = Math.log(value);
+  const lnLevels = levels.map(Math.log);
+  if (ln <= lnLevels[0]) return taus[0];
+  if (ln >= lnLevels[lnLevels.length - 1]) return taus[taus.length - 1];
+  for (let i = 1; i < lnLevels.length; i++) {
+    if (ln <= lnLevels[i]) {
+      const f = (ln - lnLevels[i - 1]) / (lnLevels[i] - lnLevels[i - 1]);
+      return taus[i - 1] + f * (taus[i] - taus[i - 1]);
+    }
+  }
+  return taus[taus.length - 1];
+}
+
 /** ROI paths from a list of event dates, each capped at the next event (or capDays). */
 export function eventRoi(
   rows: { date: string; close: number }[],

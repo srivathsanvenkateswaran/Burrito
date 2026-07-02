@@ -25,11 +25,23 @@ export const CHARTS: ChartDef[] = [
     title: "Risk Metric",
     category: "Risk",
     description:
-      "0–1 risk score: ln-space deviation from log-regression fair value, percentile-ranked over a trailing 4-year window. v1 — calibration ongoing.",
+      "0–1 risk score: price's percentile position inside the quantile regression fan. v2.",
     explanation: [
-      "The risk metric compresses \"how stretched is price right now?\" into a single number between 0 and 1. It measures how far price sits above or below the log-regression fair value (in log space, so percentage deviations count equally at any price level), then asks: compared to the last four years — roughly one full market cycle — how extreme is today's deviation? A reading of 0.9 means price is more extended than 90% of days in the trailing window.",
-      "How to use it: low readings (green, below 0.2) have historically coincided with bear-market bottoms and accumulation zones; high readings (red, above 0.8) with euphoric tops where risk-reward favors taking profit. It is a slow signal about valuation, not a trade timer — price can stay in a high-risk band for months while a bull market tops out.",
-      "Caveats: this is version 1 of our own model, not Benjamin Cowen's proprietary metric. The percentile approach means the score is always relative to recent history, and the regression fit itself shifts slowly as new data arrives. Treat the extremes as meaningful and the middle of the range as noise.",
+      "The risk metric compresses \"how stretched is price right now?\" into a single number between 0 and 1. Version 2 reads it directly off the quantile regression fan: if price sits on the fan's median curve, risk is 0.5; on the 95th-percentile curve, 0.95. It is the statistical answer to \"how expensive is today relative to Bitcoin's entire trend history?\"",
+      "How to use it: low readings (green, below 0.2) have historically coincided with bear-market bottoms and accumulation zones; high readings (red, above 0.8) with euphoric tops where risk-reward favors taking profit. Backtested against known reference points, v2 scores the 2013/2017/2021 tops at 0.98–0.99 and the 2022 bottom at 0.01. It is a slow valuation signal, not a trade timer.",
+      "Caveats: this is our own model — same family of methods ITC describes (asymmetric quantile regression), but independently fitted. The fan is refit on the full history each day, so all readings shift slightly as new data arrives; extremes are meaningful, mid-range is noise.",
+    ],
+  },
+  {
+    slug: "asymmetric-quantile-regression-fan",
+    title: "Quantile Regression Fan",
+    category: "Risk",
+    description:
+      "Fan chart from asymmetric quadratic quantile regression — the model behind the risk metric.",
+    explanation: [
+      "Each curve is a separate quadratic quantile regression of log price against log time: the 0.50 curve is the median trend (fair value), while the 0.01 and 0.99 curves bound the historically cheapest and most euphoric extremes. Unlike a least-squares fit, quantile regression is robust to bubbles — the median curve ignores outliers instead of being dragged by them — and fitting each quantile separately lets the fan be asymmetric, wider above than below, like Bitcoin's actual return distribution.",
+      "Every band is fit on the full history and rearranged so curves can't cross. Price touching the lower curves has marked every major bottom; riding the upper curves, every mania phase. The risk metric is literally price's interpolated position between these curves.",
+      "This mirrors the methodology ITC now uses in place of its retired logarithmic regression (they describe theirs as a \"rearranged asymmetric quadratic quantile regression\") — ours is an independent implementation of the same idea, so the exact curves will differ.",
     ],
   },
   {
@@ -39,7 +51,7 @@ export const CHARTS: ChartDef[] = [
     description: "The full price history, colored by the risk metric at each point in time.",
     explanation: [
       "Same data as the Risk Metric chart, painted directly onto price: green stretches are low-risk accumulation zones, red stretches are euphoric extension. The mapping makes the strategy visceral — the green you'd want to have bought is always at the bottom of crashes, which is exactly when buying feels worst.",
-      "This is also the fastest way to sanity-check the risk model itself: if red doesn't line up with what you'd call tops in hindsight, the model needs recalibrating (ours is v1 and slated for the quantile-regression upgrade).",
+      "This is also the fastest way to sanity-check the risk model itself: red lining up with the 2013/2017/2021 tops and green with the 2015/2018/2022 bottoms is exactly the calibration the quantile-fan version of the metric was chosen for.",
     ],
   },
   {
