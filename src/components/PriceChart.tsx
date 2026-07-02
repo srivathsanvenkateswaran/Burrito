@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useChartColors } from "./ThemeProvider";
 import {
   AreaSeries,
   ColorType,
@@ -63,6 +64,7 @@ function lineData(rows: MetricRow[], pick: (r: MetricRow) => number | null) {
 
 export default function PriceChart({ rows }: { rows: MetricRow[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cc = useChartColors();
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<Partial<Record<OverlayKey, ISeriesApi<"Line">[]>>>({});
 
@@ -83,18 +85,18 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: C.text,
+        textColor: cc.text,
         attributionLogo: false,
       },
       grid: {
-        vertLines: { color: C.grid },
-        horzLines: { color: C.grid },
+        vertLines: { color: cc.grid },
+        horzLines: { color: cc.grid },
       },
       rightPriceScale: { borderVisible: false },
       timeScale: { borderVisible: false, minBarSpacing: 0.001 },
       crosshair: {
-        horzLine: { labelBackgroundColor: C.accent },
-        vertLine: { labelBackgroundColor: C.accent },
+        horzLine: { labelBackgroundColor: cc.crosshair },
+        vertLine: { labelBackgroundColor: cc.crosshair },
       },
     });
     chartRef.current = chart;
@@ -141,7 +143,7 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
       chart.remove();
       chartRef.current = null;
     };
-  }, [rows]);
+  }, [rows, cc]);
 
   useEffect(() => {
     chartRef.current?.priceScale("right").applyOptions({

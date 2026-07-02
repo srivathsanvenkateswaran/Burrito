@@ -42,7 +42,7 @@ export default function Sidebar() {
       </Link>
 
       <nav className="flex flex-col gap-1">
-        <NavLink href="/" active={pathname === "/"}>
+        <NavLink href="/dashboard" active={pathname === "/dashboard"}>
           Dashboard
         </NavLink>
 

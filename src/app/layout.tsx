@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
-import Sidebar from "@/components/Sidebar";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const schibsted = Schibsted_Grotesk({
@@ -25,6 +25,8 @@ export const metadata: Metadata = {
   description: "every market, one tortilla — quantitative market analysis",
 };
 
+const themeInit = `try{var q=new URLSearchParams(location.search).get("theme");var t=q==="light"||q==="dark"?q:localStorage.getItem("burrito-theme");if(t==="light")document.documentElement.classList.add("light")}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,11 +35,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${schibsted.variable} ${plexMono.variable} ${bricolage.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full">
-        <Sidebar />
-        <div className="min-w-0 flex-1">{children}</div>
+      <body className="min-h-full">
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

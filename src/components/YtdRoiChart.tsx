@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useChartColors } from "./ThemeProvider";
 import {
   ColorType,
   createChart,
@@ -71,6 +72,7 @@ function sameSet(a: number[], b: number[]): boolean {
 
 export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cc = useChartColors();
   const years = data.map((d) => d.year);
   const [selected, setSelected] = useState<number[]>(years.slice(-3));
 
@@ -82,12 +84,12 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: "#a29382",
+        textColor: cc.text,
         attributionLogo: false,
       },
       grid: {
         vertLines: { visible: false },
-        horzLines: { color: "rgba(237, 227, 212, 0.05)" },
+        horzLines: { color: cc.grid },
       },
       rightPriceScale: { borderVisible: false },
       timeScale: {
@@ -107,8 +109,8 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
           }),
       },
       crosshair: {
-        horzLine: { labelBackgroundColor: "#e6a144" },
-        vertLine: { labelBackgroundColor: "#e6a144" },
+        horzLine: { labelBackgroundColor: cc.crosshair },
+        vertLine: { labelBackgroundColor: cc.crosshair },
       },
     });
 
@@ -143,7 +145,7 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
       cancelAnimationFrame(raf);
       chart.remove();
     };
-  }, [data, selected, years]);
+  }, [data, selected, years, cc]);
 
   const toggle = (year: number) =>
     setSelected((s) =>

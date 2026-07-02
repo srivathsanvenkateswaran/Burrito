@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useChartColors } from "./ThemeProvider";
 import {
   ColorType,
   createChart,
@@ -37,6 +38,7 @@ export default function DaysAxisChart({
   height?: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cc = useChartColors();
   const [hidden, setHidden] = useState<string[]>([]);
 
   useEffect(() => {
@@ -47,12 +49,12 @@ export default function DaysAxisChart({
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: "#a29382",
+        textColor: cc.text,
         attributionLogo: false,
       },
       grid: {
         vertLines: { visible: false },
-        horzLines: { color: "rgba(237, 227, 212, 0.05)" },
+        horzLines: { color: cc.grid },
       },
       rightPriceScale: {
         borderVisible: false,
@@ -65,8 +67,8 @@ export default function DaysAxisChart({
       },
       localization: { timeFormatter: (time: number) => `day ${fmtDay(time).slice(0, -1)}` },
       crosshair: {
-        horzLine: { labelBackgroundColor: "#e6a144" },
-        vertLine: { labelBackgroundColor: "#e6a144" },
+        horzLine: { labelBackgroundColor: cc.crosshair },
+        vertLine: { labelBackgroundColor: cc.crosshair },
       },
     });
 
@@ -106,7 +108,7 @@ export default function DaysAxisChart({
       cancelAnimationFrame(raf);
       chart.remove();
     };
-  }, [series, log, thresholds, hidden]);
+  }, [series, log, thresholds, hidden, cc]);
 
   const toggle = (label: string) =>
     setHidden((h) => (h.includes(label) ? h.filter((l) => l !== label) : [...h, label]));

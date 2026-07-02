@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useChartColors } from "./ThemeProvider";
 import {
   AreaSeries,
   ColorType,
@@ -61,6 +62,7 @@ export default function MultiSeriesChart({
   showLegend = true,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cc = useChartColors();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -71,12 +73,12 @@ export default function MultiSeriesChart({
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: "#a29382",
+        textColor: cc.text,
         attributionLogo: false,
       },
       grid: {
         vertLines: { visible: false },
-        horzLines: { color: "rgba(237, 227, 212, 0.05)" },
+        horzLines: { color: cc.grid },
       },
       rightPriceScale: {
         borderVisible: false,
@@ -89,8 +91,8 @@ export default function MultiSeriesChart({
       },
       timeScale: { borderVisible: false, minBarSpacing: 0.001 },
       crosshair: {
-        horzLine: { labelBackgroundColor: "#e6a144" },
-        vertLine: { labelBackgroundColor: "#e6a144" },
+        horzLine: { labelBackgroundColor: cc.crosshair },
+        vertLine: { labelBackgroundColor: cc.crosshair },
       },
     });
 
@@ -157,7 +159,7 @@ export default function MultiSeriesChart({
       cancelAnimationFrame(raf);
       chart.remove();
     };
-  }, [series, markers, thresholds, rightLog, leftLog]);
+  }, [series, markers, thresholds, rightLog, leftLog, cc]);
 
   return (
     <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">

@@ -1,17 +1,47 @@
 @import "tailwindcss";
 
-@theme {
-  /* the midnight comal — warm charred darks, crema text, queso accent */
-  --color-ink: #171210;
-  --color-surface: #1f1915;
-  --color-raise: #29211a;
-  --color-line: #33291f;
-  --color-fg: #ede3d4;
-  --color-muted: #a29382;
-  --color-faint: #6e6254;
-  --color-accent: #e6a144;
-  --color-gain: #82b57a;
-  --color-loss: #de6b5a;
+/*
+ * the midnight comal — warm charred darks, crema text, queso accent.
+ * Light mode is the same kitchen in daylight: warm paper + espresso.
+ * Utilities reference vars, so flipping .light swaps the whole palette.
+ */
+:root {
+  --ink: #171210;
+  --surface: #1f1915;
+  --raise: #29211a;
+  --line: #33291f;
+  --fg: #ede3d4;
+  --muted: #a29382;
+  --faint: #6e6254;
+  --accent: #e6a144;
+  --gain: #82b57a;
+  --loss: #de6b5a;
+}
+
+.light {
+  --ink: #f6f0e4;
+  --surface: #fdfaf2;
+  --raise: #efe6d3;
+  --line: #e0d5bf;
+  --fg: #2b2318;
+  --muted: #6e6254;
+  --faint: #a09073;
+  --accent: #c07d1e;
+  --gain: #4e8a4b;
+  --loss: #c05240;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-raise: var(--raise);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-gain: var(--gain);
+  --color-loss: var(--loss);
 
   --font-sans: var(--font-schibsted);
   --font-mono: var(--font-plex-mono);
@@ -19,8 +49,8 @@
 }
 
 body {
-  background: var(--color-ink);
-  color: var(--color-fg);
+  background: var(--ink);
+  color: var(--fg);
   font-family: var(--font-sans);
 }
 

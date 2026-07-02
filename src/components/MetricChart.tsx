@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useChartColors } from "./ThemeProvider";
 import {
   ColorType,
   createChart,
@@ -35,6 +36,7 @@ export default function MetricChart({
   height = 220,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const cc = useChartColors();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -44,12 +46,12 @@ export default function MetricChart({
       autoSize: true,
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
-        textColor: "#a29382",
+        textColor: cc.text,
         attributionLogo: false,
       },
       grid: {
         vertLines: { visible: false },
-        horzLines: { color: "rgba(237, 227, 212, 0.05)" },
+        horzLines: { color: cc.grid },
       },
       rightPriceScale: { borderVisible: false },
       timeScale: { borderVisible: false, minBarSpacing: 0.001 },
@@ -86,7 +88,7 @@ export default function MetricChart({
       cancelAnimationFrame(raf);
       chart.remove();
     };
-  }, [points, color, colorByValue, thresholds]);
+  }, [points, color, colorByValue, thresholds, cc]);
 
   return (
     <div className="rounded-xl border border-line bg-surface/50 p-3 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
