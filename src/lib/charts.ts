@@ -73,7 +73,7 @@ export const CHARTS: ChartDef[] = [
       "Year-to-date return for each calendar year, overlayable to compare how different years unfolded.",
     explanation: [
       "Each line tracks one calendar year's cumulative return, starting from that year's first close (0% on the year's first trading day). All years are drawn on a shared January-to-December axis, so you can overlay any set of them and compare their paths day by day.",
-      "Use the year pills to toggle years on and off. Overlaying the current year against past years shows whether this year is tracking a typical path or diverging; overlaying halving years (2012, 2016, 2020, 2024) against each other reveals how similar their second-half accelerations were. Post-halving years (2013, 2017, 2021, 2025) and bear years (2014, 2018, 2022) each have their own recognizable shapes.",
+      "Use the year pills to toggle years on and off, or the presets to jump to a cycle view. Overlaying halving years (2012, 2016, 2020, 2024) reveals how similar their second-half accelerations were; post-halving years (2013, 2017, 2021, 2025) and bear years (2014, 2018, 2022) each have their own recognizable shapes. The presidential presets slice the same calendar by the US political cycle — and note the coincidence: election years and halving years are the same years, so the two 4-year rhythms are perfectly in phase, with pre-election years being the one phase the crypto presets don't cover.",
       "Reading tip: the absolute levels matter less than the shape. Years that spent H1 flat and exploded in Q4 look very different from years that front-loaded their gains — and where the current year sits inside that family of shapes is a quick sanity check on cycle narratives.",
     ],
   },
