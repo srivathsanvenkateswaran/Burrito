@@ -54,6 +54,7 @@ function main() {
     sma200w: round(sma200w[i], 2),
     mayer: round(sma200d[i] === null ? null : closes[i] / sma200d[i]!, 3),
     rsi14: round(rsi14[i], 1),
+    roi1y: round(i < 365 ? null : (closes[i] / closes[i - 365] - 1) * 100, 1),
   }));
 
   const dir = path.join(process.cwd(), "data", "metrics", "btc");
