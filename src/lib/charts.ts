@@ -90,7 +90,7 @@ export const CHARTS: ChartDef[] = [
     category: "Cycles",
     description: "The return on investment after each time the block mining reward is halved.",
     explanation: [
-      "Each line starts at 0% on a halving day (2012, 2016, 2020, 2024) and tracks the return from that day forward, on a shared days-since axis. This is the chart behind the entire halving-cycle thesis: historically, the 12–18 months after each halving contained the bulk of the cycle's gains.",
+      "Each line starts at 1× on a halving day (2012, 2016, 2020, 2024) and tracks the multiple of that day's price forward, on a shared days-since axis with a logarithmic y-axis — without the log scale, 2012's 90× would flatten every later cycle into invisibility. This is the chart behind the entire halving-cycle thesis: historically, the 12–18 months after each halving contained the bulk of the cycle's gains.",
       "Note the shrinking amplitude — each successive halving cycle has delivered a smaller multiple, consistent with diminishing returns as market cap grows. Comparing the current halving line against its predecessors at the same day-count is the cleanest \"where are we in the cycle\" view this framework offers.",
     ],
   },
@@ -100,7 +100,7 @@ export const CHARTS: ChartDef[] = [
     category: "Cycles",
     description: "The return on investment as measured from each market cycle bottom.",
     explanation: [
-      "Each line starts at a bear-market bottom (2011, 2015, 2018, 2022) and shows the recovery path from that low on a days-since axis. Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.",
+      "Each line starts at 1× on a bear-market bottom (2011, 2015, 2018, 2022) and shows the recovery multiple from that low on a days-since axis (log scale, since early cycles reached 100×+). Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.",
       "The recoveries rhyme: roughly two years of choppy appreciation, then a steep leg. Overlaying the current cycle on the old ones shows whether the market is running hot or cold against its own precedent — and the shrinking peak multiples echo the same diminishing-returns story as the halving chart.",
     ],
   },

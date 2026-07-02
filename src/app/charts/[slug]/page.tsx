@@ -380,9 +380,21 @@ function ChartBody({ slug }: { slug: string }) {
       );
     }
     case "roi-after-halving":
-      return <DaysAxisChart series={eventSeries(loadEventRoi().halvings)} />;
+      return (
+        <DaysAxisChart
+          log
+          series={multipleSeries(loadEventRoi().halvings)}
+          thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "1× (break even)" }]}
+        />
+      );
     case "roi-after-cycle-bottom":
-      return <DaysAxisChart series={eventSeries(loadEventRoi().bottoms)} />;
+      return (
+        <DaysAxisChart
+          log
+          series={multipleSeries(loadEventRoi().bottoms)}
+          thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "1× (break even)" }]}
+        />
+      );
     case "roi-after-cycle-peak":
       return (
         <DaysAxisChart
@@ -486,6 +498,17 @@ function eventSeries(
     label: g.label,
     color: EVENT_COLORS[i % EVENT_COLORS.length],
     points: g.points.map((p) => ({ day: p.day, value: p.pct })),
+  }));
+}
+
+/** ROI as a multiple of the event-day price (1× = break even) — log-scale friendly. */
+function multipleSeries(
+  groups: { label: string; points: { day: number; pct: number }[] }[],
+) {
+  return groups.map((g, i) => ({
+    label: `${g.label} (×)`,
+    color: EVENT_COLORS[i % EVENT_COLORS.length],
+    points: g.points.map((p) => ({ day: p.day, value: 1 + p.pct / 100 })),
   }));
 }
 
