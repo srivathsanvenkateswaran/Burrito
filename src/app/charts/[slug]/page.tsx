@@ -1,11 +1,56 @@
 import { notFound } from "next/navigation";
 import { CHARTS, chartBySlug } from "@/lib/charts";
-import { loadMetrics, loadMonthlyReturns, loadYtdRoi, metricPoints } from "@/lib/data";
+import {
+  loadDaysSince,
+  loadDistributions,
+  loadEvents,
+  loadMetrics,
+  loadMonthlyReturns,
+  loadTa,
+  loadYtdRoi,
+  metricPoints,
+  taPoints,
+} from "@/lib/data";
 import YtdRoiChart from "@/components/YtdRoiChart";
 import PriceChart from "@/components/PriceChart";
 import MetricChart from "@/components/MetricChart";
-import MonthlyHeatmap from "@/components/MonthlyHeatmap";
+import MultiSeriesChart from "@/components/MultiSeriesChart";
+import CategoryBars from "@/components/CategoryBars";
+import PeriodHeatmap from "@/components/PeriodHeatmap";
+import MilestoneChart from "@/components/MilestoneChart";
 import ChartCard from "@/components/ChartCard";
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const YEAR_PALETTE = [
+  "#e6a144", "#8ba7c9", "#82b57a", "#de6b5a", "#b391bf", "#7fb5a8",
+  "#c07a4a", "#a8a862", "#cf8fa8", "#ede3d4", "#909c6b", "#c9a06a",
+];
+
+function daysSinceBody(direction: "declines" | "gains") {
+  const ds = loadDaysSince();
+  const groups = ds[direction];
+  const priceRows = loadMetrics().rows;
+  const colors = ["#e6a144", "#8ba7c9", "#de6b5a"];
+  return (
+    <MultiSeriesChart
+      leftLog
+      series={[
+        ...groups.map((g, i) => ({
+          label: `since ${g.threshold}% ${direction === "declines" ? "drop" : "gain"}`,
+          color: colors[i % colors.length],
+          points: ds.dates.map((date, j) => ({ date, value: g.days[j] })),
+        })),
+        {
+          label: "BTC price (log, left)",
+          color: "rgba(162,147,130,0.45)",
+          scale: "left" as const,
+          lineWidth: 1,
+          points: priceRows.map((r) => ({ date: r.date, value: r.close })),
+        },
+      ]}
+    />
+  );
+}
 
 export function generateStaticParams() {
   return CHARTS.map((c) => ({ slug: c.slug }));
@@ -66,9 +111,194 @@ function ChartBody({ slug }: { slug: string }) {
     case "monthly-returns":
       return (
         <ChartCard>
-          <MonthlyHeatmap returns={loadMonthlyReturns()} />
+          <PeriodHeatmap
+            columns={MONTHS}
+            returns={loadMonthlyReturns().map((r) => ({
+              year: r.year,
+              period: r.month,
+              pct: r.pct,
+            }))}
+          />
         </ChartCard>
       );
+    case "quarterly-returns":
+      return (
+        <ChartCard>
+          <PeriodHeatmap
+            columns={["Q1", "Q2", "Q3", "Q4"]}
+            returns={loadDistributions().quarterly.map((r) => ({
+              year: r.year,
+              period: r.quarter,
+              pct: r.pct,
+            }))}
+          />
+        </ChartCard>
+      );
+    case "monthly-average-roi": {
+      const returns = loadMonthlyReturns();
+      const avgs = MONTHS.map((_, i) => {
+        const vals = returns.filter((r) => r.month === i + 1).map((r) => r.pct);
+        return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+      });
+      return (
+        <CategoryBars
+          categories={MONTHS}
+          series={[{ label: "average", color: "#e6a144", values: avgs }]}
+          showValues
+        />
+      );
+    }
+    case "historical-monthly-average-roi": {
+      const returns = loadMonthlyReturns();
+      const years = [...new Set(returns.map((r) => r.year))].sort();
+      return (
+        <CategoryBars
+          categories={MONTHS}
+          height={420}
+          series={years.map((y, yi) => ({
+            label: String(y),
+            color: YEAR_PALETTE[yi % YEAR_PALETTE.length],
+            values: MONTHS.map(
+              (_, mi) => returns.find((r) => r.year === y && r.month === mi + 1)?.pct ?? null,
+            ),
+          }))}
+        />
+      );
+    }
+    case "average-daily-returns": {
+      const { avgDaily } = loadDistributions();
+      return (
+        <CategoryBars
+          categories={avgDaily.map((d) => String(d.day))}
+          series={[{ label: "avg daily return", color: "#e6a144", values: avgDaily.map((d) => d.avg) }]}
+        />
+      );
+    }
+    case "price-drawdown-ath": {
+      const ta = loadTa().rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            {
+              label: "drawdown from ATH",
+              color: "#de6b5a",
+              type: "area",
+              points: taPoints(ta, (r) => r.drawdown),
+            },
+          ]}
+          showLegend={false}
+        />
+      );
+    }
+    case "volatility": {
+      const ta = loadTa().rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "30d", color: "#e6a144", points: taPoints(ta, (r) => r.vol30, "2011-01-01") },
+            { label: "60d", color: "#8ba7c9", points: taPoints(ta, (r) => r.vol60, "2011-01-01") },
+            { label: "180d", color: "#b391bf", points: taPoints(ta, (r) => r.vol180, "2011-01-01") },
+          ]}
+        />
+      );
+    }
+    case "moving-average-convergence-divergence": {
+      const ta = loadTa().rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "MACD", color: "#e6a144", points: taPoints(ta, (r) => r.macd) },
+            { label: "signal", color: "#8ba7c9", points: taPoints(ta, (r) => r.macdSignal) },
+            {
+              label: "histogram",
+              color: "rgba(162,147,130,0.5)",
+              type: "histogram",
+              points: taPoints(ta, (r) => r.macdHist),
+            },
+          ]}
+          thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "" }]}
+        />
+      );
+    }
+    case "bollinger-bands": {
+      const ta = loadTa().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "close", color: "#e6a144", points: taPoints(ta, (r) => r.close) },
+            { label: "upper", color: "rgba(222,107,90,0.55)", lineWidth: 1, points: taPoints(ta, (r) => r.bbUpper) },
+            { label: "20d SMA", color: "rgba(162,147,130,0.7)", dashed: true, lineWidth: 1, points: taPoints(ta, (r) => r.bbMid) },
+            { label: "lower", color: "rgba(130,181,122,0.55)", lineWidth: 1, points: taPoints(ta, (r) => r.bbLower) },
+          ]}
+        />
+      );
+    }
+    case "golden-death-crosses": {
+      const ta = loadTa().rows;
+      const events = loadEvents().goldenDeath;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "close", color: "rgba(230,161,68,0.85)", points: taPoints(ta, (r) => r.close) },
+            { label: "50d SMA", color: "#82b57a", lineWidth: 1, points: taPoints(ta, (r) => r.sma50d) },
+            { label: "200d SMA", color: "#de6b5a", lineWidth: 1, points: taPoints(ta, (r) => r.sma200d) },
+          ]}
+          markers={events.map((e) => ({
+            date: e.date,
+            position: e.type === "up" ? "belowBar" : "aboveBar",
+            color: e.type === "up" ? "#82b57a" : "#de6b5a",
+            shape: e.type === "up" ? "arrowUp" : "arrowDown",
+            text: e.type === "up" ? "golden" : "death",
+          }))}
+        />
+      );
+    }
+    case "pi-cycle-bottom-top": {
+      const ta = loadTa().rows;
+      const events = loadEvents().piCycle.filter((e) => e.type === "up");
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "close", color: "rgba(230,161,68,0.85)", points: taPoints(ta, (r) => r.close) },
+            { label: "111d SMA", color: "#82b57a", lineWidth: 1, points: taPoints(ta, (r) => r.sma111d) },
+            { label: "2 × 350d SMA", color: "#de6b5a", lineWidth: 1, points: taPoints(ta, (r) => r.sma350x2) },
+          ]}
+          markers={events.map((e) => ({
+            date: e.date,
+            position: "aboveBar",
+            color: "#de6b5a",
+            shape: "arrowDown",
+            text: "π top",
+          }))}
+        />
+      );
+    }
+    case "benfords-law": {
+      const { benford } = loadDistributions();
+      return (
+        <CategoryBars
+          categories={benford.map((b) => String(b.digit))}
+          series={[
+            { label: "BTC daily closes", color: "#e6a144", values: benford.map((b) => b.actual) },
+            { label: "Benford expected", color: "#8ba7c9", values: benford.map((b) => b.expected) },
+          ]}
+        />
+      );
+    }
+    case "price-milestone-crossings":
+      return (
+        <MilestoneChart
+          events={loadDistributions().milestones}
+          dates={loadMetrics().rows.map((r) => r.date)}
+        />
+      );
+    case "days-since-percentage-decline":
+      return daysSinceBody("declines");
+    case "days-since-percentage-gain":
+      return daysSinceBody("gains");
     default:
       notFound();
   }

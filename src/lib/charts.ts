@@ -78,6 +78,146 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "quarterly-returns",
+    title: "Quarterly Returns",
+    category: "Returns",
+    description: "Close-to-close returns for each calendar quarter across the full history.",
+    explanation: [
+      "Each cell is one quarter's return, measured from the prior quarter's final daily close. Green closed up, red closed down, intensity scaled to the size of the move.",
+      "Quarters smooth out the noise that monthly cells still carry: Q4's historical strength and Q3's weakness stand out clearly, and each year compresses into four readable numbers. Q2 2011 or Q1 2013 style outliers also make it obvious which quarters defined their entire cycle.",
+    ],
+  },
+  {
+    slug: "monthly-average-roi",
+    title: "Monthly Average ROI",
+    category: "Returns",
+    description: "The average return of each calendar month across all years.",
+    explanation: [
+      "Each bar averages every January, every February, and so on across Bitcoin's full history — the long-run seasonal fingerprint of the market.",
+      "Averages hide variance: a +10% average month can still lose money four years out of ten. Read this next to the Monthly Returns heatmap, which shows the spread behind each bar. Small-sample caveat applies — there are only ~15 observations per month.",
+    ],
+  },
+  {
+    slug: "historical-monthly-average-roi",
+    title: "Historical Monthly ROI by Year",
+    category: "Returns",
+    description: "Each month's return shown separately for every year.",
+    explanation: [
+      "The grouped bars break the Monthly Average ROI apart: within each month, one bar per year. This shows the distribution behind the seasonal average — how often October actually delivered, and how wild the spread is.",
+      "Hover any bar for its exact year and value. The dominance of a few enormous early-cycle months (2011–2013) is a useful reminder of why averages alone mislead.",
+    ],
+  },
+  {
+    slug: "average-daily-returns",
+    title: "Average Daily Returns",
+    category: "Returns",
+    description: "Average return on investment for any given day of the month.",
+    explanation: [
+      "Each bar is the average daily % change for that day of the month across all years — day 1 averages every 1st of the month in history, and so on.",
+      "This is the chart behind \"best day to DCA\" folklore. The honest reading: differences between days are small relative to daily volatility, so treat any pattern here as weak evidence — which is itself useful to know before over-optimizing a DCA schedule.",
+    ],
+  },
+  {
+    slug: "price-drawdown-ath",
+    title: "Price Drawdown From ATH",
+    category: "Returns",
+    description: "Percentage drawdown from the most recent all-time high.",
+    explanation: [
+      "The line shows how far price sits below the highest close ever reached up to that point. Zero means a new all-time high; the deep troughs are the bear-market capitulations (−93% in 2011, −84% in 2015, −83% in 2018, −77% in 2022).",
+      "Two uses: gauging where the current decline ranks against history, and internalizing Bitcoin's true risk profile — every cycle so far has spent years more than 50% below its high. Note the progressively shallower cycle lows, consistent with a maturing (lower-volatility) asset.",
+    ],
+  },
+  {
+    slug: "volatility",
+    title: "Volatility",
+    category: "Momentum",
+    description: "The 30/60/180 day volatility, equal to the standard deviation of logarithmic returns.",
+    explanation: [
+      "Each line is the standard deviation of daily log returns over a rolling window, in percent per day. The 30-day line reacts fast; the 180-day line shows the regime.",
+      "Volatility clusters: calm periods and violent periods each persist. Historically, multi-month volatility compression (all three lines low and converging) has preceded large directional moves — the coiled-spring pattern — while volatility peaks coincide with capitulations and blow-off tops. The long-term trend is also visibly downward as the asset matures.",
+    ],
+  },
+  {
+    slug: "golden-death-crosses",
+    title: "Golden/Death Crosses",
+    category: "Momentum",
+    description: "Golden crosses (50d SMA over 200d) and death crosses (under) marked on price.",
+    explanation: [
+      "A golden cross is the 50-day SMA crossing above the 200-day SMA; a death cross is the reverse. Markers show each event on the price history with both averages plotted.",
+      "The classical reading — golden bullish, death bearish — is right about half the time in crypto, because the signal lags: crosses confirm a trend that is already months old, and choppy markets produce whipsaws (a cross followed quickly by its opposite). The interesting historical pattern is that death crosses have often landed near local bottoms rather than before further decline.",
+    ],
+  },
+  {
+    slug: "moving-average-convergence-divergence",
+    title: "MACD",
+    category: "Momentum",
+    description: "The MACD indicator measures changes in strength, direction and momentum.",
+    explanation: [
+      "MACD is the gap between the 12- and 26-day EMAs (the orange line), with a 9-day EMA of that gap as the signal line, and the histogram showing their difference. Positive and rising = accelerating upward momentum.",
+      "The standard signals: MACD crossing its signal line (short-term momentum shifts) and zero-line crossings (trend direction changes). On an asset this volatile the daily MACD fires often — the higher-value readings are divergences at extremes, where price makes a new high or low that the MACD refuses to confirm.",
+    ],
+  },
+  {
+    slug: "bollinger-bands",
+    title: "Bollinger Bands",
+    category: "Momentum",
+    description: "Bollinger Bands create signals when an asset is either oversold or overbought.",
+    explanation: [
+      "The bands sit two standard deviations above and below a 20-day moving average, so they widen when volatility rises and squeeze when it falls. Roughly 95% of closes fall inside them by construction.",
+      "Two classic reads: the squeeze (unusually narrow bands mark volatility compression that tends to resolve violently) and band walks (in strong trends price rides the upper or lower band for weeks — touching a band is not by itself a reversal signal).",
+    ],
+  },
+  {
+    slug: "pi-cycle-bottom-top",
+    title: "Pi Cycle Bottom/Top",
+    category: "Momentum",
+    description: "Local price bottom/top indicator using the crossover of the 111D SMA and the 2×350D SMA.",
+    explanation: [
+      "When the fast 111-day SMA crosses above twice the 350-day SMA, the Pi Cycle Top has historically flagged cycle peaks with eerie precision — within days of the 2013, 2017 and 2021 tops. The name comes from 350/111 ≈ π.",
+      "It is a curve-fit discovery, not a theory — there is no economic reason the ratio should be π — so treat each new cycle as an out-of-sample test. It fires rarely (a handful of events in 15 years), which is exactly what makes it worth marking on the chart.",
+    ],
+  },
+  {
+    slug: "benfords-law",
+    title: "Benford's Law",
+    category: "Other",
+    description: "The probability of an asset having a certain leading digit (1, 2, ..., 9).",
+    explanation: [
+      "Benford's Law says that in many naturally occurring datasets, smaller leading digits dominate: numbers starting with 1 appear ~30% of the time, with 9 under 5%. The bars compare Bitcoin's daily closing prices against that theoretical curve.",
+      "Data spanning many orders of magnitude (like a price that went from $0.07 to $120k) should follow Benford closely — and Bitcoin does, which is a neat statistical fingerprint of organic, multiplicative growth. Strong deviations in other assets can hint at manipulated or range-pinned prices.",
+    ],
+  },
+  {
+    slug: "price-milestone-crossings",
+    title: "Price Milestone Crossings",
+    category: "Other",
+    description: "How many times has BTC price crossed various price milestones?",
+    explanation: [
+      "Each dot marks a day when price crossed a round-number milestone ($1k, $10k, $20k, …) in either direction. Clusters of dots at one level show price churning around that milestone; a level with a single dot was crossed once and never revisited.",
+      "Round numbers act as psychological support and resistance, and this chart makes the battlegrounds visible — the $10k and $20k levels were each crossed dozens of times before finally being left behind, while levels conquered in strong trends barely register a second dot.",
+    ],
+  },
+  {
+    slug: "days-since-percentage-decline",
+    title: "Days Since % Decline",
+    category: "Other",
+    description: "The amount of days since a single-day percentage decline occurred.",
+    explanation: [
+      "The counter rises by one each day and resets to zero whenever a daily drop of at least the chosen size (5%, 10%, 20%) occurs, with price shown behind it for context.",
+      "Long stretches without a big red day are a feature of maturing bull markets — and the counter's height going into a top measures how complacent the market had become. The declining frequency of 10%+ days across the years is also one of the cleanest views of Bitcoin's falling volatility.",
+    ],
+  },
+  {
+    slug: "days-since-percentage-gain",
+    title: "Days Since % Gain",
+    category: "Other",
+    description: "The amount of days since a certain single-day percentage gain has occurred.",
+    explanation: [
+      "The mirror image of Days Since % Decline: the counter resets whenever a single-day gain of at least the chosen size occurs.",
+      "Big green days cluster in two regimes: euphoric bull runs and violent bear-market rallies. A very tall counter means the market has gone a long time without explosive upside — historically common in late bears and early accumulation phases, when volatility is compressed.",
+    ],
+  },
+  {
     slug: "monthly-returns",
     title: "Monthly Returns",
     category: "Returns",

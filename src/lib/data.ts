@@ -33,6 +33,70 @@ export function loadYtdRoi(asset = "btc"): YearSeries[] {
   return loadJson<YearSeries[]>("metrics", asset, "ytd-roi.json");
 }
 
+export interface TaRow {
+  date: string;
+  close: number;
+  drawdown: number | null;
+  vol30: number | null;
+  vol60: number | null;
+  vol180: number | null;
+  macd: number | null;
+  macdSignal: number | null;
+  macdHist: number | null;
+  bbUpper: number | null;
+  bbMid: number | null;
+  bbLower: number | null;
+  sma50d: number | null;
+  sma200d: number | null;
+  sma111d: number | null;
+  sma350x2: number | null;
+}
+
+export function loadTa(asset = "btc"): { rows: TaRow[] } {
+  return loadJson("metrics", asset, "ta.json");
+}
+
+export interface CrossEvent {
+  date: string;
+  type: "up" | "down";
+}
+
+export function loadEvents(asset = "btc"): { goldenDeath: CrossEvent[]; piCycle: CrossEvent[] } {
+  return loadJson("metrics", asset, "events.json");
+}
+
+export interface DaysSinceFile {
+  dates: string[];
+  declines: { threshold: number; days: number[] }[];
+  gains: { threshold: number; days: number[] }[];
+}
+
+export function loadDaysSince(asset = "btc"): DaysSinceFile {
+  return loadJson("metrics", asset, "days-since.json");
+}
+
+export interface DistributionsFile {
+  benford: { digit: number; actual: number; expected: number }[];
+  milestones: { date: string; level: number }[];
+  quarterly: { year: number; quarter: number; pct: number }[];
+  avgDaily: { day: number; avg: number }[];
+}
+
+export function loadDistributions(asset = "btc"): DistributionsFile {
+  return loadJson("metrics", asset, "distributions.json");
+}
+
+export function taPoints(
+  rows: TaRow[],
+  pick: (r: TaRow) => number | null,
+  fromDate = "",
+): { date: string; value: number }[] {
+  return rows.flatMap((r) => {
+    const v = pick(r);
+    return v === null || r.date < fromDate ? [] : [{ date: r.date, value: v }];
+  });
+}
+
 export function metricPoints(
   rows: FullMetricRow[],
   pick: (r: FullMetricRow) => number | null,
