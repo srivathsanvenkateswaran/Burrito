@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ColorType,
   createChart,
@@ -37,6 +37,7 @@ export default function DaysAxisChart({
   height?: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hidden, setHidden] = useState<string[]>([]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -69,7 +70,9 @@ export default function DaysAxisChart({
       },
     });
 
+    let thresholdsDrawn = false;
     series.forEach((def, idx) => {
+      if (hidden.includes(def.label)) return;
       const s = chart.addSeries(LineSeries, {
         color: def.color,
         lineWidth: (def.lineWidth ?? 2) as 1 | 2 | 3 | 4,
@@ -83,7 +86,7 @@ export default function DaysAxisChart({
           value: p.value,
         })),
       );
-      if (idx === 0) {
+      if (!thresholdsDrawn) {
         for (const t of thresholds) {
           s.createPriceLine({
             price: t.value,
@@ -94,6 +97,7 @@ export default function DaysAxisChart({
             title: t.label,
           });
         }
+        thresholdsDrawn = true;
       }
     });
 
@@ -102,20 +106,34 @@ export default function DaysAxisChart({
       cancelAnimationFrame(raf);
       chart.remove();
     };
-  }, [series, log, thresholds]);
+  }, [series, log, thresholds, hidden]);
+
+  const toggle = (label: string) =>
+    setHidden((h) => (h.includes(label) ? h.filter((l) => l !== label) : [...h, label]));
 
   return (
     <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
-      <div className="flex flex-wrap items-center gap-3 border-b border-line/70 px-4 py-2.5">
-        {series.map((s) => (
-          <span key={s.label} className="flex items-center gap-1.5 text-xs text-muted">
-            <span
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ backgroundColor: s.color }}
-            />
-            {s.label}
-          </span>
-        ))}
+      <div className="flex flex-wrap items-center gap-1.5 border-b border-line/70 px-4 py-3">
+        {series.map((s) => {
+          const active = !hidden.includes(s.label);
+          return (
+            <button
+              key={s.label}
+              onClick={() => toggle(s.label)}
+              className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
+                active
+                  ? "border-faint/60 text-fg"
+                  : "border-line text-faint hover:border-faint/60"
+              }`}
+            >
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ backgroundColor: s.color, opacity: active ? 1 : 0.35 }}
+              />
+              {s.label}
+            </button>
+          );
+        })}
         <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
           x-axis: days since event
         </span>
