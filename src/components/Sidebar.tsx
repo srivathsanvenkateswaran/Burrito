@@ -33,8 +33,8 @@ export default function Sidebar() {
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col overflow-y-auto border-r border-line px-3 py-5">
       <Link href="/" className="mb-7 block px-3">
-        <span className="font-display text-[26px] italic tracking-wide text-fg">
-          burrito<span className="not-italic text-accent">.</span>
+        <span className="font-display text-2xl font-extrabold tracking-tight text-fg">
+          Burrito<span className="text-accent">.</span>
         </span>
         <span className="mt-0.5 block text-xs text-faint">
           every market, one tortilla

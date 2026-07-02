@@ -46,7 +46,7 @@ export default function Home() {
           <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
             Dashboard
           </div>
-          <h1 className="mt-1 font-display text-3xl italic tracking-wide">Bitcoin</h1>
+          <h1 className="mt-1 font-display text-3xl font-bold tracking-tight">Bitcoin</h1>
         </div>
         <div className="text-right">
           <div className="font-mono text-xl">

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Instrument_Serif, Schibsted_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import "./globals.css";
 
@@ -14,15 +14,14 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
 });
 
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
-  weight: "400",
-  style: ["normal", "italic"],
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  weight: ["700", "800"],
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "burrito",
+  title: "Burrito",
   description: "every market, one tortilla — quantitative market analysis",
 };
 
@@ -34,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${schibsted.variable} ${plexMono.variable} ${instrument.variable} h-full antialiased`}
+      className={`${schibsted.variable} ${plexMono.variable} ${bricolage.variable} h-full antialiased`}
     >
       <body className="flex min-h-full">
         <Sidebar />

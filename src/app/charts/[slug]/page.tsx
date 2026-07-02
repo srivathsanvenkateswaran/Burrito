@@ -88,7 +88,7 @@ export default async function ChartPage({
         <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
           {def.category} · BTC
         </div>
-        <h1 className="mt-1 font-display text-3xl italic tracking-wide">{def.title}</h1>
+        <h1 className="mt-1 font-display text-3xl font-bold tracking-tight">{def.title}</h1>
         <p className="mt-1.5 max-w-2xl text-sm text-muted">{def.description}</p>
       </header>
       <ChartBody slug={slug} />
