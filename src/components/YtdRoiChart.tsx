@@ -35,6 +35,18 @@ function ts(md: string): UTCTimestamp {
   return (Date.parse(`2000-${md}T00:00:00Z`) / 1000) as UTCTimestamp;
 }
 
+/** The 4-year cycle rhythm, anchored to the 2012 halving; self-extends. */
+const PRESETS: { label: string; pick: (years: number[]) => number[] }[] = [
+  { label: "last 3", pick: (ys) => ys.slice(-3) },
+  { label: "halving", pick: (ys) => ys.filter((y) => (y - 2012) % 4 === 0) },
+  { label: "post-halving", pick: (ys) => ys.filter((y) => (y - 2013) % 4 === 0) },
+  { label: "bear", pick: (ys) => ys.filter((y) => (y - 2014) % 4 === 0) },
+];
+
+function sameSet(a: number[], b: number[]): boolean {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+}
+
 export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const years = data.map((d) => d.year);
@@ -118,7 +130,25 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
 
   return (
     <div className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
-      <div className="flex flex-wrap items-center gap-1.5 border-b border-line/70 px-4 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b border-line/70 px-4 py-3">
+        <div className="flex gap-0.5 rounded-md bg-ink p-0.5">
+          {PRESETS.map(({ label, pick }) => {
+            const active = sameSet(selected, pick(years));
+            return (
+              <button
+                key={label}
+                onClick={() => setSelected(pick(years))}
+                className={`rounded px-2.5 py-1 font-mono text-xs transition-colors ${
+                  active ? "bg-fg text-ink" : "text-muted hover:bg-raise hover:text-fg"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+        <div className="h-4 w-px bg-line" />
+        <div className="flex flex-wrap items-center gap-1.5">
         {years.map((y) => {
           const active = selected.includes(y);
           return (
@@ -142,6 +172,7 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
             </button>
           );
         })}
+        </div>
       </div>
       <div className="p-3">
         <div ref={containerRef} className="h-[52vh] min-h-[360px] w-full" />
