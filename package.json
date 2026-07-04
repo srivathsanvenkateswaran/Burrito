@@ -9,7 +9,8 @@
     "lint": "eslint",
     "data:backfill": "tsx scripts/backfill.ts",
     "data:update": "tsx scripts/update.ts",
-    "data:compute": "tsx scripts/compute.ts"
+    "data:compute": "tsx scripts/compute.ts",
+    "data:external": "tsx scripts/fetch-external.ts"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",

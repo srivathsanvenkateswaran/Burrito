@@ -23,7 +23,15 @@ export interface RiskPricePoint {
   risk: number | null;
 }
 
-export default function RiskColoredPrice({ points }: { points: RiskPricePoint[] }) {
+export default function RiskColoredPrice({
+  points,
+  legendText = "low risk → high risk",
+  gradientCss = "linear-gradient(90deg, rgb(130,181,122), rgb(230,161,68), rgb(222,107,90))",
+}: {
+  points: RiskPricePoint[];
+  legendText?: string;
+  gradientCss?: string;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const cc = useChartColors();
@@ -80,11 +88,9 @@ export default function RiskColoredPrice({ points }: { points: RiskPricePoint[] 
       <div className="flex flex-wrap items-center gap-2 border-b border-line/70 px-4 py-2.5 text-xs text-muted">
         <span
           className="h-2 w-24 rounded-full"
-          style={{
-            background: "linear-gradient(90deg, rgb(130,181,122), rgb(230,161,68), rgb(222,107,90))",
-          }}
+          style={{ background: gradientCss }}
         />
-        low risk → high risk
+        {legendText}
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <DateRangeBar
             min={points[0]?.date ?? ""}

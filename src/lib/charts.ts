@@ -320,6 +320,40 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "fear-greed-index",
+    title: "Fear & Greed Index",
+    category: "Sentiment",
+    description: "Bitcoin price color coded by the crypto Fear & Greed Index.",
+    explanation: [
+      "The Fear & Greed Index (published daily by alternative.me since 2018) blends volatility, momentum, social media activity, dominance, and survey data into a 0–100 sentiment score: 0 is extreme fear, 100 is extreme greed. Here it's painted onto the price line — red stretches are fearful markets, green stretches greedy ones.",
+      "The contrarian reading is the useful one: extreme fear has historically clustered near local and cycle bottoms (when buying felt impossible), and extreme greed near tops. It agrees with the risk metric surprisingly often despite measuring completely different inputs — sentiment versus valuation.",
+      "Grey price history before February 2018 predates the index. Sentiment is fast and noisy — treat single-day readings as weather, multi-week extremes as climate.",
+    ],
+  },
+  {
+    slug: "qt-ending-bear-markets",
+    title: "QT Ending Bear Markets",
+    category: "Macro",
+    description:
+      "Bitcoin against the Fed's balance sheet, with Quantitative Tightening episodes marked.",
+    explanation: [
+      "Quantitative Tightening (QT) is the Federal Reserve shrinking its balance sheet — draining the liquidity that QE injected. The blue line is the Fed's total assets (FRED series WALCL); the markers flag when each QT episode started and ended. Bitcoin, the most liquidity-sensitive large asset in existence, has lived and died by this line.",
+      "The pattern this chart is named for: both of Bitcoin's deepest modern bears happened *during* QT — the 2018 bear during QT1 (ended August 2019) and the 2022 bear during QT2 — and the endings of QT have historically marked the transition back to easier conditions that bull markets grew out of.",
+      "The current setup is why this chart matters now: the balance sheet stopped shrinking around late 2025 and has begun ticking up — QT2 is effectively over — while BTC sits deep in a drawdown. If the 2019 rhyme holds, this is the part of the cycle where liquidity stops being a headwind. A rhyme, not a law.",
+    ],
+  },
+  {
+    slug: "btc-vs-dxy",
+    title: "BTC vs. DXY",
+    category: "Other",
+    description: "Bitcoin against the US Dollar Index — historically strongly negatively correlated.",
+    explanation: [
+      "The DXY measures the dollar's strength against a basket of major currencies (euro, yen, pound, and others). Bitcoin, priced in dollars and behaving like a liquidity-sensitive risk asset, has historically moved inversely to it: dollar strength coincides with BTC weakness and vice versa.",
+      "The big alignments are striking: the 2021 crypto top formed as DXY bottomed, the 2022 bear market tracked DXY's violent rally to 114, and BTC's recoveries have coincided with dollar retreats. The mechanism is macro: a rising dollar usually means tightening global liquidity — the tide that floats or sinks all risk assets.",
+      "BTC is on the log scale (right axis), DXY linear (left). The correlation is a regime, not a law — it weakens in quiet macro periods and tightens when the Fed dominates the narrative.",
+    ],
+  },
+  {
     slug: "benfords-law",
     title: "Benford's Law",
     category: "Other",

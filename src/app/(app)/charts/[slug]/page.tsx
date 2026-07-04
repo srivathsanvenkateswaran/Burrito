@@ -3,9 +3,12 @@ import { CHARTS, chartBySlug } from "@/lib/charts";
 import {
   loadDaysSince,
   loadDistributions,
+  loadDxy,
   loadEventRoi,
   loadEvents,
   loadFan,
+  loadFearGreed,
+  loadFedAssets,
   loadMetrics,
   loadMonthlyReturns,
   loadRoiBands,
@@ -332,6 +335,56 @@ function ChartBody({ slug }: { slug: string }) {
           points={rows.map((r) => ({ date: r.date, close: r.close, risk: r.risk }))}
         />
       );
+    case "fear-greed-index": {
+      const fng = new Map(loadFearGreed().rows.map((r) => [r.date, r.value]));
+      return (
+        <RiskColoredPrice
+          points={rows.map((r) => {
+            const v = fng.get(r.date);
+            // riskColor is green→red over 0..1, so invert: greed green, fear red
+            return { date: r.date, close: r.close, risk: v === undefined ? null : 1 - v / 100 };
+          })}
+          legendText="extreme greed → extreme fear"
+        />
+      );
+    }
+    case "qt-ending-bear-markets": {
+      const fed = loadFedAssets().rows.filter((r) => r.date >= "2014-01-01");
+      const QT = [
+        { date: "2017-10-04", type: "start" as const, label: "QT1 starts" },
+        { date: "2019-08-01", type: "end" as const, label: "QT1 ends" },
+        { date: "2022-06-01", type: "start" as const, label: "QT2 starts" },
+        { date: "2025-12-31", type: "end" as const, label: "QT2 ends" },
+      ];
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "BTC/USD (log, right)", color: "#e6a144", points: rows.filter((r) => r.date >= "2014-01-01").map((r) => ({ date: r.date, value: r.close })) },
+            { label: "Fed total assets, $B (left)", color: "#8ba7c9", scale: "left", lineWidth: 1, points: fed.map((r) => ({ date: r.date, value: r.value })) },
+          ]}
+          markers={QT.map((q) => ({
+            date: q.date,
+            position: q.type === "start" ? "aboveBar" : "belowBar",
+            color: q.type === "start" ? "#de6b5a" : "#82b57a",
+            shape: q.type === "start" ? "arrowDown" : "arrowUp",
+            text: q.label,
+          }))}
+        />
+      );
+    }
+    case "btc-vs-dxy": {
+      const dxyRows = loadDxy().rows.filter((r) => r.date >= "2010-08-18");
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "BTC/USD (log, right)", color: "#e6a144", points: rows.map((r) => ({ date: r.date, value: r.close })) },
+            { label: "DXY (left)", color: "#8ba7c9", scale: "left", lineWidth: 1, points: dxyRows.map((r) => ({ date: r.date, value: r.close })) },
+          ]}
+        />
+      );
+    }
     case "risk-time": {
       const counts = new Array(10).fill(0);
       for (const r of rows) {
