@@ -34,8 +34,8 @@ export default function Sidebar({ variant = "desktop" }: { variant?: "desktop" |
     <aside
       className={
         variant === "desktop"
-          ? "sticky top-0 hidden h-screen w-60 shrink-0 flex-col overflow-y-auto border-r border-line px-3 py-5 md:flex"
-          : "flex h-full w-64 flex-col overflow-y-auto bg-ink px-3 py-5"
+          ? "app-chrome sticky top-0 hidden h-screen w-60 shrink-0 flex-col overflow-y-auto border-r border-line px-3 py-5 md:flex"
+          : "app-chrome flex h-full w-64 flex-col overflow-y-auto bg-ink px-3 py-5"
       }
     >
       <Link href="/" className="mb-7 block px-3">

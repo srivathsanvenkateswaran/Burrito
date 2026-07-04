@@ -70,6 +70,22 @@
   color-scheme: light;
 }
 
+/* fiesta: the app chrome (sidebar + header) wears verde bandera — the flag's
+   green band — by re-scoping the theme tokens inside chrome containers */
+.fiesta .app-chrome {
+  background-color: #10402a;
+  --ink: #0c3421;
+  --surface: #164a30;
+  --raise: #1d5639;
+  --line: #2a6144;
+  --fg: #eef5ec;
+  --muted: #b9cfbe;
+  --faint: #7fa189;
+  --accent: #f4d35e; /* a touch of gold for active states on verde */
+  --gain: #8fd6a0;
+  --loss: #f0705c;
+}
+
 /* fiesta signature: papel-picado fringe on elements opting in via .papel-edge */
 .fiesta .papel-edge {
   position: relative;
