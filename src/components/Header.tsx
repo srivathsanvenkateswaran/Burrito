@@ -1,5 +1,6 @@
 import Link from "next/link";
 import MobileSidebar from "./MobileSidebar";
+import SearchPalette from "./SearchPalette";
 import ThemeToggle from "./ThemeToggle";
 
 interface Props {
@@ -32,6 +33,7 @@ export default function Header({ price, changePct, risk, date }: Props) {
         {date}
       </span>
       <div className="ml-auto flex items-center gap-2">
+        <SearchPalette />
         <Link
           href="/"
           className="hidden rounded-md border border-line px-2.5 py-1.5 text-xs text-muted transition-colors hover:border-faint/60 hover:text-fg sm:inline"

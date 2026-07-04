@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SearchPalette from "@/components/SearchPalette";
 import ThemeToggle from "@/components/ThemeToggle";
 import { CHARTS } from "@/lib/charts";
 import { loadMetrics, loadTa } from "@/lib/data";
@@ -54,6 +55,7 @@ export default function Landing() {
           Burrito<span className="text-accent">.</span>
         </span>
         <div className="flex items-center gap-2">
+          <SearchPalette />
           <ThemeToggle />
           <Link
             href="/dashboard"
@@ -76,8 +78,9 @@ export default function Landing() {
               one tortilla<span className="text-accent">.</span>
             </h1>
             <p className="mt-5 max-w-md text-base leading-relaxed text-muted">
-              {CHARTS.length} charts of Bitcoin risk, cycles, and returns — recomputed
-              daily from raw market data. No hype, no paywall, just math on a warm plate.
+              {CHARTS.length} charts of crypto risk, cycles, on-chain, breadth, and macro
+              — recomputed daily from raw data. No hype, no paywall, just math on a warm
+              plate.
             </p>
             <div className="mt-7 flex gap-3">
               <Link
