@@ -19,14 +19,10 @@ on-chain, breadth, derivatives, and US macro. Recomputed daily. Running cost: **
 
 https://github.com/srivathsanvenkateswaran/Burrito/raw/main/.github/media/launch-video.mp4
 
-*(The launch video itself was built with AI — written as HTML compositions in burrito's own design
-tokens and rendered to MP4 with [HyperFrames](https://github.com/heygen-com/hyperframes), one
-agent per scene.)*
-
 ## What is this?
 
-A personal clone of the paid crypto-analytics platforms — built solo in a few days with
-[Claude Code](https://claude.com/claude-code), on entirely free data. Highlights:
+A personal clone of the paid crypto-analytics platforms — built solo, from scratch, on
+entirely free data. Highlights:
 
 - **Own risk model** — a 0–1 risk metric read from an asymmetric quadratic **quantile
   regression fan** fitted to each asset's full history (independently implemented; scores
