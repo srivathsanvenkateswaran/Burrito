@@ -17,10 +17,12 @@
     "data:onchain": "tsx scripts/fetch-onchain.ts && tsx scripts/fetch-onchain-bc.ts && tsx scripts/fetch-wiki.ts",
     "data:compute-onchain": "tsx scripts/compute-onchain.ts",
     "data:fred": "tsx scripts/fetch-fred.ts",
-    "data:derivs": "tsx scripts/fetch-derivs.ts"
+    "data:derivs": "tsx scripts/fetch-derivs.ts",
+    "docs:generate": "tsx scripts/generate-docs.ts"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",
+    "marked": "^18.0.5",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4"

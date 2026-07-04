@@ -46,6 +46,8 @@ jobs:
 
       - run: npm run data:compute-onchain
 
+      - run: npm run docs:generate
+
       - name: Commit and push if data changed
         run: |
           if git diff --quiet -- data/; then
@@ -54,6 +56,6 @@ jobs:
           fi
           git config user.name "burrito-bot"
           git config user.email "actions@github.com"
-          git add data/
+          git add data/ docs/ public/burrito-vault.zip
           git commit -m "data: daily update $(date -u +%F)"
           git push
