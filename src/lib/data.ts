@@ -58,6 +58,7 @@ export interface AssetSummary {
   shortHistory: boolean;
   mayer: number | null;
   above20w: boolean | null;
+  maStrength?: { p20: boolean; s20_50: boolean; s50_100: boolean; s100_200: boolean };
   stale: boolean;
 }
 
@@ -84,6 +85,52 @@ export function loadMcapAggregates(): { rows: McapAggRow[] } {
 
 export function loadAltseason(): { rows: { date: string; value: number }[] } {
   return loadJson("metrics", "altseason.json");
+}
+
+export function loadAssetDaily(id: string): { rows: { date: string; close: number }[] } {
+  return loadJson("raw", id, "daily.json");
+}
+
+export function loadBreadth(): {
+  rows: {
+    date: string;
+    adv: number;
+    dec: number;
+    advPct: number | null;
+    adi: number;
+    abi: number;
+    above20wPct: number | null;
+  }[];
+} {
+  return loadJson("metrics", "breadth.json");
+}
+
+export function loadPortfolios(): {
+  rows: { date: string; top5: number; top10: number; top20: number; btc: number }[];
+} {
+  return loadJson("metrics", "portfolios.json");
+}
+
+export function loadCorrelations(): { ids: string[]; matrix: (number | null)[][] } {
+  return loadJson("metrics", "correlations.json");
+}
+
+export interface ComparisonLine {
+  id: string;
+  points: { day: number; mult: number }[];
+}
+
+export function loadComparisons(): {
+  anchors: { bottom: string; peak: string; ethBottoms: string[] };
+  fromBottom: ComparisonLine[];
+  fromPeak: ComparisonLine[];
+  pairsFromBottom: ComparisonLine[];
+  pairsFromPeak: ComparisonLine[];
+  inception: ComparisonLine[];
+  pairsInception: ComparisonLine[];
+  ethSubCycle: ComparisonLine[];
+} {
+  return loadJson("metrics", "comparisons.json");
 }
 
 export interface OnchainBtcRow {

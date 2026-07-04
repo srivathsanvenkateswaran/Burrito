@@ -2,7 +2,11 @@ import { notFound } from "next/navigation";
 import { CHARTS, chartBySlug } from "@/lib/charts";
 import {
   loadAltseason,
+  loadAssetDaily,
   loadAssetsSummary,
+  loadBreadth,
+  loadComparisons,
+  loadCorrelations,
   loadDaysSince,
   loadDistributions,
   loadDxy,
@@ -16,6 +20,7 @@ import {
   loadMonthlyReturns,
   loadOnchainBtc,
   loadOnchainEth,
+  loadPortfolios,
   loadRoiBands,
   loadWiki,
   onchainPoints,
@@ -36,6 +41,10 @@ import PeriodHeatmap from "@/components/PeriodHeatmap";
 import MilestoneChart from "@/components/MilestoneChart";
 import ChartCard from "@/components/ChartCard";
 import AssetTable from "@/components/AssetTable";
+import CryptoHeatmap from "@/components/CryptoHeatmap";
+import CorrelationMatrix from "@/components/CorrelationMatrix";
+import MaStrengthTable from "@/components/MaStrengthTable";
+import HypotheticalsTable from "@/components/HypotheticalsTable";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const YEAR_PALETTE = [
@@ -358,6 +367,125 @@ function ChartBody({ slug }: { slug: string }) {
     }
     case "risk-dashboard":
       return <AssetTable assets={loadAssetsSummary().assets} />;
+    case "heatmap":
+      return <CryptoHeatmap assets={loadAssetsSummary().assets} />;
+    case "market-capitalization-hypotheticals":
+      return <HypotheticalsTable assets={loadAssetsSummary().assets} />;
+    case "color-coded-moving-average-strength":
+      return <MaStrengthTable assets={loadAssetsSummary().assets} />;
+    case "correlation-coefficients": {
+      const { ids, matrix } = loadCorrelations();
+      return <CorrelationMatrix ids={ids} matrix={matrix} />;
+    }
+    case "portfolios-weighted-by-market-cap": {
+      const pf = loadPortfolios().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "top 5 (mcap-weighted)", color: "#e6a144", points: pf.map((r) => ({ date: r.date, value: r.top5 })) },
+            { label: "top 10", color: "#8ba7c9", points: pf.map((r) => ({ date: r.date, value: r.top10 })) },
+            { label: "top 20", color: "#b391bf", points: pf.map((r) => ({ date: r.date, value: r.top20 })) },
+            { label: "BTC only", color: "#82b57a", points: pf.map((r) => ({ date: r.date, value: r.btc })) },
+          ]}
+          thresholds={[{ value: 100, color: "rgba(162,147,130,0.5)", label: "start (2019)" }]}
+        />
+      );
+    }
+    case "advance-decline-ratios": {
+      const b = loadBreadth().rows;
+      return (
+        <MetricChart
+          points={b.flatMap((r) => (r.advPct === null ? [] : [{ date: r.date, value: r.advPct }]))}
+          height={460}
+          thresholds={[{ value: 50, color: "rgba(162,147,130,0.5)", label: "even" }]}
+        />
+      );
+    }
+    case "advance-decline-index": {
+      const b = loadBreadth().rows;
+      return (
+        <MetricChart
+          points={b.map((r) => ({ date: r.date, value: r.adi }))}
+          color="#8ba7c9"
+          height={460}
+        />
+      );
+    }
+    case "absolute-breadth-index": {
+      const b = loadBreadth().rows;
+      return (
+        <MultiSeriesChart
+          series={[{ label: "|advances − declines|", color: "#b391bf", type: "histogram", points: b.map((r) => ({ date: r.date, value: r.abi })) }]}
+        />
+      );
+    }
+    case "above-below-ma": {
+      const b = loadBreadth().rows;
+      return (
+        <MetricChart
+          points={b.flatMap((r) => (r.above20wPct === null ? [] : [{ date: r.date, value: r.above20wPct }]))}
+          colorByValue
+          height={460}
+          thresholds={[
+            { value: 80, color: "rgba(222,107,90,0.7)", label: "broad bull" },
+            { value: 20, color: "rgba(130,181,122,0.7)", label: "washout" },
+          ]}
+        />
+      );
+    }
+    case "does-it-bleed": {
+      const anchor = "2024-07-01";
+      const btcSeries = loadMetrics().rows.filter((r) => r.date >= anchor);
+      const btcMap = new Map(btcSeries.map((r) => [r.date, r.close]));
+      const btcBase = btcSeries[0].close;
+      const majors = ["eth", "sol", "bnb", "xrp", "ada", "doge", "link", "avax"];
+      const summary = loadAssetsSummary().assets.filter((a) => a.id !== "btc" && !a.stale);
+      return (
+        <DaysAxisChart
+          log
+          series={summary.map((a, i) => {
+            const rows = loadAssetDaily(a.id).rows.filter((r) => r.date >= anchor);
+            const base = rows[0];
+            const baseRatio = base ? base.close / (btcMap.get(base.date) ?? btcBase) : 1;
+            return {
+              label: a.symbol,
+              color: ASSET_PALETTE[i % ASSET_PALETTE.length],
+              points: rows.flatMap((r, day) => {
+                const b = btcMap.get(r.date);
+                return b ? [{ day, value: Number((r.close / b / baseRatio).toFixed(4)) }] : [];
+              }),
+            };
+          })}
+          defaultHidden={summary.filter((a) => !majors.includes(a.id)).map((a) => a.symbol)}
+          thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "vs BTC breakeven" }]}
+        />
+      );
+    }
+    case "roi-after-bottom-comparison":
+      return comparisonChart(loadComparisons().fromBottom, ["BTC", "ETH", "SOL", "BNB", "XRP", "DOGE"]);
+    case "roi-after-cycle-bottom-for-crypto-pairs":
+      return comparisonChart(loadComparisons().pairsFromBottom, ["ETH", "SOL", "BNB", "XRP", "DOGE"]);
+    case "roi-after-inception-comparison":
+      return comparisonChart(loadComparisons().inception, ["BTC", "ETH", "SOL", "DOGE", "LINK"]);
+    case "roi-after-inception-for-crypto-pairs":
+      return comparisonChart(loadComparisons().pairsInception, ["ETH", "SOL", "DOGE", "LINK"]);
+    case "roi-after-latest-cycle-peak":
+      return comparisonChart(loadComparisons().fromPeak, ["BTC", "ETH", "SOL", "BNB", "XRP", "DOGE"]);
+    case "roi-after-latest-cycle-peak-for-crypto-pairs":
+      return comparisonChart(loadComparisons().pairsFromPeak, ["ETH", "SOL", "BNB", "XRP", "DOGE"]);
+    case "roi-after-sub-cycle-bottom":
+      return (
+        <DaysAxisChart
+          log
+          series={loadComparisons().ethSubCycle.map((l, i) => ({
+            label: l.id,
+            color: ASSET_PALETTE[i % ASSET_PALETTE.length],
+            points: l.points.map((p) => ({ day: p.day, value: p.mult })),
+          }))}
+          thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "1× (bottom)" }]}
+        />
+      );
     case "mvrv": {
       const oc = loadOnchainBtc().rows;
       return (
@@ -862,6 +990,29 @@ function ChartBody({ slug }: { slug: string }) {
 }
 
 const EVENT_COLORS = ["#8ba7c9", "#82b57a", "#e6a144", "#de6b5a", "#b391bf"];
+
+const ASSET_PALETTE = [
+  "#e6a144", "#8ba7c9", "#82b57a", "#de6b5a", "#b391bf", "#7fb5a8",
+  "#c07a4a", "#a8a862", "#cf8fa8", "#ede3d4", "#909c6b", "#c9a06a",
+];
+
+/** Multi-asset comparison on a days axis: log multiples, majors visible by default. */
+function comparisonChart(lines: { id: string; points: { day: number; mult: number }[] }[], defaultVisible: string[]) {
+  const series = lines.map((l, i) => ({
+    label: l.id.toUpperCase(),
+    color: ASSET_PALETTE[i % ASSET_PALETTE.length],
+    lineWidth: 1 as const,
+    points: l.points.map((p) => ({ day: p.day, value: p.mult })),
+  }));
+  return (
+    <DaysAxisChart
+      log
+      series={series}
+      defaultHidden={series.map((s) => s.label).filter((l) => !defaultVisible.includes(l))}
+      thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "1×" }]}
+    />
+  );
+}
 
 function eventSeries(
   groups: { label: string; points: { day: number; pct: number }[] }[],

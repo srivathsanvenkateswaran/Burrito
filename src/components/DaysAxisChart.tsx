@@ -32,15 +32,17 @@ export default function DaysAxisChart({
   log = false,
   thresholds = [],
   height = 460,
+  defaultHidden = [],
 }: {
   series: DaySeries[];
   log?: boolean;
   thresholds?: { value: number; color: string; label: string }[];
   height?: number;
+  defaultHidden?: string[];
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cc = useChartColors();
-  const [hidden, setHidden] = useState<string[]>([]);
+  const [hidden, setHidden] = useState<string[]>(defaultHidden);
 
   useEffect(() => {
     const container = containerRef.current;
