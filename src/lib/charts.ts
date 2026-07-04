@@ -331,6 +331,76 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "risk-dashboard",
+    title: "Risk Dashboard",
+    category: "Risk",
+    description: "Current risk, momentum, and cycle position across all tracked assets.",
+    explanation: [
+      "Every tracked asset gets the same treatment BTC does: its own quantile-regression fan fitted to its full price history, with risk = the price's current percentile inside that fan. The table sorts by market cap and adds 24h/30d/1y returns, the Mayer Multiple, and whether price sits above its 20-week SMA (the bull-market line).",
+      "This is the screen for relative positioning: which majors are stretched, which are washed out, and whether risk is broadly synchronized (macro-driven markets) or dispersed (rotation markets). Assets marked * have under two years of history — their fans are fitted to a single partial cycle, so read those risk values loosely.",
+    ],
+  },
+  {
+    slug: "dominance",
+    title: "Dominance",
+    category: "Market Cap",
+    description: "Each asset's market cap as a share of the total tracked crypto market cap.",
+    explanation: [
+      "Dominance is an asset's market cap divided by the whole market's. BTC dominance is the market's risk dial: money rotates from BTC into alts as cycles heat up (dominance falls) and flees back to BTC — or out entirely — in fear (dominance rises).",
+      "Our denominator is the aggregate of the ~30 tracked assets plus major stablecoins rather than every coin in existence, so levels read a few points higher than CoinMarketCap's, but the shape and turning points — which are what dominance is for — match. The classic pattern: dominance peaks near bear-market bottoms and troughs at alt-season manias.",
+    ],
+  },
+  {
+    slug: "market-cap-logarithmic-regression",
+    title: "Total Crypto Market Cap & Trendline",
+    category: "Market Cap",
+    description: "Aggregate market cap of tracked assets with a fitted trendline and bands.",
+    explanation: [
+      "The total market cap of all tracked assets (log scale) with a quantile-regression trendline: the middle curve is the median fit, the outer curves the 15th/85th percentile bands. It's the market-wide version of BTC's fair-value model.",
+      "Total market cap is arguably a better cycle gauge than BTC's price alone because it absorbs rotation: alt seasons that leave BTC flat still show up here. Note the aggregate is built from our tracked asset set, so early history (pre-2017) undercounts the then-fragmented market.",
+    ],
+  },
+  {
+    slug: "market-cap-vs-fair-value",
+    title: "Total Crypto Valuation vs. Trendline",
+    category: "Market Cap",
+    description: "Extension of the total market cap above or below its fitted trendline.",
+    explanation: [
+      "This is the trendline chart flattened into a single oscillator: the ratio of total market cap to its median trendline fit. 1.0 means the market sits exactly on trend; 2.0 means double the trend; 0.5 means half.",
+      "Cycle tops have historically pushed the ratio far above 1 and bear bottoms well below it, making this the market-wide cousin of the risk metric. Reading today's value against past extremes is the quickest \"is crypto as a whole cheap or dear?\" check on the site.",
+    ],
+  },
+  {
+    slug: "altcoin-market-capitalizations",
+    title: "Altcoin Market Capitalizations",
+    category: "Market Cap",
+    description: "The total market minus Bitcoin — and minus Ethereum and stablecoins.",
+    explanation: [
+      "Two views of the market without its anchor: total minus BTC (everything that isn't Bitcoin), and total minus BTC, ETH, and stablecoins (the speculative long tail). Log scale.",
+      "The second line is the purest alt-season gauge: stablecoins don't speculate and ETH half-behaves like a major, so what's left is the risk appetite frontier. Its cycles are more violent than BTC's in both directions — the same chart shape, amplified.",
+    ],
+  },
+  {
+    slug: "ssr",
+    title: "Stablecoin Supply Ratio (SSR)",
+    category: "Market Cap",
+    description: "Bitcoin market cap divided by the aggregate stablecoin market cap.",
+    explanation: [
+      "SSR compares Bitcoin's market cap to the combined market cap of major stablecoins (USDT, USDC, DAI). Stablecoins are the market's dry powder — capital parked on-exchange, one click from buying.",
+      "Low SSR means stablecoin buying power is large relative to Bitcoin — historically a supportive setup — while high SSR means little sideline capital remains relative to BTC's size. The metric trends structurally downward as stablecoins grow, so compare against the recent regime rather than 2018 levels.",
+    ],
+  },
+  {
+    slug: "altcoin-season-index",
+    title: "Altcoin Season Index",
+    category: "Returns",
+    description: "The share of tracked altcoins outperforming Bitcoin over the trailing 90 days.",
+    explanation: [
+      "For each day, the index asks: what fraction of tracked altcoins beat Bitcoin's return over the previous 90 days? Above 75 is conventionally \"altcoin season\"; below 25 is \"Bitcoin season.\"",
+      "Alt seasons are the euphoric late phase of bull markets — capital rotating down the risk curve — and they historically cluster just before cycle tops, which makes this as much a warning gauge as a celebration. Our universe is the ~27 tracked alts rather than the top-50 ITC uses, so exact values differ slightly; the regime signal is the same.",
+    ],
+  },
+  {
     slug: "qt-ending-bear-markets",
     title: "QT Ending Bear Markets",
     category: "Macro",

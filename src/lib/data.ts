@@ -45,6 +45,47 @@ export function loadFedAssets(): { rows: { date: string; value: number }[] } {
   return loadJson("raw", "fed-assets.json");
 }
 
+export interface AssetSummary {
+  id: string;
+  symbol: string;
+  name: string;
+  close: number;
+  chg24h: number;
+  roi30d: number | null;
+  roi1y: number | null;
+  mcap: number | null;
+  risk: number;
+  shortHistory: boolean;
+  mayer: number | null;
+  above20w: boolean | null;
+  stale: boolean;
+}
+
+export function loadAssetsSummary(): { updatedAt: string; assets: AssetSummary[] } {
+  return loadJson("metrics", "assets-summary.json");
+}
+
+export interface McapAggRow {
+  date: string;
+  total: number;
+  btcDom: number;
+  ethDom: number;
+  alt: number;
+  altExEthStables: number;
+  ssr: number | null;
+  fair: number;
+  fairLow: number;
+  fairHigh: number;
+}
+
+export function loadMcapAggregates(): { rows: McapAggRow[] } {
+  return loadJson("metrics", "mcap-aggregates.json");
+}
+
+export function loadAltseason(): { rows: { date: string; value: number }[] } {
+  return loadJson("metrics", "altseason.json");
+}
+
 export interface FanFile {
   taus: number[];
   rows: { date: string; q: number[] }[];
