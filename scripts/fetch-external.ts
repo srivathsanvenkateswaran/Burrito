@@ -49,8 +49,32 @@ async function dxy() {
   console.log(`dxy: ${rows.length} rows (${rows[0].date} → ${rows.at(-1)!.date})`);
 }
 
+/** Fed total assets (WALCL, weekly, $ millions → billions) via FRED. */
+async function fedAssets() {
+  let key = process.env.FRED_API_KEY;
+  if (!key) {
+    // local convenience: read .env.local (gitignored)
+    try {
+      const env = fs.readFileSync(path.join(process.cwd(), ".env.local"), "utf8");
+      key = env.match(/^FRED_API_KEY=(.+)$/m)?.[1]?.trim();
+    } catch {}
+  }
+  if (!key) {
+    console.warn("fed-assets: FRED_API_KEY not set — skipping");
+    return;
+  }
+  const body = await getJson(
+    `https://api.stlouisfed.org/fred/series/observations?series_id=WALCL&api_key=${key}&file_type=json`,
+  );
+  const rows = (body.observations as any[])
+    .filter((o) => o.value !== ".")
+    .map((o) => ({ date: o.date as string, value: Number((Number(o.value) / 1000).toFixed(1)) }));
+  write("fed-assets.json", { updatedAt: new Date().toISOString(), unit: "USD billions", rows });
+  console.log(`fed-assets: ${rows.length} rows (${rows[0].date} → ${rows.at(-1)!.date})`);
+}
+
 async function main() {
-  const results = await Promise.allSettled([fearGreed(), dxy()]);
+  const results = await Promise.allSettled([fearGreed(), dxy(), fedAssets()]);
   const failed = results.filter((r) => r.status === "rejected");
   for (const f of failed) console.error("fetch failed:", (f as PromiseRejectedResult).reason);
   // partial failure is fine (stale file stays); total failure should fail the job

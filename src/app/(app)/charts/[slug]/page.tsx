@@ -8,6 +8,7 @@ import {
   loadEvents,
   loadFan,
   loadFearGreed,
+  loadFedAssets,
   loadMetrics,
   loadMonthlyReturns,
   loadRoiBands,
@@ -344,6 +345,31 @@ function ChartBody({ slug }: { slug: string }) {
             return { date: r.date, close: r.close, risk: v === undefined ? null : 1 - v / 100 };
           })}
           legendText="extreme greed → extreme fear"
+        />
+      );
+    }
+    case "qt-ending-bear-markets": {
+      const fed = loadFedAssets().rows.filter((r) => r.date >= "2014-01-01");
+      const QT = [
+        { date: "2017-10-04", type: "start" as const, label: "QT1 starts" },
+        { date: "2019-08-01", type: "end" as const, label: "QT1 ends" },
+        { date: "2022-06-01", type: "start" as const, label: "QT2 starts" },
+        { date: "2025-12-31", type: "end" as const, label: "QT2 ends" },
+      ];
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "BTC/USD (log, right)", color: "#e6a144", points: rows.filter((r) => r.date >= "2014-01-01").map((r) => ({ date: r.date, value: r.close })) },
+            { label: "Fed total assets, $B (left)", color: "#8ba7c9", scale: "left", lineWidth: 1, points: fed.map((r) => ({ date: r.date, value: r.value })) },
+          ]}
+          markers={QT.map((q) => ({
+            date: q.date,
+            position: q.type === "start" ? "aboveBar" : "belowBar",
+            color: q.type === "start" ? "#de6b5a" : "#82b57a",
+            shape: q.type === "start" ? "arrowDown" : "arrowUp",
+            text: q.label,
+          }))}
         />
       );
     }

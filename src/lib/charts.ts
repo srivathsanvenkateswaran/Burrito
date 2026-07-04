@@ -331,6 +331,18 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "qt-ending-bear-markets",
+    title: "QT Ending Bear Markets",
+    category: "Macro",
+    description:
+      "Bitcoin against the Fed's balance sheet, with Quantitative Tightening episodes marked.",
+    explanation: [
+      "Quantitative Tightening (QT) is the Federal Reserve shrinking its balance sheet — draining the liquidity that QE injected. The blue line is the Fed's total assets (FRED series WALCL); the markers flag when each QT episode started and ended. Bitcoin, the most liquidity-sensitive large asset in existence, has lived and died by this line.",
+      "The pattern this chart is named for: both of Bitcoin's deepest modern bears happened *during* QT — the 2018 bear during QT1 (ended August 2019) and the 2022 bear during QT2 — and the endings of QT have historically marked the transition back to easier conditions that bull markets grew out of.",
+      "The current setup is why this chart matters now: the balance sheet stopped shrinking around late 2025 and has begun ticking up — QT2 is effectively over — while BTC sits deep in a drawdown. If the 2019 rhyme holds, this is the part of the cycle where liquidity stops being a headwind. A rhyme, not a law.",
+    ],
+  },
+  {
     slug: "btc-vs-dxy",
     title: "BTC vs. DXY",
     category: "Other",

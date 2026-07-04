@@ -41,6 +41,10 @@ export function loadDxy(): { rows: { date: string; close: number }[] } {
   return loadJson("raw", "dxy", "daily.json");
 }
 
+export function loadFedAssets(): { rows: { date: string; value: number }[] } {
+  return loadJson("raw", "fed-assets.json");
+}
+
 export interface FanFile {
   taus: number[];
   rows: { date: string; q: number[] }[];
