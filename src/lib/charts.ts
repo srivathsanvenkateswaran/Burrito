@@ -58,7 +58,7 @@ export const CHARTS: ChartDef[] = [
     slug: "risk-time",
     title: "Time In Risk Bands",
     category: "Risk",
-    description: "The number of days price has spent in each risk band.",
+    description: "How many of Bitcoin's trading days fall into each 0.1-wide risk bucket.",
     explanation: [
       "Each bar counts the days spent in one 0.1-wide risk band across the full history. The shape tells you what \"normal\" looks like: most of Bitcoin's life is spent mid-band, and the extreme bands are rare by construction.",
       "Practical use: it calibrates patience. If the sub-0.1 band holds only a small fraction of all days, then deep-value windows are short — when the metric gets there, hesitation has historically been expensive. The same logic applies in reverse for the 0.9+ band.",
@@ -78,7 +78,7 @@ export const CHARTS: ChartDef[] = [
     slug: "short-term-bubble-risk",
     title: "Short Term Bubble Risk",
     category: "Risk",
-    description: "Risk metric based on the extension from the 20W moving average.",
+    description: "How stretched price is above or below its 20-week average, ranked against history.",
     explanation: [
       "Where the main risk metric measures extension from a multi-year fair value, this one measures extension from the 20-week SMA — the same baseline as the Bull Market Support Band — percentile-ranked the same way. It captures short-term froth rather than cycle-scale valuation.",
       "The two risks disagree in useful ways: mid-bull, cycle risk can be moderate while short-term bubble risk pins near 1.0 after a vertical few weeks — historically a local-top warning even when the larger trend had further to run.",
@@ -88,7 +88,7 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-halving",
     title: "ROI After Halving",
     category: "Cycles",
-    description: "The return on investment after each time the block mining reward is halved.",
+    description: "Price multiples following each of Bitcoin's four halvings, overlaid day by day.",
     explanation: [
       "Each line starts at 1× on a halving day (2012, 2016, 2020, 2024) and tracks the multiple of that day's price forward, on a shared days-since axis with a logarithmic y-axis — without the log scale, 2012's 90× would flatten every later cycle into invisibility. This is the chart behind the entire halving-cycle thesis: historically, the 12–18 months after each halving contained the bulk of the cycle's gains.",
       "Note the shrinking amplitude — each successive halving cycle has delivered a smaller multiple, consistent with diminishing returns as market cap grows. Comparing the current halving line against its predecessors at the same day-count is the cleanest \"where are we in the cycle\" view this framework offers.",
@@ -98,7 +98,7 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-cycle-bottom",
     title: "ROI After Cycle Bottom",
     category: "Cycles",
-    description: "The return on investment as measured from each market cycle bottom.",
+    description: "Recovery paths from each bear-market low, overlaid on a shared timeline.",
     explanation: [
       "Each line starts at 1× on a bear-market bottom (2011, 2015, 2018, 2022) and shows the recovery multiple from that low on a days-since axis (log scale, since early cycles reached 100×+). Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.",
       "The recoveries rhyme: roughly two years of choppy appreciation, then a steep leg. Overlaying the current cycle on the old ones shows whether the market is running hot or cold against its own precedent — and the shrinking peak multiples echo the same diminishing-returns story as the halving chart.",
@@ -108,7 +108,7 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-cycle-peak",
     title: "ROI After Cycle Peak",
     category: "Cycles",
-    description: "The return on investment as measured from each market cycle peak.",
+    description: "Drawdown-and-recovery paths from each cycle top, overlaid day by day.",
     explanation: [
       "The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top (2011, 2013, 2017, 2021, 2025) and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?",
       "History's answer has been two to three years underwater, with the depth of the trough shrinking each cycle. It's also the best illustration of why the risk metric emphasizes selling into strength — the cost of buying the top is measured in years, not percent.",
@@ -168,7 +168,7 @@ export const CHARTS: ChartDef[] = [
     slug: "best-day-to-dca",
     title: "Best Day To DCA",
     category: "Returns",
-    description: "The best day of the week to DCA, based on average extension from a moving average.",
+    description: "Whether any weekday has historically offered cheaper buys relative to trend.",
     explanation: [
       "Each bar is the average extension of price above its 50-day SMA for that weekday, across the full history. The weekday with the lowest average extension has, historically, offered slightly cheaper buys relative to trend.",
       "Honest framing: the differences are tiny — fractions of a percent against daily volatility measured in whole percents. If a weekday edge exists (weekend closes have historically been marginally softer), it's a tie-breaker for an existing DCA habit, not a strategy.",
@@ -178,7 +178,7 @@ export const CHARTS: ChartDef[] = [
     slug: "supertrend",
     title: "Supertrend",
     category: "Momentum",
-    description: "The Supertrend indicator is used to identify the current trend direction.",
+    description: "An ATR-based trailing stop that flips between support and resistance with the trend.",
     explanation: [
       "Supertrend places a trailing stop line a multiple of Average True Range (here 3× the 10-day ATR) below price in uptrends and above it in downtrends, flipping sides when price crosses it. Green segments mark uptrend support; red segments mark downtrend resistance.",
       "Because ATR widens with volatility, the stop gives more room in wild markets and tightens in calm ones. It shines as a trend-following exit discipline; it chops badly in sideways markets, like every trend indicator. Series starts in 2017, when true daily high/low data begins.",
@@ -263,7 +263,7 @@ export const CHARTS: ChartDef[] = [
     slug: "average-daily-returns",
     title: "Average Daily Returns",
     category: "Returns",
-    description: "Average return on investment for any given day of the month.",
+    description: "Bitcoin's average daily move for each calendar day of the month.",
     explanation: [
       "Each bar is the average daily % change for that day of the month across all years — day 1 averages every 1st of the month in history, and so on.",
       "This is the chart behind \"best day to DCA\" folklore. The honest reading: differences between days are small relative to daily volatility, so treat any pattern here as weak evidence — which is itself useful to know before over-optimizing a DCA schedule.",
@@ -273,7 +273,7 @@ export const CHARTS: ChartDef[] = [
     slug: "price-drawdown-ath",
     title: "Price Drawdown From ATH",
     category: "Returns",
-    description: "Percentage drawdown from the most recent all-time high.",
+    description: "How far price sits below the highest close ever reached.",
     explanation: [
       "The line shows how far price sits below the highest close ever reached up to that point. Zero means a new all-time high; the deep troughs are the bear-market capitulations (−93% in 2011, −84% in 2015, −83% in 2018, −77% in 2022).",
       "Two uses: gauging where the current decline ranks against history, and internalizing Bitcoin's true risk profile — every cycle so far has spent years more than 50% below its high. Note the progressively shallower cycle lows, consistent with a maturing (lower-volatility) asset.",
@@ -283,7 +283,7 @@ export const CHARTS: ChartDef[] = [
     slug: "volatility",
     title: "Volatility",
     category: "Momentum",
-    description: "The 30/60/180 day volatility, equal to the standard deviation of logarithmic returns.",
+    description: "Rolling standard deviation of daily log returns, over 30, 60, and 180-day windows.",
     explanation: [
       "Each line is the standard deviation of daily log returns over a rolling window, in percent per day. The 30-day line reacts fast; the 180-day line shows the regime.",
       "Volatility clusters: calm periods and violent periods each persist. Historically, multi-month volatility compression (all three lines low and converging) has preceded large directional moves — the coiled-spring pattern — while volatility peaks coincide with capitulations and blow-off tops. The long-term trend is also visibly downward as the asset matures.",
@@ -303,7 +303,7 @@ export const CHARTS: ChartDef[] = [
     slug: "moving-average-convergence-divergence",
     title: "MACD",
     category: "Momentum",
-    description: "The MACD indicator measures changes in strength, direction and momentum.",
+    description: "Momentum read from the gap between fast and slow EMAs, with signal line and histogram.",
     explanation: [
       "MACD is the gap between the 12- and 26-day EMAs (the orange line), with a 9-day EMA of that gap as the signal line, and the histogram showing their difference. Positive and rising = accelerating upward momentum.",
       "The standard signals: MACD crossing its signal line (short-term momentum shifts) and zero-line crossings (trend direction changes). On an asset this volatile the daily MACD fires often — the higher-value readings are divergences at extremes, where price makes a new high or low that the MACD refuses to confirm.",
@@ -313,7 +313,7 @@ export const CHARTS: ChartDef[] = [
     slug: "bollinger-bands",
     title: "Bollinger Bands",
     category: "Momentum",
-    description: "Bollinger Bands create signals when an asset is either oversold or overbought.",
+    description: "A 20-day average with ±2σ bands that widen and squeeze with volatility.",
     explanation: [
       "The bands sit two standard deviations above and below a 20-day moving average, so they widen when volatility rises and squeeze when it falls. Roughly 95% of closes fall inside them by construction.",
       "Two classic reads: the squeeze (unusually narrow bands mark volatility compression that tends to resolve violently) and band walks (in strong trends price rides the upper or lower band for weeks — touching a band is not by itself a reversal signal).",
@@ -323,7 +323,7 @@ export const CHARTS: ChartDef[] = [
     slug: "pi-cycle-bottom-top",
     title: "Pi Cycle Bottom/Top",
     category: "Momentum",
-    description: "Local price bottom/top indicator using the crossover of the 111D SMA and the 2×350D SMA.",
+    description: "The cycle-top signal that fires when the 111-day SMA crosses twice the 350-day SMA.",
     explanation: [
       "When the fast 111-day SMA crosses above twice the 350-day SMA, the Pi Cycle Top has historically flagged cycle peaks with eerie precision — within days of the 2013, 2017 and 2021 tops. The name comes from 350/111 ≈ π.",
       "It is a curve-fit discovery, not a theory — there is no economic reason the ratio should be π — so treat each new cycle as an out-of-sample test. It fires rarely (a handful of events in 15 years), which is exactly what makes it worth marking on the chart.",
@@ -410,10 +410,10 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
-    slug: "does-it-bleed",
-    title: "Does It Bleed",
+    slug: "alts-vs-btc",
+    title: "Alts vs BTC",
     category: "Breadth",
-    description: "Altcoin prices measured in BTC, indexed — does your coin bleed against Bitcoin?",
+    description: "Altcoin prices measured in BTC, indexed — which alts actually hold their value against Bitcoin?",
     explanation: [
       "Every line is an alt's BTC-denominated price, indexed to 1.0 two years ago. Below 1.0: you'd hold more value in Bitcoin — the alt \"bleeds.\" The USD chart flatters alts in bull markets; the BTC pair is the honest benchmark.",
       "The sobering base rate: over multi-year windows, most alts bleed most of the time, with brief violent exceptions during alt seasons. This chart is the antidote to survivorship memory — and the toggles let you check any specific coin's verdict.",
@@ -466,7 +466,7 @@ export const CHARTS: ChartDef[] = [
     description: "Each asset against BTC since its own listing day.",
     explanation: [
       "The inception chart in BTC terms: from each asset's first day, did holding it beat just holding Bitcoin? Lines below 1× — the majority, most of the time — answer no.",
-      "This is the cleanest long-horizon version of the \"does it bleed\" question, aligned by asset age instead of calendar. The handful of lines that sustain above 1× for years are the short list of alts that have genuinely compounded against BTC.",
+      "This is the cleanest long-horizon version of the alts-vs-BTC question, aligned by asset age instead of calendar. The handful of lines that sustain above 1× for years are the short list of alts that have genuinely compounded against BTC.",
     ],
   },
   {
@@ -693,7 +693,7 @@ export const CHARTS: ChartDef[] = [
     slug: "long-short-ratios",
     title: "Long/Short Ratios",
     category: "Derivatives",
-    description: "Binance futures long/short ratios: top accounts, top positions, and all accounts.",
+    description: "Who's positioned long vs short on Binance futures — the biggest traders and the whole crowd.",
     explanation: [
       "Three views of positioning: top traders by account count, top traders by position size, and the entire exchange. Above 1.0, more longs than shorts. The gap between the top-position and global lines is the smart-money-vs-crowd divergence.",
       "The classic contrarian read: retail (global) crowding heavily long into a falling market marks capitulation fuel — their liquidations become the cascade. Top-position traders leaning opposite the crowd have historically been the better-informed side. Accumulating since July 2026 (Binance exposes 30 days).",
@@ -723,7 +723,7 @@ export const CHARTS: ChartDef[] = [
     slug: "fear-greed-index",
     title: "Fear & Greed Index",
     category: "Sentiment",
-    description: "Bitcoin price color coded by the crypto Fear & Greed Index.",
+    description: "The full price history, painted by each day's crypto Fear & Greed reading.",
     explanation: [
       "The Fear & Greed Index (published daily by alternative.me since 2018) blends volatility, momentum, social media activity, dominance, and survey data into a 0–100 sentiment score: 0 is extreme fear, 100 is extreme greed. Here it's painted onto the price line — red stretches are fearful markets, green stretches greedy ones.",
       "The contrarian reading is the useful one: extreme fear has historically clustered near local and cycle bottoms (when buying felt impossible), and extreme greed near tops. It agrees with the risk metric surprisingly often despite measuring completely different inputs — sentiment versus valuation.",
@@ -774,7 +774,7 @@ export const CHARTS: ChartDef[] = [
     slug: "altcoin-market-capitalizations",
     title: "Altcoin Market Capitalizations",
     category: "Market Cap",
-    description: "The total market minus Bitcoin — and minus Ethereum and stablecoins.",
+    description: "What the market is worth once Bitcoin is removed — and then Ethereum and stablecoins too.",
     explanation: [
       "Two views of the market without its anchor: total minus BTC (everything that isn't Bitcoin), and total minus BTC, ETH, and stablecoins (the speculative long tail). Log scale.",
       "The second line is the purest alt-season gauge: stablecoins don't speculate and ETH half-behaves like a major, so what's left is the risk appetite frontier. Its cycles are more violent than BTC's in both directions — the same chart shape, amplified.",
@@ -932,7 +932,7 @@ export const CHARTS: ChartDef[] = [
   },
   {
     slug: "qt-ending-bear-markets",
-    title: "QT Ending Bear Markets",
+    title: "Bear Markets & Quantitative Tightening",
     category: "Macro",
     description:
       "Bitcoin against the Fed's balance sheet, with Quantitative Tightening episodes marked.",
@@ -957,7 +957,7 @@ export const CHARTS: ChartDef[] = [
     slug: "benfords-law",
     title: "Benford's Law",
     category: "Other",
-    description: "The probability of an asset having a certain leading digit (1, 2, ..., 9).",
+    description: "Do Bitcoin's price digits follow the distribution of naturally occurring numbers?",
     explanation: [
       "Benford's Law says that in many naturally occurring datasets, smaller leading digits dominate: numbers starting with 1 appear ~30% of the time, with 9 under 5%. The bars compare Bitcoin's daily closing prices against that theoretical curve.",
       "Data spanning many orders of magnitude (like a price that went from $0.07 to $120k) should follow Benford closely — and Bitcoin does, which is a neat statistical fingerprint of organic, multiplicative growth. Strong deviations in other assets can hint at manipulated or range-pinned prices.",
@@ -967,7 +967,7 @@ export const CHARTS: ChartDef[] = [
     slug: "price-milestone-crossings",
     title: "Price Milestone Crossings",
     category: "Other",
-    description: "How many times has BTC price crossed various price milestones?",
+    description: "Every crossing of a round-number price level, plotted as events over time.",
     explanation: [
       "Each dot marks a day when price crossed a round-number milestone ($1k, $10k, $20k, …) in either direction. Clusters of dots at one level show price churning around that milestone; a level with a single dot was crossed once and never revisited.",
       "Round numbers act as psychological support and resistance, and this chart makes the battlegrounds visible — the $10k and $20k levels were each crossed dozens of times before finally being left behind, while levels conquered in strong trends barely register a second dot.",
@@ -977,7 +977,7 @@ export const CHARTS: ChartDef[] = [
     slug: "days-since-percentage-decline",
     title: "Days Since % Decline",
     category: "Other",
-    description: "The amount of days since a single-day percentage decline occurred.",
+    description: "A running counter of days since the last single-day drop of 5%, 10%, or 20%.",
     explanation: [
       "The counter rises by one each day and resets to zero whenever a daily drop of at least the chosen size (5%, 10%, 20%) occurs, with price shown behind it for context.",
       "Long stretches without a big red day are a feature of maturing bull markets — and the counter's height going into a top measures how complacent the market had become. The declining frequency of 10%+ days across the years is also one of the cleanest views of Bitcoin's falling volatility.",
@@ -987,7 +987,7 @@ export const CHARTS: ChartDef[] = [
     slug: "days-since-percentage-gain",
     title: "Days Since % Gain",
     category: "Other",
-    description: "The amount of days since a certain single-day percentage gain has occurred.",
+    description: "A running counter of days since the last single-day gain of 5%, 10%, or 20%.",
     explanation: [
       "The mirror image of Days Since % Decline: the counter resets whenever a single-day gain of at least the chosen size occurs.",
       "Big green days cluster in two regimes: euphoric bull runs and violent bear-market rallies. A very tall counter means the market has gone a long time without explosive upside — historically common in late bears and early accumulation phases, when volatility is compressed.",
