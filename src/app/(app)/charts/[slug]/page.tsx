@@ -437,7 +437,7 @@ function ChartBody({ slug }: { slug: string }) {
         />
       );
     }
-    case "does-it-bleed": {
+    case "alts-vs-btc": {
       const anchor = "2024-07-01";
       const btcSeries = loadMetrics().rows.filter((r) => r.date >= anchor);
       const btcMap = new Map(btcSeries.map((r) => [r.date, r.close]));
