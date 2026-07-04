@@ -32,9 +32,13 @@ jobs:
 
       - run: npm run data:mcaps
 
+      - run: npm run data:onchain
+
       - run: npm run data:compute
 
       - run: npm run data:compute-assets
+
+      - run: npm run data:compute-onchain
 
       - name: Commit and push if data changed
         run: |

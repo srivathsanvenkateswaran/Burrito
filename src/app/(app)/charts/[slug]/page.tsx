@@ -14,7 +14,11 @@ import {
   loadMcapAggregates,
   loadMetrics,
   loadMonthlyReturns,
+  loadOnchainBtc,
+  loadOnchainEth,
   loadRoiBands,
+  loadWiki,
+  onchainPoints,
   loadTa,
   loadYtdRoi,
   metricPoints,
@@ -354,6 +358,245 @@ function ChartBody({ slug }: { slug: string }) {
     }
     case "risk-dashboard":
       return <AssetTable assets={loadAssetsSummary().assets} />;
+    case "mvrv": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MetricChart
+          points={onchainPoints(oc, (r) => r.mvrv, "2011-01-01")}
+          height={460}
+          thresholds={[
+            { value: 3.5, color: "rgba(222,107,90,0.7)", label: "euphoria" },
+            { value: 1, color: "rgba(130,181,122,0.7)", label: "cost basis" },
+          ]}
+        />
+      );
+    }
+    case "mvrv-z-score": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MetricChart
+          points={onchainPoints(oc, (r) => r.mvrvZ, "2011-01-01")}
+          color="#8ba7c9"
+          height={460}
+          thresholds={[
+            { value: 7, color: "rgba(222,107,90,0.7)", label: "top zone" },
+            { value: 0.1, color: "rgba(130,181,122,0.7)", label: "deep value" },
+          ]}
+        />
+      );
+    }
+    case "nupl": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MetricChart
+          points={onchainPoints(oc, (r) => r.nupl, "2011-01-01")}
+          colorByValue
+          height={460}
+          thresholds={[
+            { value: 0.75, color: "rgba(222,107,90,0.7)", label: "euphoria" },
+            { value: 0, color: "rgba(130,181,122,0.7)", label: "capitulation" },
+          ]}
+        />
+      );
+    }
+    case "puell-multiple": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MetricChart
+          points={onchainPoints(oc, (r) => r.puell, "2011-01-01")}
+          height={460}
+          thresholds={[
+            { value: 4, color: "rgba(222,107,90,0.7)", label: "miner euphoria" },
+            { value: 0.5, color: "rgba(130,181,122,0.7)", label: "miner stress" },
+          ]}
+        />
+      );
+    }
+    case "stock-to-flow": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          leftLog
+          series={[
+            { label: "stock-to-flow", color: "#e6a144", points: onchainPoints(oc, (r) => r.s2f, "2011-01-01") },
+            { label: "price (left)", color: "rgba(162,147,130,0.5)", scale: "left", lineWidth: 1, points: onchainPoints(oc, (r) => r.price, "2011-01-01") },
+          ]}
+        />
+      );
+    }
+    case "issuance": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "issuance $/day (log, right)", color: "#e6a144", points: onchainPoints(oc, (r) => r.issUsd, "2010-10-01") },
+            { label: "annual inflation % (left)", color: "#8ba7c9", scale: "left", lineWidth: 1, points: onchainPoints(oc, (r) => r.inflPct, "2010-10-01") },
+          ]}
+        />
+      );
+    }
+    case "supply-eth-btc": {
+      const btc = loadOnchainBtc().rows;
+      const eth = loadOnchainEth().rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "BTC supply", color: "#e6a144", points: onchainPoints(btc, (r) => r.splyCur) },
+            { label: "ETH supply", color: "#8ba7c9", points: onchainPoints(eth, (r) => r.splyCur) },
+          ]}
+        />
+      );
+    }
+    case "address-activity": {
+      const btc = loadOnchainBtc().rows;
+      const eth = loadOnchainEth().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "BTC active addresses", color: "#e6a144", points: onchainPoints(btc, (r) => r.adrAct, "2011-01-01") },
+            { label: "ETH active addresses", color: "#8ba7c9", points: onchainPoints(eth, (r) => r.adrAct) },
+          ]}
+        />
+      );
+    }
+    case "transfer-count-statistics": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "transactions/day", color: "#e6a144", points: onchainPoints(oc, (r) => r.txCnt, "2011-01-01") },
+            { label: "value transfers/day", color: "#8ba7c9", lineWidth: 1, points: onchainPoints(oc, (r) => r.txTfrCnt, "2011-01-01") },
+          ]}
+        />
+      );
+    }
+    case "transaction-fees": {
+      const btc = loadOnchainBtc().rows;
+      const eth = loadOnchainEth().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "BTC fees $/day", color: "#e6a144", points: onchainPoints(btc, (r) => r.feesUsd, "2011-01-01") },
+            { label: "ETH fees $/day", color: "#8ba7c9", points: onchainPoints(eth, (r) => r.feesUsd) },
+          ]}
+        />
+      );
+    }
+    case "hash-rate": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[{ label: "hash rate (TH/s)", color: "#e6a144", points: onchainPoints(oc, (r) => r.hashRate, "2010-01-01") }]}
+        />
+      );
+    }
+    case "hash-ribbons": {
+      const { rows: oc, ribbonEvents } = loadOnchainBtc();
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "hash rate 30d MA", color: "#82b57a", points: onchainPoints(oc, (r) => r.hashSma30, "2011-01-01") },
+            { label: "hash rate 60d MA", color: "#de6b5a", points: onchainPoints(oc, (r) => r.hashSma60, "2011-01-01") },
+            { label: "hash rate", color: "rgba(162,147,130,0.35)", lineWidth: 1, points: onchainPoints(oc, (r) => r.hashRate, "2011-01-01") },
+          ]}
+          markers={ribbonEvents
+            .filter((e) => e.date >= "2011-01-01")
+            .map((e) => ({
+              date: e.date,
+              position: e.type === "up" ? ("belowBar" as const) : ("aboveBar" as const),
+              color: e.type === "up" ? "#82b57a" : "#de6b5a",
+              shape: e.type === "up" ? ("arrowUp" as const) : ("arrowDown" as const),
+            }))}
+        />
+      );
+    }
+    case "hash-over-price": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[{ label: "hash rate / price", color: "#b391bf", points: onchainPoints(oc, (r) => r.hashOverPrice, "2011-01-01") }]}
+        />
+      );
+    }
+    case "miner-revenue": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[{ label: "miner revenue $/day", color: "#e6a144", points: onchainPoints(oc, (r) => r.minerRev) }]}
+        />
+      );
+    }
+    case "mcap-thermocap": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MetricChart points={onchainPoints(oc, (r) => r.mctc, "2011-01-01")} height={460} />
+      );
+    }
+    case "rcap-thermocap": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MetricChart points={onchainPoints(oc, (r) => r.rctc, "2011-01-01")} color="#8ba7c9" height={460} />
+      );
+    }
+    case "block": {
+      const oc = loadOnchainBtc().rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "blocks/day", color: "#e6a144", lineWidth: 1, points: onchainPoints(oc, (r) => r.blkCnt, "2011-01-01") },
+            { label: "avg block size MB (left)", color: "#8ba7c9", scale: "left", points: onchainPoints(oc, (r) => r.blockSizeMb, "2011-01-01") },
+          ]}
+        />
+      );
+    }
+    case "exchange-supply": {
+      const btc = loadOnchainBtc().rows;
+      const eth = loadOnchainEth().rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "BTC on exchanges", color: "#e6a144", points: onchainPoints(btc, (r) => r.splyExNtv, "2012-01-01") },
+            { label: "ETH on exchanges (left)", color: "#8ba7c9", scale: "left", points: onchainPoints(eth, (r) => r.splyExNtv) },
+          ]}
+        />
+      );
+    }
+    case "exchange-flow": {
+      const oc = loadOnchainBtc().rows.filter((r) => r.date >= "2013-01-01");
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "net flow $/day", color: "rgba(162,147,130,0.6)", type: "histogram", points: oc.map((r) => ({ date: r.date, value: r.flowNetExUsd })) },
+            { label: "inflow $/day", color: "#de6b5a", lineWidth: 1, points: oc.map((r) => ({ date: r.date, value: r.flowInExUsd })) },
+            { label: "outflow $/day", color: "#82b57a", lineWidth: 1, points: oc.map((r) => ({ date: r.date, value: r.flowOutExUsd })) },
+          ]}
+        />
+      );
+    }
+    case "wikipedia-page-views": {
+      const articles = ["bitcoin", "ethereum", "cryptocurrency", "blockchain"];
+      const colors = ["#e6a144", "#8ba7c9", "#82b57a", "#b391bf"];
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={articles.map((a, i) => ({
+            label: a,
+            color: colors[i],
+            lineWidth: 1,
+            points: loadWiki(a).rows.map((r) => ({ date: r.date, value: r.views })),
+          }))}
+        />
+      );
+    }
     case "dominance": {
       const agg = loadMcapAggregates().rows;
       return (
