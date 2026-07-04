@@ -525,7 +525,7 @@ export default async function ChartPage({
   const metrics = loadMetrics();
 
   return (
-    <main className="px-8 py-8">
+    <main className="px-4 py-6 sm:px-8 sm:py-8">
       <header className="mb-6">
         <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
           {def.category} · BTC

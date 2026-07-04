@@ -40,7 +40,7 @@ export default function Home() {
   const dayChange = ((latest.close - prev.close) / prev.close) * 100;
 
   return (
-    <main className="px-8 py-8">
+    <main className="px-4 py-6 sm:px-8 sm:py-8">
       <header className="mb-6">
         <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
           Dashboard

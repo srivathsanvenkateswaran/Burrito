@@ -63,7 +63,7 @@ export function DateRangeBar({
 
   return (
     <form
-      className="flex items-center gap-1.5"
+      className="flex flex-wrap items-center gap-1.5"
       onSubmit={(e) => {
         e.preventDefault();
         if (from && to && from < to) onApply(from, to);

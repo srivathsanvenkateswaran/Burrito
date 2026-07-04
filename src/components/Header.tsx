@@ -1,4 +1,5 @@
 import Link from "next/link";
+import MobileSidebar from "./MobileSidebar";
 import ThemeToggle from "./ThemeToggle";
 
 interface Props {
@@ -10,8 +11,9 @@ interface Props {
 
 export default function Header({ price, changePct, risk, date }: Props) {
   return (
-    <header className="sticky top-0 z-10 flex h-12 items-center gap-4 border-b border-line bg-ink/85 px-6 backdrop-blur">
-      <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
+    <header className="sticky top-0 z-10 flex h-12 items-center gap-3 border-b border-line bg-ink/85 px-4 backdrop-blur sm:gap-4 sm:px-6">
+      <MobileSidebar />
+      <span className="hidden font-mono text-[10px] uppercase tracking-[0.15em] text-faint sm:inline">
         BTC / USD
       </span>
       <span className="font-mono text-sm text-fg">
