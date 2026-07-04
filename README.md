@@ -15,6 +15,14 @@ on-chain, breadth, derivatives, and US macro. Recomputed daily. Running cost: **
 
 </div>
 
+## The 55-second tour
+
+https://github.com/srivathsanvenkateswaran/Burrito/raw/main/.github/media/launch-video.mp4
+
+*(The launch video itself was built with AI — written as HTML compositions in burrito's own design
+tokens and rendered to MP4 with [HyperFrames](https://github.com/heygen-com/hyperframes), one
+agent per scene.)*
+
 ## What is this?
 
 A personal clone of the paid crypto-analytics platforms — built solo in a few days with
