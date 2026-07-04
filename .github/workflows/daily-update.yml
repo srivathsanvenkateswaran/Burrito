@@ -34,6 +34,8 @@ jobs:
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
 
+      - run: npm run data:derivs
+
       - run: npm run data:mcaps
 
       - run: npm run data:onchain

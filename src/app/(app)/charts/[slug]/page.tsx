@@ -8,6 +8,7 @@ import {
   loadComparisons,
   loadCorrelations,
   loadDaysSince,
+  loadDerivs,
   loadFred,
   yoy,
   loadDistributions,
@@ -709,6 +710,49 @@ function ChartBody({ slug }: { slug: string }) {
             { label: "inflow $/day", color: "#de6b5a", lineWidth: 1, points: oc.map((r) => ({ date: r.date, value: r.flowInExUsd })) },
             { label: "outflow $/day", color: "#82b57a", lineWidth: 1, points: oc.map((r) => ({ date: r.date, value: r.flowOutExUsd })) },
           ]}
+        />
+      );
+    }
+    case "futures-open-interest":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "BTC futures OI $", color: "#e6a144", points: loadDerivs<{ oiUsd: number }>("futures-oi-btc").rows.map((r) => ({ date: r.date, value: r.oiUsd })) },
+            { label: "ETH futures OI $ (left)", color: "#8ba7c9", scale: "left", points: loadDerivs<{ oiUsd: number }>("futures-oi-eth").rows.map((r) => ({ date: r.date, value: r.oiUsd })) },
+          ]}
+        />
+      );
+    case "options-open-interest":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "BTC options OI $ (Deribit)", color: "#e6a144", points: loadDerivs<{ oiUsd: number }>("options-oi-btc").rows.map((r) => ({ date: r.date, value: r.oiUsd })) },
+            { label: "ETH options OI $ (left)", color: "#8ba7c9", scale: "left", points: loadDerivs<{ oiUsd: number }>("options-oi-eth").rows.map((r) => ({ date: r.date, value: r.oiUsd })) },
+          ]}
+        />
+      );
+    case "long-short-ratios": {
+      const ls = loadDerivs<{ topAcct?: number; topPos?: number; global?: number }>("long-short-btc").rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "top accounts", color: "#e6a144", points: ls.map((r) => ({ date: r.date, value: r.topAcct ?? null })) },
+            { label: "top positions", color: "#8ba7c9", points: ls.map((r) => ({ date: r.date, value: r.topPos ?? null })) },
+            { label: "all accounts", color: "#b391bf", points: ls.map((r) => ({ date: r.date, value: r.global ?? null })) },
+          ]}
+          thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "balanced" }]}
+        />
+      );
+    }
+    case "long-short-percent": {
+      const ls = loadDerivs<{ longPct?: number; shortPct?: number }>("long-short-btc").rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "top traders long %", color: "#82b57a", points: ls.map((r) => ({ date: r.date, value: r.longPct ?? null })) },
+            { label: "top traders short %", color: "#de6b5a", points: ls.map((r) => ({ date: r.date, value: r.shortPct ?? null })) },
+          ]}
+          thresholds={[{ value: 50, color: "rgba(162,147,130,0.5)", label: "even" }]}
         />
       );
     }

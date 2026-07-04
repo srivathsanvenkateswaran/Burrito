@@ -196,6 +196,10 @@ export function loadFred(id: string): { fredId: string; rows: { date: string; va
   return loadJson("raw", "fred", `${id}.json`);
 }
 
+export function loadDerivs<T = Record<string, number | string>>(file: string): { rows: (T & { date: string })[] } {
+  return loadJson("raw", "derivs", `${file}.json`);
+}
+
 /** Year-over-year % change for monthly FRED series. */
 export function yoy(rows: { date: string; value: number }[]): { date: string; value: number }[] {
   return rows.flatMap((r, i) =>
