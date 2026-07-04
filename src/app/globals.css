@@ -31,18 +31,18 @@
   --loss: #c05240;
 }
 
-/* fiesta — a Mexico tribute: night-market aubergine, rosa mexicano accent */
+/* fiesta — a Mexico tribute in the flag's tricolor: verde, blanco, rojo */
 .fiesta {
-  --ink: #1e1222;
-  --surface: #28182e;
-  --raise: #34203c;
-  --line: #432a4c;
-  --fg: #f5e9e0;
-  --muted: #bda3b3;
-  --faint: #83687f;
-  --accent: #ee3d8f; /* rosa mexicano, brightened for dark bg */
-  --gain: #7fc063; /* nopal */
-  --loss: #e8703f; /* chile guajillo */
+  --ink: #f4f1e6; /* blanco antiguo */
+  --surface: #fdfcf6;
+  --raise: #e9e5d3;
+  --line: #d6d1ba;
+  --fg: #17291d; /* near-black verde */
+  --muted: #4c6354;
+  --faint: #8b9a8c;
+  --accent: #0b7a45; /* verde bandera */
+  --gain: #2f9e5b;
+  --loss: #c9271e; /* rojo */
 }
 
 @theme inline {
@@ -62,11 +62,11 @@
   --font-display: var(--font-bricolage);
 }
 
-:root,
-.fiesta {
+:root {
   color-scheme: dark;
 }
-.light {
+.light,
+.fiesta {
   color-scheme: light;
 }
 
@@ -82,12 +82,11 @@
   height: 4px;
   background: repeating-linear-gradient(
     90deg,
-    #ee3d8f 0 24px,
-    #f4a53c 24px 48px,
-    #7fc063 48px 72px,
-    #52a8c9 72px 96px
+    #0b7a45 0 32px,
+    #efe9d6 32px 64px,
+    #c9271e 64px 96px
   );
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 body {
