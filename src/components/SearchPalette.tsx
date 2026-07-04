@@ -15,6 +15,11 @@ interface Entry {
 const ENTRIES: Entry[] = [
   { href: "/dashboard", title: "Dashboard", category: "Pages", description: "Stats, hero chart, and the full chart index." },
   { href: "/", title: "Home", category: "Pages", description: "Landing page with today's read." },
+  { href: "/docs", title: "Documentation", category: "Docs", description: "Methodology, data pipeline, chart reference, FAQ, Obsidian vault." },
+  { href: "/docs/risk-metric", title: "Risk Metric Methodology", category: "Docs", description: "How the 0–1 risk score and quantile regression fan work." },
+  { href: "/docs/data-pipeline", title: "Data Sources & Pipeline", category: "Docs", description: "Where every number comes from; the self-updating loop." },
+  { href: "/docs/snapshot", title: "Market Snapshot", category: "Docs", description: "Today's readings, regenerated daily." },
+  { href: "/docs/faq", title: "FAQ", category: "Docs", description: "Why numbers differ, update cadence, licensing." },
   ...CHARTS.map((c) => ({
     href: `/charts/${c.slug}`,
     title: c.title,

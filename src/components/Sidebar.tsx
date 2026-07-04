@@ -51,6 +51,9 @@ export default function Sidebar({ variant = "desktop" }: { variant?: "desktop" |
         <NavLink href="/dashboard" active={pathname === "/dashboard"}>
           Dashboard
         </NavLink>
+        <NavLink href="/docs" active={pathname.startsWith("/docs")}>
+          Docs
+        </NavLink>
 
         {CATEGORIES.map((cat) => (
           <div key={cat} className="mt-4">
