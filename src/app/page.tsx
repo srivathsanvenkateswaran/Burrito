@@ -98,7 +98,7 @@ export default function Landing() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-line bg-surface/50 p-5 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
+          <div className="papel-edge rounded-xl border border-line bg-surface/50 p-5 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
             <div className="flex items-baseline justify-between">
               <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
                 today&apos;s read · {latest.date}

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   description: "every market, one tortilla — quantitative market analysis",
 };
 
-const themeInit = `try{var q=new URLSearchParams(location.search).get("theme");var t=q==="light"||q==="dark"?q:localStorage.getItem("burrito-theme");if(t==="light")document.documentElement.classList.add("light")}catch(e){}`;
+const themeInit = `try{var v=["light","dark","fiesta"];var q=new URLSearchParams(location.search).get("theme");var s=localStorage.getItem("burrito-theme");var t=v.includes(q)?q:v.includes(s)?s:"dark";if(t!=="dark")document.documentElement.classList.add(t)}catch(e){}`;
 
 export default function RootLayout({
   children,

@@ -70,6 +70,8 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
   const seriesRef = useRef<Partial<Record<OverlayKey, ISeriesApi<"Line">[]>>>({});
 
   const [scale, setScale] = useState<"log" | "linear">("log");
+  const scaleRef = useRef(scale);
+  scaleRef.current = scale;
   const [range, setRange] = useState<Range>("ALL");
   const [overlays, setOverlays] = useState<Record<OverlayKey, boolean>>({
     regression: true,
@@ -93,7 +95,13 @@ export default function PriceChart({ rows }: { rows: MetricRow[] }) {
         vertLines: { color: cc.grid },
         horzLines: { color: cc.grid },
       },
-      rightPriceScale: { borderVisible: false },
+      rightPriceScale: {
+        borderVisible: false,
+        // initialize from state: theme changes recreate the chart, and the
+        // scale-toggle effect won't re-fire to restore log mode
+        mode:
+          scaleRef.current === "log" ? PriceScaleMode.Logarithmic : PriceScaleMode.Normal,
+      },
       timeScale: { borderVisible: false, minBarSpacing: 0.001 },
       crosshair: {
         horzLine: { labelBackgroundColor: cc.crosshair },

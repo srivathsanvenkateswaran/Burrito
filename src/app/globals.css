@@ -31,6 +31,20 @@
   --loss: #c05240;
 }
 
+/* fiesta — a Mexico tribute: night-market aubergine, rosa mexicano accent */
+.fiesta {
+  --ink: #1e1222;
+  --surface: #28182e;
+  --raise: #34203c;
+  --line: #432a4c;
+  --fg: #f5e9e0;
+  --muted: #bda3b3;
+  --faint: #83687f;
+  --accent: #ee3d8f; /* rosa mexicano, brightened for dark bg */
+  --gain: #7fc063; /* nopal */
+  --loss: #e8703f; /* chile guajillo */
+}
+
 @theme inline {
   --color-ink: var(--ink);
   --color-surface: var(--surface);
@@ -48,11 +62,32 @@
   --font-display: var(--font-bricolage);
 }
 
-:root {
+:root,
+.fiesta {
   color-scheme: dark;
 }
 .light {
   color-scheme: light;
+}
+
+/* fiesta signature: papel-picado fringe on elements opting in via .papel-edge */
+.fiesta .papel-edge {
+  position: relative;
+  overflow: hidden;
+}
+.fiesta .papel-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    #ee3d8f 0 24px,
+    #f4a53c 24px 48px,
+    #7fc063 48px 72px,
+    #52a8c9 72px 96px
+  );
+  opacity: 0.85;
 }
 
 body {
