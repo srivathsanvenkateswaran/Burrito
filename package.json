@@ -16,7 +16,8 @@
     "data:compute-assets": "tsx scripts/compute-assets.ts",
     "data:onchain": "tsx scripts/fetch-onchain.ts && tsx scripts/fetch-onchain-bc.ts && tsx scripts/fetch-wiki.ts",
     "data:compute-onchain": "tsx scripts/compute-onchain.ts",
-    "data:fred": "tsx scripts/fetch-fred.ts"
+    "data:fred": "tsx scripts/fetch-fred.ts",
+    "data:derivs": "tsx scripts/fetch-derivs.ts"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",
