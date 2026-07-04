@@ -15,7 +15,8 @@
     "data:mcaps": "tsx scripts/fetch-mcaps.ts && tsx scripts/fetch-mcaps-estimate.ts",
     "data:compute-assets": "tsx scripts/compute-assets.ts",
     "data:onchain": "tsx scripts/fetch-onchain.ts && tsx scripts/fetch-onchain-bc.ts && tsx scripts/fetch-wiki.ts",
-    "data:compute-onchain": "tsx scripts/compute-onchain.ts"
+    "data:compute-onchain": "tsx scripts/compute-onchain.ts",
+    "data:fred": "tsx scripts/fetch-fred.ts"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",

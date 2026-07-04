@@ -8,6 +8,8 @@ import {
   loadComparisons,
   loadCorrelations,
   loadDaysSince,
+  loadFred,
+  yoy,
   loadDistributions,
   loadDxy,
   loadEventRoi,
@@ -794,6 +796,124 @@ function ChartBody({ slug }: { slug: string }) {
         />
       );
     }
+    case "inflation-yoy":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "CPI YoY %", color: "#e6a144", points: yoy(loadFred("cpi").rows.filter((r) => r.date >= "1959-01-01")) },
+            { label: "core CPI YoY %", color: "#8ba7c9", points: yoy(loadFred("core-cpi").rows.filter((r) => r.date >= "1959-01-01")) },
+          ]}
+          thresholds={[{ value: 2, color: "rgba(130,181,122,0.6)", label: "Fed target" }]}
+        />
+      );
+    case "money-supply":
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "M2 ($B)", color: "#e6a144", points: loadFred("m2").rows },
+            { label: "M1 ($B)", color: "#8ba7c9", points: loadFred("m1").rows },
+          ]}
+        />
+      );
+    case "fed-liquidity":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "Fed total assets $B", color: "#e6a144", points: loadFedAssets().rows.filter((r) => r.date >= "2014-01-01") },
+            { label: "ON RRP $B (left)", color: "#8ba7c9", scale: "left", points: loadFred("on-rrp").rows.filter((r) => r.date >= "2014-01-01") },
+          ]}
+        />
+      );
+    case "yield-curves":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "10y − 2y", color: "#e6a144", points: loadFred("t10y2y").rows },
+            { label: "10y − 3m", color: "#8ba7c9", lineWidth: 1, points: loadFred("t10y3m").rows },
+          ]}
+          thresholds={[{ value: 0, color: "rgba(222,107,90,0.6)", label: "inversion" }]}
+        />
+      );
+    case "fed-funds-rate":
+      return (
+        <MultiSeriesChart
+          series={[{ label: "fed funds effective rate %", color: "#e6a144", points: loadFred("ffr").rows }]}
+          showLegend={false}
+        />
+      );
+    case "employment":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "unemployment % (left)", color: "#de6b5a", scale: "left", points: loadFred("unrate").rows },
+            { label: "nonfarm payrolls (thousands)", color: "#82b57a", points: loadFred("payems").rows },
+          ]}
+        />
+      );
+    case "gdp-and-debt":
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "GDP $B (log)", color: "#e6a144", points: loadFred("gdp").rows },
+            { label: "debt-to-GDP % (left)", color: "#de6b5a", scale: "left", points: loadFred("debt-to-gdp").rows },
+          ]}
+        />
+      );
+    case "personal-income":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "real income ex transfers $B", color: "#e6a144", points: loadFred("real-income").rows },
+            { label: "saving rate % (left)", color: "#8ba7c9", scale: "left", points: loadFred("saving-rate").rows },
+          ]}
+        />
+      );
+    case "consumer-sentiment":
+      return (
+        <MultiSeriesChart
+          series={[{ label: "UMich consumer sentiment", color: "#b391bf", points: loadFred("sentiment").rows }]}
+          showLegend={false}
+        />
+      );
+    case "housing":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "housing starts (thousands)", color: "#e6a144", points: loadFred("housing-starts").rows },
+            { label: "new home sales (thousands)", color: "#8ba7c9", points: loadFred("new-home-sales").rows },
+          ]}
+        />
+      );
+    case "home-prices-and-mortgages":
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "Case-Shiller index (left)", color: "#e6a144", scale: "left", points: loadFred("case-shiller").rows },
+            { label: "30y mortgage rate %", color: "#de6b5a", points: loadFred("mortgage-30y").rows.filter((r) => r.date >= "1987-01-01") },
+          ]}
+        />
+      );
+    case "bank-loans":
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "real-estate loans $B", color: "#e6a144", points: loadFred("real-estate-loans").rows.filter((r) => r.date >= "1960-01-01") },
+            { label: "business loans $B", color: "#8ba7c9", points: loadFred("business-loans").rows.filter((r) => r.date >= "1960-01-01") },
+            { label: "consumer loans $B", color: "#82b57a", points: loadFred("consumer-loans").rows },
+          ]}
+        />
+      );
+    case "nfci":
+      return (
+        <MultiSeriesChart
+          series={[{ label: "NFCI", color: "#b391bf", points: loadFred("nfci").rows }]}
+          thresholds={[{ value: 0, color: "rgba(162,147,130,0.5)", label: "long-run average" }]}
+          showLegend={false}
+        />
+      );
     case "qt-ending-bear-markets": {
       const fed = loadFedAssets().rows.filter((r) => r.date >= "2014-01-01");
       const QT = [

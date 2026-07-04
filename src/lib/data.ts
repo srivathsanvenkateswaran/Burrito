@@ -192,6 +192,17 @@ export function loadWiki(article: string): { rows: { date: string; views: number
   return loadJson("raw", "wiki", `${article}.json`);
 }
 
+export function loadFred(id: string): { fredId: string; rows: { date: string; value: number }[] } {
+  return loadJson("raw", "fred", `${id}.json`);
+}
+
+/** Year-over-year % change for monthly FRED series. */
+export function yoy(rows: { date: string; value: number }[]): { date: string; value: number }[] {
+  return rows.flatMap((r, i) =>
+    i < 12 ? [] : [{ date: r.date, value: Number(((r.value / rows[i - 12].value - 1) * 100).toFixed(2)) }],
+  );
+}
+
 export function onchainPoints<T extends { date: string }>(
   rows: T[],
   pick: (r: T) => number | null,
