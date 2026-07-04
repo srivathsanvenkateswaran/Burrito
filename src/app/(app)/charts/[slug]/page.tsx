@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { CHARTS, chartBySlug } from "@/lib/charts";
 import {
+  loadAltseason,
+  loadAssetsSummary,
   loadDaysSince,
   loadDistributions,
   loadDxy,
@@ -9,6 +11,7 @@ import {
   loadFan,
   loadFearGreed,
   loadFedAssets,
+  loadMcapAggregates,
   loadMetrics,
   loadMonthlyReturns,
   loadRoiBands,
@@ -28,6 +31,7 @@ import CategoryBars from "@/components/CategoryBars";
 import PeriodHeatmap from "@/components/PeriodHeatmap";
 import MilestoneChart from "@/components/MilestoneChart";
 import ChartCard from "@/components/ChartCard";
+import AssetTable from "@/components/AssetTable";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const YEAR_PALETTE = [
@@ -345,6 +349,77 @@ function ChartBody({ slug }: { slug: string }) {
             return { date: r.date, close: r.close, risk: v === undefined ? null : 1 - v / 100 };
           })}
           legendText="extreme greed → extreme fear"
+        />
+      );
+    }
+    case "risk-dashboard":
+      return <AssetTable assets={loadAssetsSummary().assets} />;
+    case "dominance": {
+      const agg = loadMcapAggregates().rows;
+      return (
+        <MultiSeriesChart
+          series={[
+            { label: "BTC dominance %", color: "#e6a144", points: agg.map((r) => ({ date: r.date, value: r.btcDom })) },
+            { label: "ETH dominance %", color: "#8ba7c9", points: agg.map((r) => ({ date: r.date, value: r.ethDom })) },
+          ]}
+        />
+      );
+    }
+    case "market-cap-logarithmic-regression": {
+      const agg = loadMcapAggregates().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "total mcap $B", color: "#e6a144", points: agg.map((r) => ({ date: r.date, value: r.total })) },
+            { label: "median fit", color: "#c9bba6", dashed: true, lineWidth: 1, points: agg.map((r) => ({ date: r.date, value: r.fair })) },
+            { label: "τ 0.15", color: "rgba(130,181,122,0.6)", lineWidth: 1, points: agg.map((r) => ({ date: r.date, value: r.fairLow })) },
+            { label: "τ 0.85", color: "rgba(222,107,90,0.6)", lineWidth: 1, points: agg.map((r) => ({ date: r.date, value: r.fairHigh })) },
+          ]}
+        />
+      );
+    }
+    case "market-cap-vs-fair-value": {
+      const agg = loadMcapAggregates().rows;
+      return (
+        <MetricChart
+          points={agg.map((r) => ({ date: r.date, value: Number((r.total / r.fair).toFixed(3)) }))}
+          height={460}
+          thresholds={[{ value: 1, color: "rgba(162,147,130,0.5)", label: "on trend" }]}
+        />
+      );
+    }
+    case "altcoin-market-capitalizations": {
+      const agg = loadMcapAggregates().rows;
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "total − BTC ($B)", color: "#8ba7c9", points: agg.map((r) => ({ date: r.date, value: r.alt })) },
+            { label: "total − BTC/ETH/stables ($B)", color: "#b391bf", points: agg.map((r) => ({ date: r.date, value: r.altExEthStables })) },
+          ]}
+        />
+      );
+    }
+    case "ssr": {
+      const agg = loadMcapAggregates().rows.filter((r) => r.ssr !== null && r.date >= "2017-01-01");
+      return (
+        <MetricChart
+          points={agg.map((r) => ({ date: r.date, value: r.ssr! }))}
+          color="#8ba7c9"
+          height={460}
+        />
+      );
+    }
+    case "altcoin-season-index": {
+      return (
+        <MetricChart
+          points={loadAltseason().rows.map((r) => ({ date: r.date, value: r.value }))}
+          height={460}
+          thresholds={[
+            { value: 75, color: "rgba(130,181,122,0.7)", label: "altcoin season" },
+            { value: 25, color: "rgba(222,107,90,0.7)", label: "bitcoin season" },
+          ]}
         />
       );
     }

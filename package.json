@@ -10,7 +10,10 @@
     "data:backfill": "tsx scripts/backfill.ts",
     "data:update": "tsx scripts/update.ts",
     "data:compute": "tsx scripts/compute.ts",
-    "data:external": "tsx scripts/fetch-external.ts"
+    "data:external": "tsx scripts/fetch-external.ts",
+    "data:assets": "tsx scripts/update-assets.ts",
+    "data:mcaps": "tsx scripts/fetch-mcaps.ts && tsx scripts/fetch-mcaps-estimate.ts",
+    "data:compute-assets": "tsx scripts/compute-assets.ts"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",
