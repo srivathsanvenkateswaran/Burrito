@@ -3,9 +3,11 @@ import { CHARTS, chartBySlug } from "@/lib/charts";
 import {
   loadDaysSince,
   loadDistributions,
+  loadDxy,
   loadEventRoi,
   loadEvents,
   loadFan,
+  loadFearGreed,
   loadMetrics,
   loadMonthlyReturns,
   loadRoiBands,
@@ -332,6 +334,31 @@ function ChartBody({ slug }: { slug: string }) {
           points={rows.map((r) => ({ date: r.date, close: r.close, risk: r.risk }))}
         />
       );
+    case "fear-greed-index": {
+      const fng = new Map(loadFearGreed().rows.map((r) => [r.date, r.value]));
+      return (
+        <RiskColoredPrice
+          points={rows.map((r) => {
+            const v = fng.get(r.date);
+            // riskColor is green→red over 0..1, so invert: greed green, fear red
+            return { date: r.date, close: r.close, risk: v === undefined ? null : 1 - v / 100 };
+          })}
+          legendText="extreme greed → extreme fear"
+        />
+      );
+    }
+    case "btc-vs-dxy": {
+      const dxyRows = loadDxy().rows.filter((r) => r.date >= "2010-08-18");
+      return (
+        <MultiSeriesChart
+          rightLog
+          series={[
+            { label: "BTC/USD (log, right)", color: "#e6a144", points: rows.map((r) => ({ date: r.date, value: r.close })) },
+            { label: "DXY (left)", color: "#8ba7c9", scale: "left", lineWidth: 1, points: dxyRows.map((r) => ({ date: r.date, value: r.close })) },
+          ]}
+        />
+      );
+    }
     case "risk-time": {
       const counts = new Array(10).fill(0);
       for (const r of rows) {
