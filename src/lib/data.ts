@@ -86,6 +86,76 @@ export function loadAltseason(): { rows: { date: string; value: number }[] } {
   return loadJson("metrics", "altseason.json");
 }
 
+export interface OnchainBtcRow {
+  date: string;
+  mvrv: number | null;
+  mvrvZ: number | null;
+  nupl: number | null;
+  rcap: number | null;
+  puell: number | null;
+  s2f: number | null;
+  issUsd: number | null;
+  inflPct: number | null;
+  thermo: number | null;
+  mctc: number | null;
+  rctc: number | null;
+  hashRate: number | null;
+  hashSma30: number | null;
+  hashSma60: number | null;
+  hashOverPrice: number | null;
+  minerRev: number | null;
+  feesUsd: number | null;
+  adrAct: number | null;
+  txCnt: number | null;
+  txTfrCnt: number | null;
+  blkCnt: number | null;
+  blockSizeMb: number | null;
+  utxoCount: number | null;
+  splyExNtv: number | null;
+  flowInExUsd: number | null;
+  flowOutExUsd: number | null;
+  flowNetExUsd: number | null;
+  splyCur: number | null;
+  price: number | null;
+}
+
+export function loadOnchainBtc(): {
+  ribbonEvents: { date: string; type: "up" | "down" }[];
+  rows: OnchainBtcRow[];
+} {
+  return loadJson("metrics", "onchain-btc.json");
+}
+
+export interface OnchainEthRow {
+  date: string;
+  adrAct: number | null;
+  feesUsd: number | null;
+  splyCur: number | null;
+  issNtv: number | null;
+  mvrv: number | null;
+  splyExNtv: number | null;
+  txCnt: number | null;
+}
+
+export function loadOnchainEth(): { rows: OnchainEthRow[] } {
+  return loadJson("metrics", "onchain-eth.json");
+}
+
+export function loadWiki(article: string): { rows: { date: string; views: number }[] } {
+  return loadJson("raw", "wiki", `${article}.json`);
+}
+
+export function onchainPoints<T extends { date: string }>(
+  rows: T[],
+  pick: (r: T) => number | null,
+  fromDate = "",
+): { date: string; value: number }[] {
+  return rows.flatMap((r) => {
+    const v = pick(r);
+    return v === null || r.date < fromDate ? [] : [{ date: r.date, value: v }];
+  });
+}
+
 export interface FanFile {
   taus: number[];
   rows: { date: string; q: number[] }[];
