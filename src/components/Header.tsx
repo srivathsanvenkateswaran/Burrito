@@ -12,7 +12,7 @@ interface Props {
 
 export default function Header({ price, changePct, risk, date }: Props) {
   return (
-    <header className="sticky top-0 z-10 flex h-12 items-center gap-3 border-b border-line bg-ink/85 px-4 backdrop-blur sm:gap-4 sm:px-6">
+    <header className="app-chrome sticky top-0 z-10 flex h-12 items-center gap-3 border-b border-line bg-ink/85 px-4 backdrop-blur sm:gap-4 sm:px-6">
       <MobileSidebar />
       <span className="hidden font-mono text-[10px] uppercase tracking-[0.15em] text-faint sm:inline">
         BTC / USD

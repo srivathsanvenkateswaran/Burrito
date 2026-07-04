@@ -56,10 +56,10 @@ function chartColors(theme: Theme) {
       };
     case "fiesta":
       return {
-        text: "#bda3b3",
-        grid: "rgba(245, 233, 224, 0.06)",
-        neutral: "rgba(189, 163, 179, 0.5)",
-        crosshair: "#ee3d8f",
+        text: "#67796b",
+        grid: "rgba(23, 41, 29, 0.08)",
+        neutral: "rgba(76, 99, 84, 0.5)",
+        crosshair: "#0b7a45",
       };
     default:
       return {
