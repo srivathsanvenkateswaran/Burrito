@@ -44,6 +44,15 @@ function main() {
 
     const sma20w = sma(closes, 140);
     const sma200d = sma(closes, 200);
+    const sma20d = sma(closes, 20);
+    const sma50d = sma(closes, 50);
+    const sma100d = sma(closes, 100);
+    const maStrength = {
+      p20: sma20d[n - 1] !== null && closes[n - 1] > sma20d[n - 1]!,
+      s20_50: sma20d[n - 1] !== null && sma50d[n - 1] !== null && sma20d[n - 1]! > sma50d[n - 1]!,
+      s50_100: sma50d[n - 1] !== null && sma100d[n - 1] !== null && sma50d[n - 1]! > sma100d[n - 1]!,
+      s100_200: sma100d[n - 1] !== null && sma200d[n - 1] !== null && sma100d[n - 1]! > sma200d[n - 1]!,
+    };
     const mcapRows = readMcap(asset.id);
     const latest = rows[n - 1];
     const staleDays = Math.round(
@@ -62,6 +71,7 @@ function main() {
       shortHistory: n < 730,
       mayer: sma200d[n - 1] === null ? null : Number((closes[n - 1] / sma200d[n - 1]!).toFixed(2)),
       above20w: sma20w[n - 1] === null ? null : closes[n - 1] > sma20w[n - 1]!,
+      maStrength,
       stale: staleDays > 5,
     });
     console.log(`${asset.id}: risk=${risk.toFixed(3)} rows=${n}${n < 730 ? " (short history)" : ""}`);
@@ -146,8 +156,233 @@ function main() {
   }
   fs.writeFileSync(path.join(dir, "altseason.json"), JSON.stringify({ rows: season }));
 
+  // ---------- breadth: advances/declines + % above 20W SMA ----------
+  const perAsset = new Map<
+    string,
+    { byDate: Map<string, { close: number; prev: number | null; sma20w: number | null }> }
+  >();
+  for (const asset of TRADEABLE) {
+    const series = readSeries(asset.id);
+    if (!series || series.rows.length < 150) continue;
+    const closes = series.rows.map((r) => r.close);
+    const s20 = sma(closes, 140);
+    const byDate = new Map(
+      series.rows.map((r, i) => [
+        r.date,
+        { close: r.close, prev: i > 0 ? closes[i - 1] : null, sma20w: s20[i] },
+      ]),
+    );
+    perAsset.set(asset.id, { byDate });
+  }
+  let adi = 0;
+  const breadth = btcDates
+    .filter((d) => d >= "2019-01-01")
+    .map((date) => {
+      let adv = 0;
+      let dec = 0;
+      let above = 0;
+      let withMa = 0;
+      for (const { byDate } of perAsset.values()) {
+        const r = byDate.get(date);
+        if (!r || r.prev === null) continue;
+        if (r.close > r.prev) adv++;
+        else if (r.close < r.prev) dec++;
+        if (r.sma20w !== null) {
+          withMa++;
+          if (r.close > r.sma20w) above++;
+        }
+      }
+      adi += adv - dec;
+      return {
+        date,
+        adv,
+        dec,
+        advPct: adv + dec > 0 ? Number(((adv / (adv + dec)) * 100).toFixed(1)) : null,
+        adi,
+        abi: Math.abs(adv - dec),
+        above20wPct: withMa >= 10 ? Number(((above / withMa) * 100).toFixed(1)) : null,
+      };
+    });
+  fs.writeFileSync(path.join(dir, "breadth.json"), JSON.stringify({ rows: breadth }));
+
+  // ---------- market-cap-weighted portfolios (monthly rebalance, indexed 100) ----------
+  const pfDates = btcDates.filter((d) => d >= "2019-01-01");
+  const sizes = [5, 10, 20] as const;
+  const pfValue: Record<string, number> = { top5: 100, top10: 100, top20: 100, btc: 100 };
+  let holdings: Record<string, Map<string, number>> = { top5: new Map(), top10: new Map(), top20: new Map() };
+  let curMonth = "";
+  const portfolios = pfDates.map((date, di) => {
+    const month = date.slice(0, 7);
+    if (month !== curMonth) {
+      curMonth = month;
+      const ranked = TRADEABLE.filter((a) => {
+        const m = mcapsById.get(a.id)?.get(date);
+        return m !== undefined && perAsset.get(a.id)?.byDate.get(date);
+      }).sort(
+        (a, b) => (mcapsById.get(b.id)!.get(date) ?? 0) - (mcapsById.get(a.id)!.get(date) ?? 0),
+      );
+      for (const n of sizes) {
+        const top = ranked.slice(0, n);
+        const totalM = top.reduce((s, a) => s + mcapsById.get(a.id)!.get(date)!, 0);
+        const h = new Map<string, number>();
+        for (const a of top) {
+          const w = mcapsById.get(a.id)!.get(date)! / totalM;
+          const px = perAsset.get(a.id)!.byDate.get(date)!.close;
+          h.set(a.id, (pfValue[`top${n}`] * w) / px); // units held
+        }
+        holdings[`top${n}`] = h;
+      }
+    }
+    if (di > 0) {
+      for (const n of sizes) {
+        let v = 0;
+        for (const [id, units] of holdings[`top${n}`]) {
+          const r = perAsset.get(id)!.byDate.get(date);
+          if (r) v += units * r.close;
+        }
+        if (v > 0) pfValue[`top${n}`] = v;
+      }
+      const b0 = perAsset.get("btc")!.byDate.get(pfDates[0])!.close;
+      pfValue.btc = (100 * perAsset.get("btc")!.byDate.get(date)!.close) / b0;
+    }
+    return {
+      date,
+      top5: Number(pfValue.top5.toFixed(2)),
+      top10: Number(pfValue.top10.toFixed(2)),
+      top20: Number(pfValue.top20.toFixed(2)),
+      btc: Number(pfValue.btc.toFixed(2)),
+    };
+  });
+  fs.writeFileSync(path.join(dir, "portfolios.json"), JSON.stringify({ rows: portfolios }));
+
+  // ---------- 90d correlation matrix (top assets + DXY) ----------
+  const corrIds = summary.slice(0, 12).map((s: any) => s.id);
+  const retMap = new Map<string, Map<string, number>>();
+  for (const id of corrIds) {
+    const series = readSeries(id)!;
+    const m = new Map<string, number>();
+    for (let i = 1; i < series.rows.length; i++) {
+      m.set(series.rows[i].date, Math.log(series.rows[i].close / series.rows[i - 1].close));
+    }
+    retMap.set(id, m);
+  }
+  try {
+    const dxy = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), "data", "raw", "dxy", "daily.json"), "utf8"),
+    ).rows as { date: string; close: number }[];
+    const m = new Map<string, number>();
+    for (let i = 1; i < dxy.length; i++) m.set(dxy[i].date, Math.log(dxy[i].close / dxy[i - 1].close));
+    retMap.set("dxy", m);
+    corrIds.push("dxy");
+  } catch {}
+  const last90 = btcDates.slice(-90);
+  const corr = corrIds.map((a) =>
+    corrIds.map((b) => {
+      const xs: number[] = [];
+      const ys: number[] = [];
+      for (const d of last90) {
+        const x = retMap.get(a)!.get(d);
+        const y = retMap.get(b)!.get(d);
+        if (x !== undefined && y !== undefined) {
+          xs.push(x);
+          ys.push(y);
+        }
+      }
+      if (xs.length < 30) return null;
+      const mx = xs.reduce((s, v) => s + v, 0) / xs.length;
+      const my = ys.reduce((s, v) => s + v, 0) / ys.length;
+      let num = 0;
+      let dx = 0;
+      let dy = 0;
+      for (let i = 0; i < xs.length; i++) {
+        num += (xs[i] - mx) * (ys[i] - my);
+        dx += (xs[i] - mx) ** 2;
+        dy += (ys[i] - my) ** 2;
+      }
+      return dx > 0 && dy > 0 ? Number((num / Math.sqrt(dx * dy)).toFixed(2)) : null;
+    }),
+  );
+  fs.writeFileSync(path.join(dir, "correlations.json"), JSON.stringify({ ids: corrIds, matrix: corr }));
+
+  // ---------- cross-asset ROI comparisons (multiples, days axis) ----------
+  const CYCLE_BOTTOM = "2022-11-21";
+  const LATEST_PEAK = "2025-10-06";
+  const btcByDate = perAsset.get("btc")!.byDate;
+  type Line = { id: string; points: { day: number; mult: number }[] };
+  const fromAnchor = (anchor: string, pair: boolean): Line[] =>
+    TRADEABLE.flatMap((asset) => {
+      const byDate = perAsset.get(asset.id)?.byDate;
+      if (!byDate) return [];
+      if (pair && asset.id === "btc") return [];
+      const dates = btcDates.filter((d) => d >= anchor);
+      const base = byDate.get(dates[0]);
+      const baseBtc = btcByDate.get(dates[0]);
+      if (!base || (pair && !baseBtc)) return [];
+      const points: { day: number; mult: number }[] = [];
+      dates.forEach((d, day) => {
+        const r = byDate.get(d);
+        const b = btcByDate.get(d);
+        if (!r || (pair && !b)) return;
+        const mult = pair
+          ? r.close / b!.close / (base.close / baseBtc!.close)
+          : r.close / base.close;
+        points.push({ day, mult: Number(mult.toFixed(4)) });
+      });
+      return points.length > 30 ? [{ id: asset.id, points }] : [];
+    });
+  const inception = (pair: boolean): Line[] =>
+    TRADEABLE.flatMap((asset) => {
+      if (pair && asset.id === "btc") return [];
+      const series = readSeries(asset.id)!;
+      const base = series.rows[0];
+      const baseBtc = btcByDate.get(base.date);
+      if (pair && !baseBtc) return [];
+      const points: { day: number; mult: number }[] = [];
+      series.rows.forEach((r, day) => {
+        if (day % 3 !== 0 && day !== series.rows.length - 1) return;
+        const b = btcByDate.get(r.date);
+        if (pair && !b) return;
+        const mult = pair
+          ? r.close / b!.close / (base.close / baseBtc!.close)
+          : r.close / base.close;
+        points.push({ day, mult: Number(mult.toFixed(4)) });
+      });
+      return [{ id: asset.id, points }];
+    });
+  // ETH sub-cycle bottoms: fixed knowns + latest 400d low
+  const eth = readSeries("eth")!.rows;
+  const recent = eth.slice(-400);
+  const latestLow = recent.reduce((a, b) => (b.close < a.close ? b : a)).date;
+  const ETH_BOTTOMS = ["2018-12-15", "2020-03-13", "2022-06-18", latestLow];
+  const ethSub = ETH_BOTTOMS.map((anchor) => {
+    const idx = eth.findIndex((r) => r.date >= anchor);
+    const next = ETH_BOTTOMS.find((b) => b > anchor);
+    const end = next ? eth.findIndex((r) => r.date >= next) : eth.length;
+    const base = eth[idx].close;
+    return {
+      id: anchor.slice(0, 7),
+      points: eth.slice(idx, end === -1 ? eth.length : end).map((r, day) => ({
+        day,
+        mult: Number((r.close / base).toFixed(4)),
+      })),
+    };
+  });
+  fs.writeFileSync(
+    path.join(dir, "comparisons.json"),
+    JSON.stringify({
+      anchors: { bottom: CYCLE_BOTTOM, peak: LATEST_PEAK, ethBottoms: ETH_BOTTOMS },
+      fromBottom: fromAnchor(CYCLE_BOTTOM, false),
+      fromPeak: fromAnchor(LATEST_PEAK, false),
+      pairsFromBottom: fromAnchor(CYCLE_BOTTOM, true),
+      pairsFromPeak: fromAnchor(LATEST_PEAK, true),
+      inception: inception(false),
+      pairsInception: inception(true),
+      ethSubCycle: ethSub,
+    }),
+  );
+
   console.log(
-    `summary: ${summary.length} assets | aggregates: ${rows.length} rows | altseason: ${season.length} rows`,
+    `summary: ${summary.length} assets | aggregates: ${rows.length} rows | altseason: ${season.length} rows | breadth: ${breadth.length} | portfolios: ${portfolios.length} | corr: ${corrIds.length}x${corrIds.length}`,
   );
   const latest = rows.at(-1)!;
   console.log(

@@ -116,12 +116,22 @@ export const CHARTS: ChartDef[] = [
   },
   {
     slug: "roi-after-latest-cycle-peak",
-    title: "ROI After Latest Cycle Peak",
+    title: "ROI After Latest Cycle Peak (Multiple Coins)",
     category: "Cycles",
-    description: "The return on investment as measured from the most recent all-time-high close.",
+    description: "Each asset's multiple since the October 2025 market peak.",
     explanation: [
-      "A single line tracking return from the most recent peak close to today — the current cycle's version of the ROI After Cycle Peak chart, updated daily.",
-      "Reading it against the historical peak paths shows whether this drawdown is tracking a typical post-top trajectory or breaking the pattern — both in depth and in elapsed time.",
+      "Every line starts at 1× on 2025-10-06 — the latest cycle's ATH close — and tracks each asset's path through the current drawdown. Toggle assets to compare who is weathering it and who is collapsing.",
+      "Drawdown dispersion is a leadership signal: assets falling least from a shared peak tend to lead the next advance, while the deepest fallers historically either die or produce the most violent (and least reliable) bounces.",
+    ],
+  },
+  {
+    slug: "roi-after-latest-cycle-peak-for-crypto-pairs",
+    title: "ROI After Latest Peak (Crypto Pairs)",
+    category: "Cycles",
+    description: "Each asset against BTC since the October 2025 peak.",
+    explanation: [
+      "The current drawdown in BTC terms: lines above 1× have outperformed Bitcoin since the top — rare in down markets, since capital hides in BTC during fear.",
+      "Anything holding above 1× through a bear phase is showing genuine relative strength, the strongest single filter for next-cycle leadership that pair charts offer.",
     ],
   },
   {
@@ -317,6 +327,156 @@ export const CHARTS: ChartDef[] = [
     explanation: [
       "When the fast 111-day SMA crosses above twice the 350-day SMA, the Pi Cycle Top has historically flagged cycle peaks with eerie precision — within days of the 2013, 2017 and 2021 tops. The name comes from 350/111 ≈ π.",
       "It is a curve-fit discovery, not a theory — there is no economic reason the ratio should be π — so treat each new cycle as an out-of-sample test. It fires rarely (a handful of events in 15 years), which is exactly what makes it worth marking on the chart.",
+    ],
+  },
+  {
+    slug: "heatmap",
+    title: "Crypto Heatmap",
+    category: "Market Cap",
+    description: "Relative market-cap sizes with the day's biggest gainers and losers.",
+    explanation: [
+      "Each tile's area scales with the square root of the asset's market cap; color shows the 24-hour move. One glance answers two questions: what dominates the market, and what's moving today.",
+      "Uniformly red or green boards mean macro is driving everything at once; a mixed board means idiosyncratic, rotational trading — the healthier regime for alt selection.",
+    ],
+  },
+  {
+    slug: "market-capitalization-hypotheticals",
+    title: "Market Cap Hypotheticals",
+    category: "Market Cap",
+    description: "What each asset's price would be at another asset's market cap.",
+    explanation: [
+      "The classic \"if X had Y's market cap\" table: each cell scales an asset's price by the ratio of the target's market cap to its own. The small multiplier shows how many × away that scenario is.",
+      "Its real use is as a plausibility filter: seeing that a favorite small cap needs 100× to reach ETH's cap converts vague dreams into arithmetic. Market cap — not price per coin — is what growth actually has to buy.",
+    ],
+  },
+  {
+    slug: "portfolios-weighted-by-market-cap",
+    title: "Portfolios Weighted By Market Cap",
+    category: "Market Cap",
+    description: "Historical performance of top-5/10/20 market-cap-weighted portfolios vs. holding BTC.",
+    explanation: [
+      "Three index portfolios — the top 5, 10, and 20 tracked assets, weighted by market cap and rebalanced monthly — against simply holding Bitcoin, all indexed to 100 at the start of 2019.",
+      "The uncomfortable finding this chart usually delivers: broad diversification into alts has mostly underperformed just holding BTC across full cycles, because alt drawdowns are deeper than their rallies are higher. Diversification earns its keep only in the alt-season windows — which the gap between the lines makes visible.",
+    ],
+  },
+  {
+    slug: "advance-decline-ratios",
+    title: "Advance Decline Ratios",
+    category: "Breadth",
+    description: "The daily share of tracked assets closing up.",
+    explanation: [
+      "Each day, what fraction of tracked assets closed higher? Smoothed over time this is the market's participation rate — rallies where 80% of assets advance are broad and healthy; rallies where 40% advance are narrow, carried by a few names.",
+      "Breadth divergences lead price: market highs made on deteriorating advance ratios (fewer and fewer assets participating) have historically preceded corrections — the crypto version of a classic equity-market signal.",
+    ],
+  },
+  {
+    slug: "advance-decline-index",
+    title: "Advance Decline Index (ADI)",
+    category: "Breadth",
+    description: "The running sum of daily advances minus declines.",
+    explanation: [
+      "ADI accumulates each day's (advances − declines) into a single line — the market's cumulative participation. Rising ADI means most assets are winning most days, regardless of what the total market cap says.",
+      "Watch for divergence against price: total market cap making new highs while ADI trends down means the average coin is already in decline — distribution hiding behind a strong index. Convergent new highs in both are the confirmation signal.",
+    ],
+  },
+  {
+    slug: "absolute-breadth-index",
+    title: "Absolute Breadth Index (ABI)",
+    category: "Breadth",
+    description: "The absolute gap between advances and declines — directionless market intensity.",
+    explanation: [
+      "ABI is |advances − declines|: how one-sided the day was, ignoring direction. High readings mean the market moved as one block (everything up or everything down); low readings mean an even, mixed tape.",
+      "Persistently high ABI marks macro-driven regimes — correlation ≈ 1 days cluster in crashes and manias. Low-ABI stretches are the stock-picker phases where individual assets trade on their own stories.",
+    ],
+  },
+  {
+    slug: "above-below-ma",
+    title: "Coins Above/Below Moving Average",
+    category: "Breadth",
+    description: "The percentage of tracked assets trading above their 20-week SMA.",
+    explanation: [
+      "The bull-market participation gauge: what share of assets sit above their own 20-week average — the same line the Bull Market Support Band is built on. Above ~80%: broad bull. Below ~20%: broad bear, and historically the washout zone where bottoms form.",
+      "This series turns before price at both extremes: bottoms show breadth improving while price still falls (fewer new lows), and tops show breadth decaying while price grinds higher on narrowing leadership.",
+    ],
+  },
+  {
+    slug: "color-coded-moving-average-strength",
+    title: "Color-Coded MA Strength",
+    category: "Breadth",
+    description: "Each asset's moving-average stack: green where the faster average is above the slower.",
+    explanation: [
+      "Four checks per asset — price above the 20-day, 20 above 50, 50 above 100, 100 above 200 — colored green when true. A full green row is a perfectly bullish MA stack; full red, a perfect downtrend.",
+      "The table reads as the market's trend X-ray: transitions matter more than states, and rows flipping from red to mixed to green in sequence trace new uptrends forming asset by asset.",
+    ],
+  },
+  {
+    slug: "does-it-bleed",
+    title: "Does It Bleed",
+    category: "Breadth",
+    description: "Altcoin prices measured in BTC, indexed — does your coin bleed against Bitcoin?",
+    explanation: [
+      "Every line is an alt's BTC-denominated price, indexed to 1.0 two years ago. Below 1.0: you'd hold more value in Bitcoin — the alt \"bleeds.\" The USD chart flatters alts in bull markets; the BTC pair is the honest benchmark.",
+      "The sobering base rate: over multi-year windows, most alts bleed most of the time, with brief violent exceptions during alt seasons. This chart is the antidote to survivorship memory — and the toggles let you check any specific coin's verdict.",
+    ],
+  },
+  {
+    slug: "correlation-coefficients",
+    title: "Correlation Coefficients",
+    category: "Breadth",
+    description: "90-day return correlations between the top assets and the dollar index.",
+    explanation: [
+      "Pearson correlation of daily returns over the trailing 90 days, for the top tracked assets plus DXY. Red cells move together; blue cells move opposite. The BTC row is the one to read: how tightly is everything chained to Bitcoin right now?",
+      "Crypto's dirty secret is visible here — intra-crypto correlations usually sit at 0.6–0.9, so diversification across coins diversifies little. The DXY column shows the macro chain: strongly negative in Fed-driven regimes, near zero when crypto trades on its own news.",
+    ],
+  },
+  {
+    slug: "roi-after-bottom-comparison",
+    title: "ROI After Bottom (Multiple Coins)",
+    category: "Cycles",
+    description: "Each asset's multiple from the November 2022 cycle bottom.",
+    explanation: [
+      "Every line starts at 1× on 2022-11-21 — the cycle low — and tracks that asset's multiple since, on a log axis. Toggle assets to compare recoveries.",
+      "Dispersion is the story: the same bottom produced wildly different recoveries, and the ranking reshuffles between market phases. BTC leading the early recovery with alts catching up later (or never) is the classic post-bottom sequence.",
+    ],
+  },
+  {
+    slug: "roi-after-cycle-bottom-for-crypto-pairs",
+    title: "ROI After Bottom (Crypto Pairs)",
+    category: "Cycles",
+    description: "Each asset's performance against BTC since the November 2022 bottom.",
+    explanation: [
+      "Same anchor as the multiple-coins chart, but every line is the asset's BTC pair — above 1× means it beat Bitcoin since the bottom, below means it lagged. This strips out the market's beta and leaves pure relative strength.",
+      "Far fewer lines hold above 1× here than on the USD version — the recurring lesson of pair charts. The ones that do are the cycle's genuine outperformers rather than passengers.",
+    ],
+  },
+  {
+    slug: "roi-after-inception-comparison",
+    title: "ROI After Inception (Multiple Coins)",
+    category: "Cycles",
+    description: "Each asset's multiple since its own first trading day, on a shared days axis.",
+    explanation: [
+      "All assets aligned at day 0 = their Binance listing, tracking the multiple since. This normalizes for age: a 2017 coin and a 2023 coin can be compared at the same point in their lifecycle.",
+      "Two patterns recur: early listings during bull markets start with a crash (listing pops fade), and the long-run distribution is brutally skewed — a few compounders, many round-trips to zero-ish. Day-matched comparison shows whether a young coin is tracking a compounder's path or a bleeder's.",
+    ],
+  },
+  {
+    slug: "roi-after-inception-for-crypto-pairs",
+    title: "ROI After Inception (Crypto Pairs)",
+    category: "Cycles",
+    description: "Each asset against BTC since its own listing day.",
+    explanation: [
+      "The inception chart in BTC terms: from each asset's first day, did holding it beat just holding Bitcoin? Lines below 1× — the majority, most of the time — answer no.",
+      "This is the cleanest long-horizon version of the \"does it bleed\" question, aligned by asset age instead of calendar. The handful of lines that sustain above 1× for years are the short list of alts that have genuinely compounded against BTC.",
+    ],
+  },
+  {
+    slug: "roi-after-sub-cycle-bottom",
+    title: "ROI After Sub-Cycle Bottom (ETH)",
+    category: "Cycles",
+    description: "Ethereum's recovery multiple from each of its major lows.",
+    explanation: [
+      "Ethereum's cycle lows don't always coincide with Bitcoin's — the 2020 COVID crash and the mid-2022 capitulation were ETH-specific extremes. Each line tracks ETH's multiple from one of those lows, plus its latest 400-day low, on a shared days axis.",
+      "Comparing the current recovery against 2018/2020/2022 paths answers whether ETH is tracking its own historical rhythm or breaking it — relevant right now, with ETH's latest drawdown deeper than BTC's.",
     ],
   },
   {
