@@ -1,29 +1,29 @@
 ---
 title: Market Snapshot
 tags: [burrito, snapshot]
-updated: 2026-07-17
+updated: 2026-07-18
 ---
 
-# Market Snapshot — 2026-07-17
+# Market Snapshot — 2026-07-18
 
 Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 
 ## Bitcoin
 
-- **Price**: $63,790.67 · **Risk**: 0.032 ([[risk-metric|methodology]])
-- **Fair value** (fan median): $112,876.76
-- **MVRV**: 1.2091 · **NUPL**: 0.173 · **Puell**: 0.637
-- **Fear & Greed**: 25
+- **Price**: $63,899.18 · **Risk**: 0.034 ([[risk-metric|methodology]])
+- **Fair value** (fan median): $113,120.42
+- **MVRV**: 1.2254 · **NUPL**: 0.1839 · **Puell**: 0.845
+- **Fear & Greed**: 28
 
 ## Market
 
-- **Total market cap** (tracked): $1940.52B · **BTC dominance**: 66.06% · **SSR**: 4.93
+- **Total market cap** (tracked): $1954.861B · **BTC dominance**: 66.47% · **SSR**: 5
 
 ## Top assets by market cap
 
 | Asset | Price | 24h | Risk |
 |---|---|---|---|
-| BTC | $63,791 | -1.43% | 0.01 |
+| BTC | $63,899 | +0.17% | 0.01 |
 | ETH | $1,758 | +3.39% | 0.02 |
 | XRP | $1.1348 | +4.29% | 0.47 |
 | BNB | $574 | +2.66% | 0.01 |
