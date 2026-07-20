@@ -1,5 +1,5 @@
 {
-"updatedAt": "2026-07-19T04:05:11.462Z",
+"updatedAt": "2026-07-20T04:24:10.534Z",
 "rows": [
 {"date":"2015-07-30","adrAct":9206,"feesUsd":null,"splyCur":72049302,"issNtv":39311.1,"mvrv":null,"splyExNtv":0,"txCnt":0},
 {"date":"2015-07-31","adrAct":424,"feesUsd":null,"splyCur":72085493,"issNtv":36191.7,"mvrv":null,"splyExNtv":0,"txCnt":0},
@@ -4007,6 +4007,7 @@
 {"date":"2026-07-15","adrAct":800549,"feesUsd":256363,"splyCur":121868942,"issNtv":2877.96,"mvrv":0.9428,"splyExNtv":16112104,"txCnt":2780952},
 {"date":"2026-07-16","adrAct":757912,"feesUsd":254964,"splyCur":121871777,"issNtv":2879.43,"mvrv":0.9149,"splyExNtv":16059819,"txCnt":2836598},
 {"date":"2026-07-17","adrAct":803959,"feesUsd":216412,"splyCur":121874626,"issNtv":2877.97,"mvrv":0.9043,"splyExNtv":16039543,"txCnt":2461418},
-{"date":"2026-07-18","adrAct":854306,"feesUsd":137593,"splyCur":121877474,"issNtv":2869.9,"mvrv":0.9127,"splyExNtv":16064868,"txCnt":2595080}
+{"date":"2026-07-18","adrAct":854306,"feesUsd":137593,"splyCur":121877474,"issNtv":2869.9,"mvrv":0.9127,"splyExNtv":16064868,"txCnt":2595080},
+{"date":"2026-07-19","adrAct":1002971,"feesUsd":133045,"splyCur":121880341,"issNtv":2880.13,"mvrv":0.9153,"splyExNtv":16056371,"txCnt":1592187}
 ]
 }
