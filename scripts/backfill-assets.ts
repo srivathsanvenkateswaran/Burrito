@@ -5,7 +5,7 @@
  * 2017 start date covers every pair. Only fully closed UTC candles are
  * stored. Run: `npx tsx scripts/backfill-assets.ts`.
  */
-import { TRADEABLE } from "./lib/assets";
+import { CRYPTO_TRADEABLE } from "./lib/assets";
 import {
   fetchBinanceDaily,
   lastClosedUtcDate,
@@ -19,15 +19,17 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function main() {
   const cutoff = lastClosedUtcDate();
-  const assets = TRADEABLE.filter((a) => a.id !== "btc");
+  const assets = CRYPTO_TRADEABLE.filter((a) => a.id !== "btc");
   console.log(`Backfilling ${assets.length} assets through ${cutoff}…`);
 
   for (const asset of assets) {
+    const pair = asset.price.kind === "binance" ? asset.price.symbol : null;
+    if (!pair) continue;
     try {
-      const fetched = await fetchBinanceDaily(asset.binance!, EARLIEST_START);
+      const fetched = await fetchBinanceDaily(pair, EARLIEST_START);
       const rows = fetched.filter((r) => r.date <= cutoff);
       if (rows.length === 0) {
-        console.warn(`${asset.id}: no candles returned for ${asset.binance}; skipping.`);
+        console.warn(`${asset.id}: no candles returned for ${pair}; skipping.`);
         continue;
       }
       writeSeries({
@@ -38,7 +40,7 @@ async function main() {
       });
       console.log(`${asset.id}: ${rows.length} rows (${rows[0].date} → ${rows.at(-1)!.date})`);
     } catch (err) {
-      console.warn(`${asset.id}: fetch failed for ${asset.binance} (${err}); skipping.`);
+      console.warn(`${asset.id}: fetch failed for ${pair} (${err}); skipping.`);
     }
     await sleep(DELAY_MS);
   }

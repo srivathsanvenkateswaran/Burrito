@@ -3,36 +3,44 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { CHARTS } from "@/lib/charts";
+import { CHARTS, chartBySlug } from "@/lib/charts";
+import { chartText } from "@/lib/chartText";
+import { assetChartSlugs, PAGE_ASSETS, toChartAsset } from "@/lib/assets";
 
 interface Entry {
   href: string;
   title: string;
   category: string;
   description: string;
+  /** Set on asset and asset×chart entries; used to rank an exact ticker match first. */
+  symbol?: string;
 }
 
-const ENTRIES: Entry[] = [
+const PAGE_ENTRIES: Entry[] = [
   { href: "/dashboard", title: "Dashboard", category: "Pages", description: "Stats, hero chart, and the full chart index." },
   { href: "/", title: "Home", category: "Pages", description: "Landing page with today's read." },
+  { href: "/assets", title: "Assets", category: "Pages", description: "Every tracked asset, grouped by sector." },
   { href: "/docs", title: "Documentation", category: "Docs", description: "Methodology, data pipeline, chart reference, FAQ, Obsidian vault." },
   { href: "/docs/risk-metric", title: "Risk Metric Methodology", category: "Docs", description: "How the 0–1 risk score and quantile regression fan work." },
   { href: "/docs/data-pipeline", title: "Data Sources & Pipeline", category: "Docs", description: "Where every number comes from; the self-updating loop." },
   { href: "/docs/snapshot", title: "Market Snapshot", category: "Docs", description: "Today's readings, regenerated daily." },
   { href: "/docs/faq", title: "FAQ", category: "Docs", description: "Why numbers differ, update cadence, licensing." },
-  ...CHARTS.map((c) => ({
-    href: `/charts/${c.slug}`,
-    title: c.title,
-    category: c.category,
-    description: c.description,
-  })),
 ];
 
-/** Rank: title prefix > title substring > category > description. 0 = no match. */
+const CHART_ENTRIES: Entry[] = CHARTS.map((c) => ({
+  href: `/charts/${c.slug}`,
+  title: c.title,
+  category: c.category,
+  description: c.description,
+}));
+
+/** Rank: exact symbol match > title prefix > title substring > category > description. 0 = no match. */
 function score(entry: Entry, q: string): number {
+  const query = q.toLowerCase().trim();
+  if (query.length === 0) return 1;
+  if (entry.symbol && entry.symbol.toLowerCase() === query) return 1_000_000;
   const t = entry.title.toLowerCase();
-  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-  if (words.length === 0) return 1;
+  const words = query.split(/\s+/).filter(Boolean);
   let total = 0;
   for (const w of words) {
     if (t.startsWith(w)) total += 100;
@@ -44,7 +52,7 @@ function score(entry: Entry, q: string): number {
   return total;
 }
 
-export default function SearchPalette() {
+export default function SearchPalette({ suiteIds }: { suiteIds: string[] }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(0);
@@ -52,12 +60,42 @@ export default function SearchPalette() {
   const listRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  // one entry per asset, plus one per asset × chart in its (computed) suite
+  const entries = useMemo<Entry[]>(() => {
+    const assetEntries: Entry[] = PAGE_ASSETS.flatMap((a) => {
+      const chartAsset = toChartAsset(a);
+      const assetEntry: Entry[] = [
+        {
+          href: `/assets/${a.id}`,
+          title: `${a.symbol} · ${a.name}`,
+          category: a.sector,
+          description: a.about,
+          symbol: a.symbol,
+        },
+      ];
+      for (const slug of assetChartSlugs(a.id, suiteIds.includes(a.id))) {
+        const def = chartBySlug(slug);
+        if (!def) continue;
+        const text = chartText(def, chartAsset);
+        assetEntry.push({
+          href: `/assets/${a.id}/${slug}`,
+          title: `${a.symbol} · ${text.title}`,
+          category: a.sector,
+          description: text.description,
+          symbol: a.symbol,
+        });
+      }
+      return assetEntry;
+    });
+    return [...PAGE_ENTRIES, ...assetEntries, ...CHART_ENTRIES];
+  }, [suiteIds]);
+
   const results = useMemo(() => {
-    const scored = ENTRIES.map((e) => ({ e, s: score(e, query) }))
+    const scored = entries.map((e) => ({ e, s: score(e, query) }))
       .filter((r) => r.s > 0)
       .sort((a, b) => b.s - a.s);
     return scored.slice(0, 12).map((r) => r.e);
-  }, [query]);
+  }, [entries, query]);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -82,8 +120,6 @@ export default function SearchPalette() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  useEffect(() => setSelected(0), [query]);
-
   useEffect(() => {
     listRef.current
       ?.querySelector(`[data-idx="${selected}"]`)
@@ -98,7 +134,10 @@ export default function SearchPalette() {
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          setSelected(0);
+        }}
         aria-label="Search charts"
         className="flex h-8 items-center gap-2 rounded-md border border-line px-2.5 text-muted transition-colors hover:border-faint/60 hover:text-fg"
       >
@@ -129,7 +168,10 @@ export default function SearchPalette() {
                 <input
                   ref={inputRef}
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setSelected(0);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "ArrowDown") {
                       e.preventDefault();
@@ -141,7 +183,7 @@ export default function SearchPalette() {
                       go(results[selected].href);
                     }
                   }}
-                  placeholder="Search 99 charts… (risk, halving, inflation, MVRV)"
+                  placeholder={`Search ${entries.length} entries… (AAPL, risk, halving, MVRV)`}
                   className="w-full bg-transparent py-3.5 text-sm text-fg outline-none placeholder:text-faint"
                 />
               </div>

@@ -24,7 +24,14 @@ function Pct({ v }: { v: number | null }) {
   );
 }
 
-export default function AssetTable({ assets }: { assets: AssetSummary[] }) {
+export default function AssetTable({
+  assets,
+  hideMcap = false,
+}: {
+  assets: AssetSummary[];
+  /** Hide the Mcap column entirely — for tables where it's null across the board (e.g. indices). */
+  hideMcap?: boolean;
+}) {
   return (
     <div className="overflow-x-auto rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]">
       <table className="w-full font-mono text-xs">
@@ -36,7 +43,9 @@ export default function AssetTable({ assets }: { assets: AssetSummary[] }) {
             <th className="px-3 py-2.5 text-right font-medium">24h</th>
             <th className="hidden px-3 py-2.5 text-right font-medium sm:table-cell">30d</th>
             <th className="hidden px-3 py-2.5 text-right font-medium md:table-cell">1y</th>
-            <th className="hidden px-3 py-2.5 text-right font-medium sm:table-cell">Mcap</th>
+            {!hideMcap && (
+              <th className="hidden px-3 py-2.5 text-right font-medium sm:table-cell">Mcap</th>
+            )}
             <th className="hidden px-3 py-2.5 text-right font-medium md:table-cell">Mayer</th>
             <th className="hidden px-3 py-2.5 text-center font-medium md:table-cell">20W</th>
             <th className="px-4 py-2.5 text-right font-medium">Risk</th>
@@ -59,7 +68,9 @@ export default function AssetTable({ assets }: { assets: AssetSummary[] }) {
               <td className="px-3 py-2.5 text-right"><Pct v={a.chg24h} /></td>
               <td className="hidden px-3 py-2.5 text-right sm:table-cell"><Pct v={a.roi30d} /></td>
               <td className="hidden px-3 py-2.5 text-right md:table-cell"><Pct v={a.roi1y} /></td>
-              <td className="hidden px-3 py-2.5 text-right text-muted sm:table-cell">{fmtMcap(a.mcap)}</td>
+              {!hideMcap && (
+                <td className="hidden px-3 py-2.5 text-right text-muted sm:table-cell">{fmtMcap(a.mcap)}</td>
+              )}
               <td className="hidden px-3 py-2.5 text-right text-muted md:table-cell">
                 {a.mayer === null ? "—" : a.mayer.toFixed(2)}
               </td>
@@ -74,18 +85,27 @@ export default function AssetTable({ assets }: { assets: AssetSummary[] }) {
               </td>
               <td className="px-4 py-2.5">
                 <div className="flex items-center justify-end gap-2">
-                  <span style={{ color: riskColor(a.risk) }}>
-                    {a.risk.toFixed(2)}
-                    {a.shortHistory && (
-                      <span className="text-faint" title="Short price history — low-confidence fit">
-                        *
-                      </span>
-                    )}
-                  </span>
+                  {a.risk === null ? (
+                    <span className="text-faint" title="Not enough history to fit a risk model yet">
+                      —
+                    </span>
+                  ) : (
+                    <span style={{ color: riskColor(a.risk) }}>
+                      {a.risk.toFixed(2)}
+                      {a.shortHistory && (
+                        <span className="text-faint" title="Short price history — low-confidence fit">
+                          *
+                        </span>
+                      )}
+                    </span>
+                  )}
                   <span className="h-1.5 w-12 overflow-hidden rounded-full bg-raise">
                     <span
                       className="block h-full rounded-full"
-                      style={{ width: `${a.risk * 100}%`, backgroundColor: riskColor(a.risk) }}
+                      style={{
+                        width: `${(a.risk ?? 0) * 100}%`,
+                        backgroundColor: a.risk === null ? "transparent" : riskColor(a.risk),
+                      }}
                     />
                   </span>
                 </div>

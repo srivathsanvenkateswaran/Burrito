@@ -8,9 +8,9 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { ASSETS, STABLES, TRADEABLE } from "./lib/assets";
+import { ASSETS, CRYPTO_TRADEABLE, STABLES, TRADEABLE } from "./lib/assets";
 import { readSeries } from "./lib/marketData";
-import { ema, fanPosition, quantileFan, sma } from "./lib/metrics";
+import { fanPosition, quantileFan, sma } from "./lib/metrics";
 
 const TAUS = [0.01, 0.05, 0.15, 0.3, 0.5, 0.7, 0.85, 0.95, 0.99];
 const dir = path.join(process.cwd(), "data", "metrics");
@@ -25,11 +25,72 @@ function pctChange(closes: number[], i: number, days: number): number | null {
   return i < days ? null : (closes[i] / closes[i - days] - 1) * 100;
 }
 
+/** Calendar-day lookback return (last row vs the last row at or before `calendarDays` ago). */
+function pctChangeByDate(rows: { date: string; close: number }[], calendarDays: number): number | null {
+  const n = rows.length;
+  if (n === 0) return null;
+  const now = rows[n - 1];
+  const targetMs = Date.parse(`${now.date}T00:00:00Z`) - calendarDays * 86_400_000;
+  let lo = 0;
+  let hi = n - 1;
+  let ans = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (Date.parse(`${rows[mid].date}T00:00:00Z`) <= targetMs) {
+      ans = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  if (ans === -1) return null;
+  return (now.close / rows[ans].close - 1) * 100;
+}
+
+interface MetricsDailyLastRow {
+  close: number;
+  fair?: number;
+  risk: number | null;
+  mayer: number | null;
+  sma20w: number | null;
+}
+
+/** Last row of data/metrics/<id>/daily.json, or null if the file doesn't exist (e.g. spcx). */
+function readMetricsLastRow(id: string): MetricsDailyLastRow | null {
+  const f = path.join(dir, id, "daily.json");
+  if (!fs.existsSync(f)) return null;
+  try {
+    const data = JSON.parse(fs.readFileSync(f, "utf8"));
+    const rows = data.rows as MetricsDailyLastRow[] | undefined;
+    return rows && rows.length > 0 ? rows[rows.length - 1] : null;
+  } catch {
+    return null;
+  }
+}
+
+interface ShareInfo {
+  shares: number;
+  asOf: string;
+  source: string;
+  adrRatio?: number;
+}
+
+function readSharesById(): Record<string, ShareInfo> {
+  const f = path.join(process.cwd(), "data", "raw", "sec", "shares.json");
+  if (!fs.existsSync(f)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(f, "utf8")).byId ?? {};
+  } catch {
+    return {};
+  }
+}
+
 function main() {
   // ---------- per-asset summary ----------
   const summary: any[] = [];
   const priceByAsset = new Map<string, Map<string, number>>();
-  for (const asset of TRADEABLE) {
+  const roi30dById = new Map<string, number | null>();
+  for (const asset of CRYPTO_TRADEABLE) {
     const series = readSeries(asset.id);
     if (!series || series.rows.length < 200) continue;
     const rows = series.rows;
@@ -37,10 +98,25 @@ function main() {
     priceByAsset.set(asset.id, new Map(rows.map((r) => [r.date, r.close])));
 
     const n = closes.length;
-    const days = rows.map((_, i) => i + 30); // days since listing, offset for ln()
-    const fan = quantileFan(days, closes, TAUS, 1500);
-    const todayLevels = TAUS.map((_, k) => fan.predict(days[n - 1], k));
-    const risk = fanPosition(closes[n - 1], todayLevels, TAUS);
+    const metricsLast = readMetricsLastRow(asset.id);
+    let risk: number;
+    let mayerFromMetrics: number | null | undefined = undefined;
+    let above20wFromMetrics: boolean | null | undefined = undefined;
+    let fair: number | null = null;
+    if (metricsLast && metricsLast.risk !== null) {
+      // suite "full" cryptos (btc, eth, sol): reuse the chart's own numbers
+      // instead of refitting, so the dashboard and the chart never disagree.
+      risk = metricsLast.risk;
+      mayerFromMetrics = metricsLast.mayer;
+      above20wFromMetrics =
+        metricsLast.sma20w === null ? null : metricsLast.close > metricsLast.sma20w;
+      fair = metricsLast.fair ?? null;
+    } else {
+      const days = rows.map((_, i) => i + 30); // days since listing, offset for ln()
+      const fan = quantileFan(days, closes, TAUS, 1500);
+      const todayLevels = TAUS.map((_, k) => fan.predict(days[n - 1], k));
+      risk = Number(fanPosition(closes[n - 1], todayLevels, TAUS).toFixed(3));
+    }
 
     const sma20w = sma(closes, 140);
     const sma200d = sma(closes, 200);
@@ -58,28 +134,145 @@ function main() {
     const staleDays = Math.round(
       (Date.now() - Date.parse(`${latest.date}T00:00:00Z`)) / 86_400_000,
     );
+    const roi30dRaw = pctChangeByDate(rows, 30);
+    const roi30d = roi30dRaw === null ? null : Number(roi30dRaw.toFixed(1));
+    const mayer =
+      mayerFromMetrics !== undefined
+        ? mayerFromMetrics
+        : sma200d[n - 1] === null
+          ? null
+          : Number((closes[n - 1] / sma200d[n - 1]!).toFixed(2));
+    const above20w =
+      above20wFromMetrics !== undefined
+        ? above20wFromMetrics
+        : sma20w[n - 1] === null
+          ? null
+          : closes[n - 1] > sma20w[n - 1]!;
+    roi30dById.set(asset.id, roi30d);
     summary.push({
       id: asset.id,
       symbol: asset.symbol,
       name: asset.name,
       close: latest.close,
       chg24h: Number((pctChange(closes, n - 1, 1) ?? 0).toFixed(2)),
-      roi30d: pctChange(closes, n - 1, 30) === null ? null : Number(pctChange(closes, n - 1, 30)!.toFixed(1)),
-      roi1y: pctChange(closes, n - 1, 365) === null ? null : Number(pctChange(closes, n - 1, 365)!.toFixed(1)),
+      roi30d,
+      roi1y: (() => {
+        const v = pctChangeByDate(rows, 365);
+        return v === null ? null : Number(v.toFixed(1));
+      })(),
       mcap: mcapRows?.at(-1)?.mcap ?? null,
       risk: Number(risk.toFixed(3)),
       shortHistory: n < 730,
-      mayer: sma200d[n - 1] === null ? null : Number((closes[n - 1] / sma200d[n - 1]!).toFixed(2)),
-      above20w: sma20w[n - 1] === null ? null : closes[n - 1] > sma20w[n - 1]!,
+      mayer,
+      above20w,
       maStrength,
       stale: staleDays > 5,
+      class: asset.class,
+      sector: asset.sector,
+      suite: asset.suite,
+      quote: asset.quote,
+      benchmark: asset.benchmark ?? null,
+      fair,
     });
     console.log(`${asset.id}: risk=${risk.toFixed(3)} rows=${n}${n < 730 ? " (short history)" : ""}`);
   }
   summary.sort((a, b) => (b.mcap ?? 0) - (a.mcap ?? 0));
+
+  // ---------- equity / index summary (assets-summary.json only; never fed
+  // into the crypto-only aggregates below) ----------
+  const equitySummary: any[] = [];
+  const sharesById = readSharesById();
+  for (const asset of TRADEABLE) {
+    if (asset.class !== "equity" && asset.class !== "index") continue;
+    const series = readSeries(asset.id);
+    if (!series || series.rows.length === 0) {
+      console.log(`${asset.id}: no raw series, skipped`);
+      continue;
+    }
+    const rows = series.rows;
+    const closes = rows.map((r) => r.close);
+    const n = closes.length;
+    const latest = rows[n - 1];
+
+    const sma200d = sma(closes, 200);
+    const sma20d = sma(closes, 20);
+    const sma50d = sma(closes, 50);
+    const sma100d = sma(closes, 100);
+    const maStrength = {
+      p20: sma20d[n - 1] !== null && closes[n - 1] > sma20d[n - 1]!,
+      s20_50: sma20d[n - 1] !== null && sma50d[n - 1] !== null && sma20d[n - 1]! > sma50d[n - 1]!,
+      s50_100: sma50d[n - 1] !== null && sma100d[n - 1] !== null && sma50d[n - 1]! > sma100d[n - 1]!,
+      s100_200: sma100d[n - 1] !== null && sma200d[n - 1] !== null && sma100d[n - 1]! > sma200d[n - 1]!,
+    };
+
+    const shares = sharesById[asset.id];
+    const mcap =
+      asset.class === "index" || asset.quote === "KRW" || !shares
+        ? null
+        : Math.round(shares.shares * latest.close);
+
+    const metricsLast = readMetricsLastRow(asset.id);
+    const risk = metricsLast ? metricsLast.risk : null;
+    const mayer = metricsLast ? metricsLast.mayer : null;
+    const above20w = metricsLast
+      ? metricsLast.sma20w === null
+        ? null
+        : latest.close > metricsLast.sma20w
+      : null;
+    const fair = metricsLast ? (metricsLast.fair ?? null) : null;
+
+    const staleDays = Math.round(
+      (Date.now() - Date.parse(`${latest.date}T00:00:00Z`)) / 86_400_000,
+    );
+    const roi30dRaw = pctChangeByDate(rows, 30);
+    const roi30d = roi30dRaw === null ? null : Number(roi30dRaw.toFixed(1));
+    const roi1yRaw = pctChangeByDate(rows, 365);
+    roi30dById.set(asset.id, roi30d);
+    equitySummary.push({
+      id: asset.id,
+      symbol: asset.symbol,
+      name: asset.name,
+      close: latest.close,
+      chg24h: Number((pctChange(closes, n - 1, 1) ?? 0).toFixed(2)),
+      roi30d,
+      roi1y: roi1yRaw === null ? null : Number(roi1yRaw.toFixed(1)),
+      mcap,
+      risk,
+      shortHistory: n < 730,
+      mayer,
+      above20w,
+      maStrength,
+      stale: staleDays > 5,
+      class: asset.class,
+      sector: asset.sector,
+      suite: asset.suite,
+      quote: asset.quote,
+      benchmark: asset.benchmark ?? null,
+      fair,
+    });
+    console.log(
+      `${asset.id}: close=${latest.close} mcap=${mcap ?? "null"} risk=${risk ?? "null"} rows=${n}${metricsLast ? "" : " (no metrics file)"}`,
+    );
+  }
+
+  // ---------- chgBenchmark30d + merged, mcap-sorted assets-summary.json ----------
+  const fullSummary = [...summary, ...equitySummary];
+  for (const entry of fullSummary) {
+    const benchRoi = entry.benchmark ? roi30dById.get(entry.benchmark) : undefined;
+    entry.chgBenchmark30d =
+      entry.roi30d !== null && benchRoi !== undefined && benchRoi !== null
+        ? Number((entry.roi30d - benchRoi).toFixed(1))
+        : null;
+  }
+  fullSummary.sort((a, b) => {
+    if (a.mcap === null && b.mcap === null) return 0;
+    if (a.mcap === null) return 1;
+    if (b.mcap === null) return -1;
+    return b.mcap - a.mcap;
+  });
   fs.writeFileSync(
     path.join(dir, "assets-summary.json"),
-    JSON.stringify({ updatedAt: new Date().toISOString(), assets: summary }),
+    JSON.stringify({ updatedAt: new Date().toISOString(), assets: fullSummary }),
   );
 
   // ---------- market-cap aggregates ----------
@@ -130,7 +323,7 @@ function main() {
   // ---------- altcoin season index ----------
   const btcPrices = priceByAsset.get("btc")!;
   const btcDates = [...btcPrices.keys()].sort();
-  const altIds = TRADEABLE.filter((a) => a.id !== "btc").map((a) => a.id);
+  const altIds = CRYPTO_TRADEABLE.filter((a) => a.id !== "btc").map((a) => a.id);
   const season: { date: string; value: number; count: number }[] = [];
   for (const date of btcDates.filter((d) => d >= "2019-01-01")) {
     const past = new Date(Date.parse(`${date}T00:00:00Z`) - 90 * 86_400_000)
@@ -161,7 +354,7 @@ function main() {
     string,
     { byDate: Map<string, { close: number; prev: number | null; sma20w: number | null }> }
   >();
-  for (const asset of TRADEABLE) {
+  for (const asset of CRYPTO_TRADEABLE) {
     const series = readSeries(asset.id);
     if (!series || series.rows.length < 150) continue;
     const closes = series.rows.map((r) => r.close);
@@ -209,13 +402,13 @@ function main() {
   const pfDates = btcDates.filter((d) => d >= "2019-01-01");
   const sizes = [5, 10, 20] as const;
   const pfValue: Record<string, number> = { top5: 100, top10: 100, top20: 100, btc: 100 };
-  let holdings: Record<string, Map<string, number>> = { top5: new Map(), top10: new Map(), top20: new Map() };
+  const holdings: Record<string, Map<string, number>> = { top5: new Map(), top10: new Map(), top20: new Map() };
   let curMonth = "";
   const portfolios = pfDates.map((date, di) => {
     const month = date.slice(0, 7);
     if (month !== curMonth) {
       curMonth = month;
-      const ranked = TRADEABLE.filter((a) => {
+      const ranked = CRYPTO_TRADEABLE.filter((a) => {
         const m = mcapsById.get(a.id)?.get(date);
         return m !== undefined && perAsset.get(a.id)?.byDate.get(date);
       }).sort(
@@ -256,7 +449,7 @@ function main() {
   fs.writeFileSync(path.join(dir, "portfolios.json"), JSON.stringify({ rows: portfolios }));
 
   // ---------- 90d correlation matrix (top assets + DXY) ----------
-  const corrIds = summary.slice(0, 12).map((s: any) => s.id);
+  const corrIds = summary.slice(0, 12).map((s) => s.id);
   const retMap = new Map<string, Map<string, number>>();
   for (const id of corrIds) {
     const series = readSeries(id)!;
@@ -310,7 +503,7 @@ function main() {
   const btcByDate = perAsset.get("btc")!.byDate;
   type Line = { id: string; points: { day: number; mult: number }[] };
   const fromAnchor = (anchor: string, pair: boolean): Line[] =>
-    TRADEABLE.flatMap((asset) => {
+    CRYPTO_TRADEABLE.flatMap((asset) => {
       const byDate = perAsset.get(asset.id)?.byDate;
       if (!byDate) return [];
       if (pair && asset.id === "btc") return [];
@@ -331,7 +524,7 @@ function main() {
       return points.length > 30 ? [{ id: asset.id, points }] : [];
     });
   const inception = (pair: boolean): Line[] =>
-    TRADEABLE.flatMap((asset) => {
+    CRYPTO_TRADEABLE.flatMap((asset) => {
       if (pair && asset.id === "btc") return [];
       const series = readSeries(asset.id)!;
       const base = series.rows[0];
@@ -382,7 +575,7 @@ function main() {
   );
 
   console.log(
-    `summary: ${summary.length} assets | aggregates: ${rows.length} rows | altseason: ${season.length} rows | breadth: ${breadth.length} | portfolios: ${portfolios.length} | corr: ${corrIds.length}x${corrIds.length}`,
+    `summary: ${fullSummary.length} assets (${summary.length} crypto + ${equitySummary.length} equity/index) | aggregates: ${rows.length} rows | altseason: ${season.length} rows | breadth: ${breadth.length} | portfolios: ${portfolios.length} | corr: ${corrIds.length}x${corrIds.length}`,
   );
   const latest = rows.at(-1)!;
   console.log(

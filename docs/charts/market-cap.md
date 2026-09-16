@@ -5,7 +5,7 @@ tags: [burrito, charts, market-cap]
 
 # Market Cap Charts
 
-8 charts. Part of the [[charts/index|chart reference]].
+9 charts. Part of the [[charts/index|chart reference]].
 
 ## Crypto Heatmap
 
@@ -36,6 +36,20 @@ Three index portfolios — the top 5, 10, and 20 tracked assets, weighted by mar
 The uncomfortable finding this chart usually delivers: broad diversification into alts has mostly underperformed just holding BTC across full cycles, because alt drawdowns are deeper than their rallies are higher. Diversification earns its keep only in the alt-season windows — which the gap between the lines makes visible.
 
 [View live chart →](https://burrito-finance.vercel.app/charts/portfolios-weighted-by-market-cap)
+
+## Bitcoin Supply
+
+*Circulating supply of BTC over time, with 30- and 90-day changes and the all-time high.*
+
+The line is BTC's circulating supply: every token issued minus every token redeemed and burned, aggregated across the chains it lives on (source: DefiLlama). For a dollar-pegged stablecoin the supply is the market cap, and it is the cleanest available measure of how many dollars are parked inside crypto rather than on the sidelines.
+
+Stablecoin supply is a flow signal with a long memory. It grows when new capital enters — the issuer mints against dollar deposits, mostly to exchanges — and shrinks only when capital leaves for good, through redemptions the issuer honours by burning. Expansion has accompanied every sustained crypto advance, and the contractions — mid-2022 after the Terra collapse being the sharpest — mark the periods when the market was bleeding capital rather than rotating it. The 30-day and 90-day changes put the current trend in one number each; the all-time high says whether the pool of dry powder is at a record.
+
+Supply is not demand: tokens minted to an exchange treasury can sit idle for months, and growth on one chain can be migration from another. Read it alongside the Stablecoin Supply Ratio, which compares this pool to Bitcoin's market cap.
+
+**Available for:** stablecoins
+
+[View live chart →](https://burrito-finance.vercel.app/charts/stablecoin-supply)
 
 ## Dominance
 

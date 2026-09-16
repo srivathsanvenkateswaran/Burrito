@@ -2,12 +2,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 export interface DailyRow {
-  date: string; // YYYY-MM-DD (UTC)
+  date: string; // YYYY-MM-DD (UTC for crypto; exchange-local trading date for equities/indices)
   open: number;
   high: number;
   low: number;
   close: number;
-  volumeUsd: number;
+  volumeUsd: number; // quote-asset volume (equities: volume × close; indices: 0)
+  adjClose?: number; // dividend-adjusted close where the source provides it (Yahoo)
+  volume?: number; // native-unit volume (shares) where the source provides it
 }
 
 export interface DailySeries {
@@ -104,8 +106,9 @@ export function readSeries(asset: string): DailySeries | null {
   return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
-export function writeSeries(series: DailySeries): void {
-  const file = seriesPath(series.asset);
+/** Write a series; `id` selects the directory when it differs from the symbol (e.g. samsung / 005930.KS). */
+export function writeSeries(series: DailySeries, id: string = series.asset): void {
+  const file = seriesPath(id);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   // One row per line keeps git diffs to exactly the appended days.
   const rows = series.rows.map((r) => `    ${JSON.stringify(r)}`).join(",\n");

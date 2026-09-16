@@ -5,16 +5,16 @@ tags: [burrito, charts]
 
 # Chart Reference
 
-All 98 charts with full explanations, grouped by category. Generated from the site's chart registry — regenerated automatically when charts change.
+All 104 charts with full explanations, grouped by category. Generated from the site's chart registry — regenerated automatically when charts change.
 
-- [[charts/price|Price]] — 1 charts
-- [[charts/risk|Risk]] — 7 charts
+- [[charts/price|Price]] — 4 charts
+- [[charts/risk|Risk]] — 8 charts
 - [[charts/cycles|Cycles]] — 13 charts
 - [[charts/returns|Returns]] — 10 charts
 - [[charts/momentum|Momentum]] — 7 charts
 - [[charts/valuation|Valuation]] — 1 charts
-- [[charts/market-cap|Market Cap]] — 8 charts
-- [[charts/breadth|Breadth]] — 7 charts
+- [[charts/market-cap|Market Cap]] — 9 charts
+- [[charts/breadth|Breadth]] — 8 charts
 - [[charts/on-chain|On-Chain]] — 10 charts
 - [[charts/mining|Mining]] — 7 charts
 - [[charts/exchanges|Exchanges]] — 2 charts

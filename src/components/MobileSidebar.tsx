@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 
 /** Hamburger + slide-over drawer for small screens; closes on navigation. */
-export default function MobileSidebar() {
+export default function MobileSidebar({ suiteIds }: { suiteIds: string[] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -41,7 +41,7 @@ export default function MobileSidebar() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
           <div className="absolute inset-y-0 left-0 border-r border-line shadow-2xl">
-            <Sidebar variant="drawer" />
+            <Sidebar variant="drawer" suiteIds={suiteIds} />
           </div>
           <button
             onClick={() => setOpen(false)}

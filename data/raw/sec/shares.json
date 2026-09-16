@@ -1,0 +1,31 @@
+{
+  "updatedAt": "2026-09-15T13:11:12.467Z",
+  "byId": {
+    "aapl": {"shares":14594180000,"asOf":"2026-07-17","source":"frames:CY2026Q2I"},
+    "amzn": {"shares":10786313572,"asOf":"2026-07-22","source":"frames:CY2026Q2I"},
+    "meta": {"shares":2566000000,"asOf":"2026-06-30","source":"companyfacts:us-gaap.WeightedAverageNumberOfDilutedSharesOutstanding (10-Q)"},
+    "nflx": {"shares":4163939676,"asOf":"2026-06-30","source":"frames:CY2026Q2I"},
+    "googl": {"shares":12230000000,"asOf":"2026-06-30","source":"companyfacts:us-gaap.CommonStockSharesOutstanding (10-Q)"},
+    "msft": {"shares":7425545491,"asOf":"2026-07-23","source":"frames:CY2026Q2I"},
+    "orcl": {"shares":3023736000,"asOf":"2026-09-07","source":"frames:CY2026Q3I"},
+    "tsla": {"shares":3949547394,"asOf":"2026-07-16","source":"frames:CY2026Q2I"},
+    "spcx": {"shares":5864000000,"asOf":"2026-06-30","source":"companyfacts:us-gaap.WeightedAverageNumberOfDilutedSharesOutstanding (10-Q)"},
+    "nvda": {"shares":24100000000,"asOf":"2026-08-21","source":"frames:CY2026Q3I"},
+    "amd": {"shares":1632475042,"asOf":"2026-07-29","source":"frames:CY2026Q2I"},
+    "mu": {"shares":1129393151,"asOf":"2026-06-17","source":"frames:CY2026Q2I"},
+    "sndk": {"shares":146419001,"asOf":"2026-08-07","source":"frames:CY2026Q2I"},
+    "avgo": {"shares":4773629865,"asOf":"2026-08-28","source":"frames:CY2026Q3I"},
+    "tsm": {"shares":5186504904,"asOf":"2025-12-31","source":"frames:CY2025Q4I ÷ 5 (ADR ratio)","adrRatio":5},
+    "asml": {"shares":385417665,"asOf":"2025-12-31","source":"frames:CY2025Q4I"},
+    "intc": {"shares":5044000000,"asOf":"2026-07-17","source":"frames:CY2026Q2I"},
+    "arm": {"shares":1064055252,"asOf":"2026-03-31","source":"frames:CY2026Q1I"},
+    "smci": {"shares":656965384,"asOf":"2026-07-31","source":"frames:CY2026Q2I"},
+    "cat": {"shares":459674889,"asOf":"2026-06-30","source":"frames:CY2026Q2I"},
+    "vst": {"shares":335635195,"asOf":"2026-08-03","source":"frames:CY2026Q2I"},
+    "ceg": {"shares":354307379,"asOf":"2026-07-31","source":"frames:CY2026Q2I"},
+    "gev": {"shares":266333581,"asOf":"2026-06-30","source":"frames:CY2026Q2I"},
+    "etn": {"shares":388400000,"asOf":"2026-06-30","source":"frames:CY2026Q2I"},
+    "vrt": {"shares":384988173,"asOf":"2026-07-27","source":"frames:CY2026Q2I"},
+    "pltr": {"shares":2402897000,"asOf":"2026-06-30","source":"companyfacts:us-gaap.CommonStockSharesOutstanding (10-Q)"}
+  }
+}

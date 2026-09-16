@@ -16,9 +16,25 @@ export interface MetricsFile {
   rows: FullMetricRow[];
 }
 
+/**
+ * Parsed-file cache, keyed by path. Static generation renders hundreds of
+ * pages in one process and most of them read the same handful of files
+ * (BTC's daily.json alone was parsed ~300 times per build before this).
+ */
+const jsonCache = new Map<string, unknown>();
+
 function loadJson<T>(...segments: string[]): T {
   const file = path.join(process.cwd(), "data", ...segments);
-  return JSON.parse(fs.readFileSync(file, "utf8"));
+  const hit = jsonCache.get(file);
+  if (hit !== undefined) return hit as T;
+  const parsed = JSON.parse(fs.readFileSync(file, "utf8")) as T;
+  jsonCache.set(file, parsed);
+  return parsed;
+}
+
+/** True when the per-asset metric suite has been computed for `id` (spcx, for one, is too short). */
+export function hasMetrics(id: string): boolean {
+  return fs.existsSync(path.join(process.cwd(), "data", "metrics", id, "daily.json"));
 }
 
 export function loadMetrics(asset = "btc"): MetricsFile {
@@ -45,16 +61,31 @@ export function loadFedAssets(): { rows: { date: string; value: number }[] } {
   return loadJson("raw", "fed-assets.json");
 }
 
+export type AssetClass = "crypto" | "stablecoin" | "equity" | "index";
+
 export interface AssetSummary {
   id: string;
   symbol: string;
   name: string;
+  /** Present since the multi-asset extension; absent on older summary files. */
+  class?: AssetClass;
+  sector?: string;
+  suite?: "full" | "summary" | "supply";
+  /** Quote currency of `close` ("USD", "USDT", "KRW"). */
+  quote?: string;
+  /** Registry id of the relative-strength benchmark (btc → spx, coins → btc, equities → spx). */
+  benchmark?: string | null;
+  /** 30d return minus the benchmark's 30d return, in percentage points. */
+  chgBenchmark30d?: number | null;
+  /** Log-regression fair value at the latest close (full-suite assets only). */
+  fair?: number | null;
   close: number;
   chg24h: number;
   roi30d: number | null;
   roi1y: number | null;
   mcap: number | null;
-  risk: number;
+  /** Null when there isn't enough history to fit a risk model yet (e.g. a very recent listing). */
+  risk: number | null;
   shortHistory: boolean;
   mayer: number | null;
   above20w: boolean | null;
@@ -87,8 +118,45 @@ export function loadAltseason(): { rows: { date: string; value: number }[] } {
   return loadJson("metrics", "altseason.json");
 }
 
-export function loadAssetDaily(id: string): { rows: { date: string; close: number }[] } {
+export interface RawDailyRow {
+  date: string;
+  open?: number;
+  high?: number;
+  low?: number;
+  close: number;
+  /** Quote-currency volume (Binance quote volume; equities: shares × close; indices: 0). */
+  volumeUsd?: number;
+  /** Native-unit volume (shares for equities); absent on Binance series. */
+  volume?: number;
+  /** Split/dividend-adjusted close where the source provides one. */
+  adjClose?: number;
+}
+
+export function loadAssetDaily(id: string): { asset?: string; quote?: string; rows: RawDailyRow[] } {
   return loadJson("raw", id, "daily.json");
+}
+
+export interface SupplyRow {
+  date: string;
+  supply: number;
+  chg30d: number | null;
+  chg90d: number | null;
+  ath: number;
+}
+
+/** Circulating-supply series for a stablecoin (data/metrics/<id>/supply.json). */
+export function loadSupply(id: string): { updatedThrough: string; rows: SupplyRow[] } {
+  return loadJson("metrics", id, "supply.json");
+}
+
+export interface SharesFile {
+  updatedAt: string;
+  byId: Record<string, { shares: number; asOf: string; source: string }>;
+}
+
+/** SEC shares outstanding per equity id (data/raw/sec/shares.json). */
+export function loadShares(): SharesFile {
+  return loadJson("raw", "sec", "shares.json");
 }
 
 export function loadBreadth(): {
@@ -113,6 +181,43 @@ export function loadPortfolios(): {
 
 export function loadCorrelations(): { ids: string[]; matrix: (number | null)[][] } {
   return loadJson("metrics", "correlations.json");
+}
+
+export interface CrossCorrelationsFile {
+  updatedAt: string;
+  ids: string[];
+  matrix: (number | null)[][];
+  /** Rolling 90-observation Pearson correlation, keyed "id1-id2" (btc-spx, btc-ndx, eth-ndx, btc-nvda). */
+  rolling: Record<string, { date: string; value: number | null }[]>;
+}
+
+/**
+ * Cross-asset correlation matrix + rolling pairs (data/metrics/correlations-cross.json),
+ * produced by compute-assets.ts. Returns null until that file exists so the chart can
+ * render a "not computed yet" note instead of crashing the build.
+ */
+export function loadCrossCorrelations(): CrossCorrelationsFile | null {
+  if (!fs.existsSync(path.join(process.cwd(), "data", "metrics", "correlations-cross.json"))) {
+    return null;
+  }
+  return loadJson<CrossCorrelationsFile>("metrics", "correlations-cross.json");
+}
+
+export interface CrossAssetFile {
+  updatedAt: string;
+  /** Keyed by base date ("2020-01-01", "2023-01-01"); each row has one number|null column per asset id plus `date`. */
+  bases: Record<string, { rows: ({ date: string } & Record<string, number | null>)[] }>;
+}
+
+/**
+ * Normalized crypto-vs-equities comparison (data/metrics/cross-asset.json). Returns
+ * null until compute-assets.ts has produced it.
+ */
+export function loadCrossAsset(): CrossAssetFile | null {
+  if (!fs.existsSync(path.join(process.cwd(), "data", "metrics", "cross-asset.json"))) {
+    return null;
+  }
+  return loadJson<CrossAssetFile>("metrics", "cross-asset.json");
 }
 
 export interface ComparisonLine {
@@ -227,8 +332,14 @@ export function loadFan(asset = "btc"): FanFile {
   return loadJson("metrics", asset, "fan.json");
 }
 
+export interface EventRoiPath {
+  label: string;
+  points: { day: number; pct: number }[];
+}
+
 export interface EventRoiFile {
-  halvings: { label: string; points: { day: number; pct: number }[] }[];
+  /** BTC only — absent for assets without halving dates. */
+  halvings?: EventRoiPath[];
   bottoms: { label: string; points: { day: number; pct: number }[] }[];
   peaks: { label: string; points: { day: number; pct: number }[] }[];
   latestPeak: { label: string; points: { day: number; pct: number }[] }[];
@@ -290,6 +401,8 @@ export function loadDaysSince(asset = "btc"): DaysSinceFile {
 
 export interface DistributionsFile {
   benford: { digit: number; actual: number; expected: number }[];
+  /** {1,2,5}×10^k levels inside the close range; `milestones` are the crossings of these. */
+  milestoneLevels: number[];
   milestones: { date: string; level: number }[];
   quarterly: { year: number; quarter: number; pct: number }[];
   avgDaily: { day: number; avg: number }[];
@@ -297,6 +410,7 @@ export interface DistributionsFile {
   dcaWeekday: { dow: number; avgExt: number }[];
   smaTopBreakouts: { date: string; prevTop: number }[];
   cyclePeaks: string[];
+  cycleBottoms: string[];
 }
 
 export function loadDistributions(asset = "btc"): DistributionsFile {

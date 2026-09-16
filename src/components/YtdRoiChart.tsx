@@ -71,11 +71,21 @@ function sameSet(a: number[], b: number[]): boolean {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 }
 
-export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
+export default function YtdRoiChart({
+  data,
+  showCryptoCyclePresets = true,
+}: {
+  data: YearSeries[];
+  /** Halving/post-halving/bear presets only make sense for crypto; hide them otherwise. */
+  showCryptoCyclePresets?: boolean;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cc = useChartColors();
   const years = data.map((d) => d.year);
   const [selected, setSelected] = useState<number[]>(years.slice(-3));
+  const presetGroups = showCryptoCyclePresets
+    ? PRESET_GROUPS
+    : PRESET_GROUPS.filter((g) => g.name !== "cycle");
 
   useEffect(() => {
     const container = containerRef.current;
@@ -159,7 +169,7 @@ export default function YtdRoiChart({ data }: { data: YearSeries[] }) {
       className="rounded-xl border border-line bg-surface/50 shadow-[inset_0_1px_0_rgba(237,227,212,0.04)]"
     >
       <div className="flex flex-wrap items-center gap-3 border-b border-line/70 px-4 py-3">
-        {PRESET_GROUPS.map(({ name, presets }) => (
+        {presetGroups.map(({ name, presets }) => (
           <div key={name} className="flex items-center gap-1.5">
             <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
               {name}

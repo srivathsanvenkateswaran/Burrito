@@ -5,7 +5,7 @@ tags: [burrito, charts, breadth]
 
 # Breadth Charts
 
-7 charts. Part of the [[charts/index|chart reference]].
+8 charts. Part of the [[charts/index|chart reference]].
 
 ## Advance Decline Ratios
 
@@ -76,3 +76,15 @@ Pearson correlation of daily returns over the trailing 90 days, for the top trac
 Crypto's dirty secret is visible here — intra-crypto correlations usually sit at 0.6–0.9, so diversification across coins diversifies little. The DXY column shows the macro chain: strongly negative in Fed-driven regimes, near zero when crypto trades on its own news.
 
 [View live chart →](https://burrito-finance.vercel.app/charts/correlation-coefficients)
+
+## Cross-Asset Correlations
+
+*90-day return correlations between the major cryptocurrencies, the US indices and the largest technology stocks.*
+
+Pearson correlation of daily log returns over the trailing 90 trading days, computed on the dates the assets share — crypto trades every day, stocks and indices only on exchange sessions, so the overlap is the equity calendar. Red cells move together, blue cells move opposite. The matrix covers Bitcoin, Ethereum and Solana against the S&P 500, the Nasdaq-100 and Composite, the largest technology stocks, and the dollar index where its data is present.
+
+The rolling lines below track the pairs that define the regime: BTC–S&P 500, BTC–Nasdaq-100, ETH–Nasdaq-100 and BTC–Nvidia. Before 2020 Bitcoin's correlation with equities hovered near zero — the "uncorrelated asset" era. From the March 2020 crash onward it has run positive and at times above 0.5, peaking during the 2022 tightening cycle, when everything liquidity-sensitive sold together. The Nvidia pair became a story of its own once both traded as proxies for AI enthusiasm and dollar liquidity at the same time.
+
+How to read it: high, rising correlation means macro is driving prices and diversification across these assets is doing little; a correlation falling back toward zero means crypto is trading on its own news again. Ninety days is short enough to catch a regime change and long enough that single days barely move it — but every reading is a window average, so it turns late.
+
+[View live chart →](https://burrito-finance.vercel.app/charts/cross-asset-correlations)
