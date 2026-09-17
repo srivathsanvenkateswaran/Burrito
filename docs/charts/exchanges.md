@@ -15,7 +15,7 @@ Coins on exchanges are sellable inventory; coins withdrawn to self-custody are, 
 
 Caveats matter here: this counts only exchanges Coin Metrics identifies (coverage grows over time, inflating early-history comparisons), and custody arrangements (ETFs!) blur the self-custody signal. Directional trends over months are meaningful; day wiggles are not.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/exchange-supply)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/exchange-supply)
 
 ## Supply Flow To Exchanges
 
@@ -25,4 +25,4 @@ Inflows are potential sell pressure arriving; outflows are coins leaving to cust
 
 Big single-day inflow spikes have preceded several violent sell-offs (they're visible before the June 2022 and FTX-era cascades), which is why exchange-flow alerts are a staple of on-chain trading desks. As with exchange supply, tracked-exchange coverage shapes the absolute numbers.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/exchange-flow)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/exchange-flow)

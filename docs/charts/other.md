@@ -17,7 +17,7 @@ The big alignments are striking: the 2021 crypto top formed as DXY bottomed, the
 
 BTC is on the log scale (right axis), DXY linear (left). The correlation is a regime, not a law — it weakens in quiet macro periods and tightens when the Fed dominates the narrative.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/btc-vs-dxy)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/btc-vs-dxy)
 
 ## Benford's Law
 
@@ -29,7 +29,7 @@ Data spanning many orders of magnitude should follow Benford closely — and Bit
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/benfords-law)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/benfords-law)
 
 ## Price Milestone Crossings
 
@@ -41,7 +41,7 @@ Round numbers act as psychological support and resistance, and this chart makes 
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/price-milestone-crossings)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/price-milestone-crossings)
 
 ## Days Since % Decline
 
@@ -53,7 +53,7 @@ Long stretches without a big red day are a feature of maturing bull markets — 
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/days-since-percentage-decline)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/days-since-percentage-decline)
 
 ## Days Since % Gain
 
@@ -65,4 +65,4 @@ Big green days cluster in two regimes: euphoric bull runs and violent bear-marke
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/days-since-percentage-gain)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/days-since-percentage-gain)

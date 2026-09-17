@@ -19,4 +19,4 @@ Its weakness is the same as any moving-average metric: after a violent crash the
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/mayer)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/mayer)

@@ -5,7 +5,7 @@ tags: [burrito, docs]
 
 # 🌯 Burrito Documentation
 
-**Burrito** ([burrito-finance.vercel.app](https://burrito-finance.vercel.app)) is a
+**Burrito** ([burrito-finance.srivathsanvenkateswaran.workers.dev](https://burrito-finance.srivathsanvenkateswaran.workers.dev)) is a
 self-updating quantitative market-analysis site: 104 charts of price, risk, cycles,
 on-chain activity, market breadth, derivatives, and US macro, run across crypto,
 equities and indices — recomputed daily from free public data, at $0/month running cost.
@@ -24,7 +24,7 @@ equities and indices — recomputed daily from free public data, at $0/month run
 This documentation is a plain-markdown folder with frontmatter and wikilinks — it **is**
 an Obsidian vault. Two ways to use it:
 
-1. **Download**: grab [burrito-vault.zip](https://burrito-finance.vercel.app/burrito-vault.zip)
+1. **Download**: grab [burrito-vault.zip](https://burrito-finance.srivathsanvenkateswaran.workers.dev/burrito-vault.zip)
    and unzip into your vault (or open it as its own vault).
 2. **Stay current**: clone the repo and open `docs/` as a vault — `git pull` brings each
    day's fresh [[snapshot]], because the daily data pipeline regenerates it and commits.

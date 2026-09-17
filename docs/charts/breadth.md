@@ -15,7 +15,7 @@ Each day, what fraction of tracked assets closed higher? Smoothed over time this
 
 Breadth divergences lead price: market highs made on deteriorating advance ratios (fewer and fewer assets participating) have historically preceded corrections — the crypto version of a classic equity-market signal.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/advance-decline-ratios)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/advance-decline-ratios)
 
 ## Advance Decline Index (ADI)
 
@@ -25,7 +25,7 @@ ADI accumulates each day's (advances − declines) into a single line — the ma
 
 Watch for divergence against price: total market cap making new highs while ADI trends down means the average coin is already in decline — distribution hiding behind a strong index. Convergent new highs in both are the confirmation signal.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/advance-decline-index)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/advance-decline-index)
 
 ## Absolute Breadth Index (ABI)
 
@@ -35,7 +35,7 @@ ABI is |advances − declines|: how one-sided the day was, ignoring direction. H
 
 Persistently high ABI marks macro-driven regimes — correlation ≈ 1 days cluster in crashes and manias. Low-ABI stretches are the stock-picker phases where individual assets trade on their own stories.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/absolute-breadth-index)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/absolute-breadth-index)
 
 ## Coins Above/Below Moving Average
 
@@ -45,7 +45,7 @@ The bull-market participation gauge: what share of assets sit above their own 20
 
 This series turns before price at both extremes: bottoms show breadth improving while price still falls (fewer new lows), and tops show breadth decaying while price grinds higher on narrowing leadership.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/above-below-ma)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/above-below-ma)
 
 ## Color-Coded MA Strength
 
@@ -55,7 +55,7 @@ Four checks per asset — price above the 20-day, 20 above 50, 50 above 100, 100
 
 The table reads as the market's trend X-ray: transitions matter more than states, and rows flipping from red to mixed to green in sequence trace new uptrends forming asset by asset.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/color-coded-moving-average-strength)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/color-coded-moving-average-strength)
 
 ## Alts vs BTC
 
@@ -65,7 +65,7 @@ Every line is an alt's BTC-denominated price, indexed to 1.0 two years ago. Belo
 
 The sobering base rate: over multi-year windows, most alts bleed most of the time, with brief violent exceptions during alt seasons. This chart is the antidote to survivorship memory — and the toggles let you check any specific coin's verdict.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/alts-vs-btc)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/alts-vs-btc)
 
 ## Correlation Coefficients
 
@@ -75,7 +75,7 @@ Pearson correlation of daily returns over the trailing 90 days, for the top trac
 
 Crypto's dirty secret is visible here — intra-crypto correlations usually sit at 0.6–0.9, so diversification across coins diversifies little. The DXY column shows the macro chain: strongly negative in Fed-driven regimes, near zero when crypto trades on its own news.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/correlation-coefficients)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/correlation-coefficients)
 
 ## Cross-Asset Correlations
 
@@ -87,4 +87,4 @@ The rolling lines below track the pairs that define the regime: BTC–S&P 500, B
 
 How to read it: high, rising correlation means macro is driving prices and diversification across these assets is doing little; a correlation falling back toward zero means crypto is trading on its own news again. Ninety days is short enough to catch a regime change and long enough that single days barely move it — but every reading is a window average, so it turns late.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/cross-asset-correlations)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/cross-asset-correlations)

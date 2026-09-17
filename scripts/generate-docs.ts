@@ -46,7 +46,7 @@ function chartReference() {
           "",
           ...text.explanation.map((p) => p + "\n"),
           ...(avail ? [avail, ""] : []),
-          `[View live chart →](https://burrito-finance.vercel.app/charts/${c.slug})`,
+          `[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/${c.slug})`,
           "",
         ].join("\n");
       })

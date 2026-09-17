@@ -8,7 +8,7 @@ A self-updating quantitative market-analysis site — 104 charts of price, risk,
 on-chain activity, breadth, derivatives, and US macro, run across crypto, equities and
 indices. Recomputed daily. Running cost: **$0/month**.
 
-**[burrito-finance.workers.dev](https://burrito-finance.workers.dev)**
+**[burrito-finance.srivathsanvenkateswaran.workers.dev](https://burrito-finance.srivathsanvenkateswaran.workers.dev)**
 
 ![charts](https://img.shields.io/badge/charts-104-e6a144) ![assets](https://img.shields.io/badge/assets-33_full--suite_+_27_coins-8ba7c9) ![cost](https://img.shields.io/badge/running_cost-%240%2Fmo-82b57a) ![license](https://img.shields.io/badge/license-MIT-b391bf)
 

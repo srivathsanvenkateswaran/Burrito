@@ -19,7 +19,7 @@ The Bull Market Support Band (20-week SMA and 21-week EMA) is the zone that has 
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/price)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/price)
 
 ## Volume
 
@@ -33,7 +33,7 @@ Crypto volume here comes from the venue the price series is built on, not from e
 
 **Available for:** crypto · equities
 
-[View live chart →](https://burrito-finance.vercel.app/charts/volume)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/volume)
 
 ## BTC vs Benchmark
 
@@ -47,7 +47,7 @@ Two reads matter more than the rest. A ratio making new highs while the absolute
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/vs-benchmark)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/vs-benchmark)
 
 ## Crypto vs Equities
 
@@ -59,4 +59,4 @@ The comparison is the answer to "was the risk worth it?": Bitcoin and Ethereum h
 
 Rebased charts are sensitive to the start date by construction — move it a few months and the ranking reshuffles — which is the point of offering two. Read the lines' slopes and drawdowns against each other, not their end values.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/crypto-vs-equities)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/crypto-vs-equities)

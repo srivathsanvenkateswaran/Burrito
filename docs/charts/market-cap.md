@@ -15,7 +15,7 @@ Each tile's area scales with the square root of the asset's market cap; color sh
 
 Uniformly red or green boards mean macro is driving everything at once; a mixed board means idiosyncratic, rotational trading — the healthier regime for alt selection.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/heatmap)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/heatmap)
 
 ## Market Cap Hypotheticals
 
@@ -25,7 +25,7 @@ The classic "if X had Y's market cap" table: each cell scales an asset's price b
 
 Its real use is as a plausibility filter: seeing that a favorite small cap needs 100× to reach ETH's cap converts vague dreams into arithmetic. Market cap — not price per coin — is what growth actually has to buy.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/market-capitalization-hypotheticals)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/market-capitalization-hypotheticals)
 
 ## Portfolios Weighted By Market Cap
 
@@ -35,7 +35,7 @@ Three index portfolios — the top 5, 10, and 20 tracked assets, weighted by mar
 
 The uncomfortable finding this chart usually delivers: broad diversification into alts has mostly underperformed just holding BTC across full cycles, because alt drawdowns are deeper than their rallies are higher. Diversification earns its keep only in the alt-season windows — which the gap between the lines makes visible.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/portfolios-weighted-by-market-cap)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/portfolios-weighted-by-market-cap)
 
 ## Bitcoin Supply
 
@@ -49,7 +49,7 @@ Supply is not demand: tokens minted to an exchange treasury can sit idle for mon
 
 **Available for:** stablecoins
 
-[View live chart →](https://burrito-finance.vercel.app/charts/stablecoin-supply)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/stablecoin-supply)
 
 ## Dominance
 
@@ -59,7 +59,7 @@ Dominance is an asset's market cap divided by the whole market's. BTC dominance 
 
 Our denominator is the aggregate of the ~30 tracked assets plus major stablecoins rather than every coin in existence, so levels read a few points higher than CoinMarketCap's, but the shape and turning points — which are what dominance is for — match. The classic pattern: dominance peaks near bear-market bottoms and troughs at alt-season manias.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/dominance)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/dominance)
 
 ## Total Crypto Market Cap & Trendline
 
@@ -69,7 +69,7 @@ The total market cap of all tracked assets (log scale) with a quantile-regressio
 
 Total market cap is arguably a better cycle gauge than BTC's price alone because it absorbs rotation: alt seasons that leave BTC flat still show up here. Note the aggregate is built from our tracked asset set, so early history (pre-2017) undercounts the then-fragmented market.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/market-cap-logarithmic-regression)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/market-cap-logarithmic-regression)
 
 ## Total Crypto Valuation vs. Trendline
 
@@ -79,7 +79,7 @@ This is the trendline chart flattened into a single oscillator: the ratio of tot
 
 Cycle tops have historically pushed the ratio far above 1 and bear bottoms well below it, making this the market-wide cousin of the risk metric. Reading today's value against past extremes is the quickest "is crypto as a whole cheap or dear?" check on the site.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/market-cap-vs-fair-value)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/market-cap-vs-fair-value)
 
 ## Altcoin Market Capitalizations
 
@@ -89,7 +89,7 @@ Two views of the market without its anchor: total minus BTC (everything that isn
 
 The second line is the purest alt-season gauge: stablecoins don't speculate and ETH half-behaves like a major, so what's left is the risk appetite frontier. Its cycles are more violent than BTC's in both directions — the same chart shape, amplified.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/altcoin-market-capitalizations)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/altcoin-market-capitalizations)
 
 ## Stablecoin Supply Ratio (SSR)
 
@@ -99,4 +99,4 @@ SSR compares Bitcoin's market cap to the combined market cap of major stablecoin
 
 Low SSR means stablecoin buying power is large relative to Bitcoin — historically a supportive setup — while high SSR means little sideline capital remains relative to BTC's size. The metric trends structurally downward as stablecoins grow, so compare against the recent regime rather than 2018 levels.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/ssr)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/ssr)

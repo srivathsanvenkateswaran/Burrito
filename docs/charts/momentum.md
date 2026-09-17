@@ -17,7 +17,7 @@ Because ATR widens with volatility, the stop gives more room in wild markets and
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/supertrend)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/supertrend)
 
 ## RSI (14d)
 
@@ -31,7 +31,7 @@ RSI is a fast momentum gauge, best for timing within a trend. It says nothing ab
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/rsi)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/rsi)
 
 ## Volatility
 
@@ -43,7 +43,7 @@ Volatility clusters: calm periods and violent periods each persist. Historically
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/volatility)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/volatility)
 
 ## Golden/Death Crosses
 
@@ -55,7 +55,7 @@ The classical reading — golden bullish, death bearish — is right about half 
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/golden-death-crosses)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/golden-death-crosses)
 
 ## MACD
 
@@ -67,7 +67,7 @@ The standard signals: MACD crossing its signal line (short-term momentum shifts)
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/moving-average-convergence-divergence)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/moving-average-convergence-divergence)
 
 ## Bollinger Bands
 
@@ -79,7 +79,7 @@ Two classic reads: the squeeze (unusually narrow bands mark volatility compressi
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/bollinger-bands)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/bollinger-bands)
 
 ## Pi Cycle Bottom/Top
 
@@ -91,4 +91,4 @@ It is a curve-fit discovery, not a theory — there is no economic reason the ra
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/pi-cycle-bottom-top)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/pi-cycle-bottom-top)

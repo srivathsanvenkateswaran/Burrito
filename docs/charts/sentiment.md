@@ -17,4 +17,4 @@ The contrarian reading is the useful one: extreme fear has historically clustere
 
 Grey price history before February 2018 predates the index. Sentiment is fast and noisy — treat single-day readings as weather, multi-week extremes as climate.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/fear-greed-index)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/fear-greed-index)

@@ -15,4 +15,4 @@ Wikipedia lookups are the purest measure of fresh retail curiosity: people who n
 
 The peaks are cycle markers: Bitcoin's all-time attention spike was December 8, 2017 (345k views in one day); the 2021 cycle peaked lower on Bitcoin but higher on Ethereum — retail's second wave arrived alt-first. Today's readings near baseline say this drawdown is happening without public attention, historically an accumulation-phase trait.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/wikipedia-page-views)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/wikipedia-page-views)

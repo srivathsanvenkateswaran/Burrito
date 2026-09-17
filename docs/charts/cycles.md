@@ -17,7 +17,7 @@ Note the shrinking amplitude — each successive halving cycle has delivered a s
 
 **Available for:** crypto
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-halving)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-halving)
 
 ## ROI After Cycle Bottom
 
@@ -29,7 +29,7 @@ The recoveries rhyme: roughly two years of choppy appreciation, then a steep leg
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-cycle-bottom)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-cycle-bottom)
 
 ## ROI After Cycle Peak
 
@@ -41,7 +41,7 @@ History's answer has been two to three years underwater, with the depth of the t
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-cycle-peak)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-cycle-peak)
 
 ## ROI After Latest Cycle Peak
 
@@ -53,7 +53,7 @@ Drawdown dispersion is a leadership signal: assets falling least from a shared p
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-latest-cycle-peak)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-latest-cycle-peak)
 
 ## ROI After Latest Peak (Crypto Pairs)
 
@@ -63,7 +63,7 @@ The current drawdown in BTC terms: lines above 1× have outperformed Bitcoin sin
 
 Anything holding above 1× through a bear phase is showing genuine relative strength, the strongest single filter for next-cycle leadership that pair charts offer.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-latest-cycle-peak-for-crypto-pairs)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-latest-cycle-peak-for-crypto-pairs)
 
 ## Cycles Deviation
 
@@ -75,7 +75,7 @@ It compresses the whole overlay-the-cycles exercise into one series. Persistent 
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/cycles-deviation)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/cycles-deviation)
 
 ## ROI Bands
 
@@ -87,7 +87,7 @@ The pattern is stark: buys made in bear-market depths multiplied within a few hu
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-bands)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-bands)
 
 ## SMA Cycle-Top Breakout
 
@@ -99,7 +99,7 @@ Historically these breakouts have landed early in the steep phase of bull market
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/sma-cycle-top-breakout)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/sma-cycle-top-breakout)
 
 ## ROI After Bottom (Multiple Coins)
 
@@ -109,7 +109,7 @@ Every line starts at 1× on 2022-11-21 — the cycle low — and tracks that ass
 
 Dispersion is the story: the same bottom produced wildly different recoveries, and the ranking reshuffles between market phases. BTC leading the early recovery with alts catching up later (or never) is the classic post-bottom sequence.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-bottom-comparison)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-bottom-comparison)
 
 ## ROI After Bottom (Crypto Pairs)
 
@@ -119,7 +119,7 @@ Same anchor as the multiple-coins chart, but every line is the asset's BTC pair 
 
 Far fewer lines hold above 1× here than on the USD version — the recurring lesson of pair charts. The ones that do are the cycle's genuine outperformers rather than passengers.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-cycle-bottom-for-crypto-pairs)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-cycle-bottom-for-crypto-pairs)
 
 ## ROI After Inception (Multiple Coins)
 
@@ -129,7 +129,7 @@ All assets aligned at day 0 = their Binance listing, tracking the multiple since
 
 Two patterns recur: early listings during bull markets start with a crash (listing pops fade), and the long-run distribution is brutally skewed — a few compounders, many round-trips to zero-ish. Day-matched comparison shows whether a young coin is tracking a compounder's path or a bleeder's.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-inception-comparison)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-inception-comparison)
 
 ## ROI After Inception (Crypto Pairs)
 
@@ -139,7 +139,7 @@ The inception chart in BTC terms: from each asset's first day, did holding it be
 
 This is the cleanest long-horizon version of the alts-vs-BTC question, aligned by asset age instead of calendar. The handful of lines that sustain above 1× for years are the short list of alts that have genuinely compounded against BTC.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-inception-for-crypto-pairs)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-inception-for-crypto-pairs)
 
 ## ROI After Sub-Cycle Bottom (ETH)
 
@@ -149,4 +149,4 @@ Ethereum's cycle lows don't always coincide with Bitcoin's — the 2020 COVID cr
 
 Comparing the current recovery against 2018/2020/2022 paths answers whether ETH is tracking its own historical rhythm or breaking it — relevant right now, with ETH's latest drawdown deeper than BTC's.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/roi-after-sub-cycle-bottom)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/roi-after-sub-cycle-bottom)

@@ -15,7 +15,7 @@ Hash rate is the physical security budget of Bitcoin — the aggregate computati
 
 Hash rate follows price with a lag (mining investment chases profitability) but falls far more reluctantly — hardware, once bought, keeps running until it's unprofitable at the margin. Sustained hash-rate declines are rare and mark genuine miner capitulation events.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/hash-rate)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/hash-rate)
 
 ## Hash Ribbons
 
@@ -25,7 +25,7 @@ When the 30-day average of hash rate drops below the 60-day, miners are switchin
 
 The logic is Darwinian: miner capitulation clusters near price bottoms because miners are the market's most informed forced sellers; when even they stop capitulating, sell pressure exhausts. The signal fired well in 2019, 2020, and post-China-ban 2021; like all rare signals, it has few data points.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/hash-ribbons)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/hash-ribbons)
 
 ## Hash Rate / Price
 
@@ -35,7 +35,7 @@ This ratio asks how much security the network provides per dollar of price. Risi
 
 Extremes are contrarian markers: ratio peaks (maximum mining effort per dollar) have coincided with price bottoms — hash rate held up while price collapsed — and troughs with manias where price sprinted ahead of infrastructure.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/hash-over-price)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/hash-over-price)
 
 ## Miner Revenue
 
@@ -45,7 +45,7 @@ Everything miners earn per day. The subsidy portion halves every four years, so 
 
 Miner revenue is also the market's most reliable structural sell pressure (miners pay electricity in fiat), which is why revenue extremes echo through price: the Puell Multiple and the thermocap ratios on this site are both built from this series.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/miner-revenue)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/miner-revenue)
 
 ## MarketCap / ThermoCap (MCTC)
 
@@ -55,7 +55,7 @@ Thermocap is every dollar ever paid to miners — the cumulative security spend,
 
 Tops have historically stretched MCTC into the 30s+ (2013 far higher); bear bottoms compressed it toward single digits. Because thermocap only ever grows, the ratio has a natural downtrend across epochs — compare against recent cycles, not 2011.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/mcap-thermocap)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/mcap-thermocap)
 
 ## RealizedCap / ThermoCap (RCTC)
 
@@ -65,7 +65,7 @@ The steadier sibling of MCTC: realized cap (the market's cost basis) over thermo
 
 Rising RCTC means holders' aggregate cost basis is compounding faster than mining expenditure — long-term adoption outpacing security cost. Its cycle swings are gentle; sharp moves are rare and worth attention.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/rcap-thermocap)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/rcap-thermocap)
 
 ## Block Statistics
 
@@ -75,4 +75,4 @@ Block count per day hovers around 144 (one per ten minutes) with drift from diff
 
 Block size tells the demand story in slow motion: the climb to the 1MB wall (2016-17), SegWit's effective-size relief, and the 2023+ inscription era pinning blocks near capacity. Full blocks plus rising fees = real block-space demand.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/block)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/block)

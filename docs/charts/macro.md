@@ -15,7 +15,7 @@ Headline CPI includes everything; core strips food and energy to show the underl
 
 The 2021–2023 spike to 9% and its aftermath created the QT regime that defined crypto's last bear market. Inflation returning toward the 2% target is what allows easing — which is why this unglamorous line sits upstream of most charts on this site.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/inflation-yoy)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/inflation-yoy)
 
 ## M1 / M2 Money Supply
 
@@ -25,7 +25,7 @@ M1 is money you can spend now (currency + checking); M2 adds savings and money-m
 
 Bitcoin's entire pitch is legible against this backdrop: a fixed-supply asset priced in an expanding unit. The 2022–2023 stretch was the first meaningful M2 *contraction* since the 1940s — precisely the crypto bear — before growth resumed.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/money-supply)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/money-supply)
 
 ## Fed Balance Sheet & ON RRP
 
@@ -35,7 +35,7 @@ Two plumbing gauges: the Fed's total assets (the QE/QT dial) and the overnight r
 
 Net-liquidity thinking (balance sheet minus RRP and the Treasury's account) is why 2023 equities rallied through QT. With RRP empty, QT bites directly — and its end, visible in the balance sheet flattening, is the regime change the QT chart tracks against BTC.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/fed-liquidity)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/fed-liquidity)
 
 ## Treasury Yield Spreads
 
@@ -45,7 +45,7 @@ When short rates exceed long rates (spread below zero), the curve is inverted: m
 
 The nuance the chart shows: recessions historically start not at inversion but at the re-steepening — when the spread races back above zero as the Fed cuts into weakness. For crypto, the steepening phase has coincided with the liquidity turns that end bear markets.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/yield-curves)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/yield-curves)
 
 ## Fed Funds Rate
 
@@ -55,7 +55,7 @@ The price of money itself. Every hiking and easing cycle since 1954 in one line 
 
 Bitcoin has now lived through one full hiking cycle, and the correlation was unambiguous: crypto's 2021 top arrived as hikes were priced in, the bottom as they peaked. Cuts are the fuel every crypto bull thesis quietly assumes.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/fed-funds-rate)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/fed-funds-rate)
 
 ## Unemployment & Payrolls
 
@@ -65,7 +65,7 @@ The Fed's second mandate. Unemployment is a stair-stepper: it falls slowly for y
 
 For markets the rule of thumb inverts intuition: deteriorating employment historically forces easing (good for liquidity-sensitive assets, eventually), while red-hot labor markets sustain tight policy. The Sahm rule — a 0.5pt rise in unemployment off its low — is the classic recession trigger visible here.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/employment)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/employment)
 
 ## GDP & Debt-to-GDP
 
@@ -75,7 +75,7 @@ Output and the leverage carried against it. Debt-to-GDP crossing 100% and stayin
 
 This is the slowest-moving chart on the site and the one underpinning the longest-horizon Bitcoin thesis: fixed-supply assets as insurance against fiscal dominance. Quarterly data; decades matter here, not months.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/gdp-and-debt)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/gdp-and-debt)
 
 ## Personal Income & Saving Rate
 
@@ -85,7 +85,7 @@ Real income ex-transfers is the organic earning power of households — one of t
 
 A saving rate scraping historic lows alongside flat real income is the squeezed-consumer signature — historically late-cycle, and part of why discretionary risk appetite (the fuel of alt seasons) has been thin this cycle.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/personal-income)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/personal-income)
 
 ## Consumer Sentiment (MCSI)
 
@@ -95,7 +95,7 @@ Seven decades of how Americans feel about the economy. The 2022 print was the lo
 
 Sentiment is contrarian at extremes: historic lows have been better buying moments than selling ones, for equities and (in its short history) crypto alike. The interesting divergence is sentiment versus spending — people who feel terrible but keep spending have repeatedly postponed predicted recessions.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/consumer-sentiment)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/consumer-sentiment)
 
 ## Housing Starts & New Home Sales
 
@@ -105,7 +105,7 @@ Housing is the economy's most interest-rate-sensitive sector and its most reliab
 
 The post-2022 freeze is textbook: 7% mortgages froze both construction and sales. Housing turning up while the Fed still holds tight would be the classic early-recovery divergence to watch for.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/housing)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/housing)
 
 ## House Prices & Mortgage Rates
 
@@ -115,7 +115,7 @@ The affordability vice: prices (Case-Shiller, left) against the cost of financin
 
 For the macro picture, shelter is the stickiest large component of CPI, so this chart feeds the inflation chart with a ~12-month lag. Falling rates with resilient prices re-ignites the wealth effect; falling prices would be the deflationary tail risk.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/home-prices-and-mortgages)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/home-prices-and-mortgages)
 
 ## Bank Loans
 
@@ -125,7 +125,7 @@ Credit creation is the economy's private money supply — most money is born as 
 
 Composition matters: business lending leads investment cycles, consumer credit tracks household stress (watch it accelerate late-cycle as savings run out), and real-estate lending is the slow giant that broke in 2008.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/bank-loans)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/bank-loans)
 
 ## Financial Conditions (NFCI)
 
@@ -135,7 +135,7 @@ The NFCI compresses 105 indicators of risk, credit, and leverage into one weekly
 
 Spikes mark every crisis — 2008 dominating, March 2020 second. For crypto, the regime reading matters most: risk assets rally when conditions loosen (NFCI falling), and the index loosening during 2023's Fed tightening explained that year's "impossible" rally.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/nfci)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/nfci)
 
 ## Bear Markets & Quantitative Tightening
 
@@ -147,4 +147,4 @@ The pattern this chart is named for: both of Bitcoin's deepest modern bears happ
 
 The current setup is why this chart matters now: the balance sheet stopped shrinking around late 2025 and has begun ticking up — QT2 is effectively over — while BTC sits deep in a drawdown. If the 2019 rhyme holds, this is the part of the cycle where liquidity stops being a headwind. A rhyme, not a law.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/qt-ending-bear-markets)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/qt-ending-bear-markets)

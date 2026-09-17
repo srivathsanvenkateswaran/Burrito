@@ -19,7 +19,7 @@ Caveats: this is our own model — same family of methods ITC describes (asymmet
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/risk)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/risk)
 
 ## Quantile Regression Fan
 
@@ -33,7 +33,7 @@ This mirrors the methodology ITC now uses in place of its retired logarithmic re
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/asymmetric-quantile-regression-fan)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/asymmetric-quantile-regression-fan)
 
 ## Price Color Coded By Risk
 
@@ -45,7 +45,7 @@ This is also the fastest way to sanity-check the risk model itself: red lining u
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/risk-colorcoded)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/risk-colorcoded)
 
 ## Time In Risk Bands
 
@@ -57,7 +57,7 @@ Practical use: it calibrates patience. If the sub-0.1 band holds only a small fr
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/risk-time)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/risk-time)
 
 ## Current Risk Levels
 
@@ -69,7 +69,7 @@ This turns the risk metric into a planning tool: instead of watching the score, 
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/risk-levels)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/risk-levels)
 
 ## Short Term Bubble Risk
 
@@ -81,7 +81,7 @@ The two risks disagree in useful ways: mid-bull, cycle risk can be moderate whil
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/short-term-bubble-risk)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/short-term-bubble-risk)
 
 ## Risk Dashboard
 
@@ -91,7 +91,7 @@ Every tracked asset gets the same treatment BTC does: its own quantile-regressio
 
 This is the screen for relative positioning: which majors are stretched, which are washed out, and whether risk is broadly synchronized (macro-driven markets) or dispersed (rotation markets). Assets marked * have under two years of history — their fans are fitted to a single partial cycle, so read those risk values loosely.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/risk-dashboard)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/risk-dashboard)
 
 ## Equity Risk Dashboard
 
@@ -103,4 +103,4 @@ The grouping is by sector — big tech, semiconductors, AI infrastructure and po
 
 Calibration caveat: each fan is fitted per asset, so 0.9 means "in the top decile of that stock's own historical extension", and a company in a secular re-rating can stay there for years. Names marked * have under two years of history — their fans are fitted to a fragment — and companies that changed shape through a spin-off or SPAC listing (Vertiv, GE Vernova, Constellation Energy) start their series at the relevant listing date.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/equity-risk-dashboard)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/equity-risk-dashboard)

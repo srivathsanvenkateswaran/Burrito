@@ -15,7 +15,7 @@ Open interest is the total capital locked in unsettled futures — the amount of
 
 OI extremes are fragility gauges: record OI means a crowded, liquidation-prone market where a small move cascades. Data note: Binance only exposes ~30 days retroactively, so this chart's history accumulates daily from July 2026 — it deepens the longer the site runs.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/futures-open-interest)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/futures-open-interest)
 
 ## Options Open Interest
 
@@ -25,7 +25,7 @@ Deribit clears the large majority of crypto options; this is the notional value 
 
 Options flows increasingly drive spot around expiry (max-pain gravitation, dealer hedging), which is why the absolute level matters: BTC options at ~$22B notional means the tail wags the dog more than in past cycles. Snapshot-based series — history accumulates daily from July 2026.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/options-open-interest)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/options-open-interest)
 
 ## Long/Short Ratios
 
@@ -35,7 +35,7 @@ Three views of positioning: top traders by account count, top traders by positio
 
 The classic contrarian read: retail (global) crowding heavily long into a falling market marks capitulation fuel — their liquidations become the cascade. Top-position traders leaning opposite the crowd have historically been the better-informed side. Accumulating since July 2026 (Binance exposes 30 days).
 
-[View live chart →](https://burrito-finance.vercel.app/charts/long-short-ratios)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/long-short-ratios)
 
 ## Long/Short Percentages
 
@@ -45,4 +45,4 @@ The same top-trader data as the ratios chart, expressed as percentages that alwa
 
 Extreme one-sidedness (75%+ either way) is the fragile state — when that many traders share a position, the exit is crowded. Persistent moderate long bias is the historical norm (crypto natives skew long); deviations from that norm carry the signal.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/long-short-percent)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/long-short-percent)

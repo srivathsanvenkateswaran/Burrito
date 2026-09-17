@@ -17,7 +17,7 @@ Honest framing: the differences are tiny — fractions of a percent against dail
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/best-day-to-dca)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/best-day-to-dca)
 
 ## Running ROI (1y)
 
@@ -31,7 +31,7 @@ Note the diminishing amplitude across cycles: early peaks reached +9,000%, recen
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/running-roi)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/running-roi)
 
 ## YTD ROI
 
@@ -45,7 +45,7 @@ Reading tip: the absolute levels matter less than the shape. Years that spent H1
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/ytd-roi)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/ytd-roi)
 
 ## Quarterly Returns
 
@@ -57,7 +57,7 @@ Quarters smooth out the noise that monthly cells still carry: Q4's historical st
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/quarterly-returns)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/quarterly-returns)
 
 ## Monthly Average ROI
 
@@ -69,7 +69,7 @@ Averages hide variance: a +10% average month can still lose money four years out
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/monthly-average-roi)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/monthly-average-roi)
 
 ## Historical Monthly ROI by Year
 
@@ -81,7 +81,7 @@ Hover any bar for its exact year and value. The dominance of a few enormous earl
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/historical-monthly-average-roi)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/historical-monthly-average-roi)
 
 ## Average Daily Returns
 
@@ -93,7 +93,7 @@ This is the chart behind "best day to DCA" folklore. The honest reading: differe
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/average-daily-returns)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/average-daily-returns)
 
 ## Price Drawdown From ATH
 
@@ -105,7 +105,7 @@ Two uses: gauging where the current decline ranks against history, and internali
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/price-drawdown-ath)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/price-drawdown-ath)
 
 ## Altcoin Season Index
 
@@ -115,7 +115,7 @@ For each day, the index asks: what fraction of tracked altcoins beat Bitcoin's r
 
 Alt seasons are the euphoric late phase of bull markets — capital rotating down the risk curve — and they historically cluster just before cycle tops, which makes this as much a warning gauge as a celebration. Our universe is the ~27 tracked alts rather than the top-50 ITC uses, so exact values differ slightly; the regime signal is the same.
 
-[View live chart →](https://burrito-finance.vercel.app/charts/altcoin-season-index)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/altcoin-season-index)
 
 ## Monthly Returns
 
@@ -129,4 +129,4 @@ Seasonality in crypto is a weak effect layered on top of the cycle: a September 
 
 **Available for:** crypto · equities · indices
 
-[View live chart →](https://burrito-finance.vercel.app/charts/monthly-returns)
+[View live chart →](https://burrito-finance.srivathsanvenkateswaran.workers.dev/charts/monthly-returns)
