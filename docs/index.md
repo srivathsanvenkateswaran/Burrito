@@ -6,15 +6,16 @@ tags: [burrito, docs]
 # 🌯 Burrito Documentation
 
 **Burrito** ([burrito-finance.vercel.app](https://burrito-finance.vercel.app)) is a
-self-updating quantitative market-analysis site: 98 charts of crypto risk, cycles,
-on-chain activity, market breadth, derivatives, and US macro — recomputed daily from
-free public data, at $0/month running cost.
+self-updating quantitative market-analysis site: 104 charts of price, risk, cycles,
+on-chain activity, market breadth, derivatives, and US macro, run across crypto,
+equities and indices — recomputed daily from free public data, at $0/month running cost.
 
 ## Start here
 
 - [[risk-metric]] — how the 0–1 risk score and the quantile regression fan work
+- [[assets]] — every asset tracked: class, sector, source, history, and what's not available for equities
 - [[data-pipeline]] — where every number comes from, and how the site updates itself
-- [[charts/index|Chart reference]] — all 98 charts, with full explanations
+- [[charts/index|Chart reference]] — all 104 charts, with full explanations
 - [[snapshot]] — today's market readings (auto-updated daily)
 - [[faq]] — honest answers about accuracy, differences from other sites, and limits
 

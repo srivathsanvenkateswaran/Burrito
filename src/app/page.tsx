@@ -4,6 +4,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { CHARTS } from "@/lib/charts";
 import { loadMetrics, loadTa } from "@/lib/data";
 import { riskColor } from "@/lib/colors";
+import { PAGE_ASSETS, type AssetClass } from "@/lib/assets";
+import { computedSuiteIds } from "@/lib/assetStats";
 
 const FEATURED = [
   "risk",
@@ -39,6 +41,7 @@ function Sparkline({ points }: { points: number[] }) {
 }
 
 export default function Landing() {
+  const suiteIds = computedSuiteIds();
   const rows = loadMetrics().rows;
   const latest = rows.at(-1)!;
   const prev = rows.at(-2)!;
@@ -47,6 +50,13 @@ export default function Landing() {
   const drawdown = loadTa().rows.at(-1)!.drawdown ?? 0;
   const yearCloses = rows.slice(-365).map((r) => r.close);
   const featured = FEATURED.map((slug) => CHARTS.find((c) => c.slug === slug)!);
+  const classCounts = PAGE_ASSETS.reduce(
+    (acc, a) => {
+      acc[a.class] = (acc[a.class] ?? 0) + 1;
+      return acc;
+    },
+    {} as Record<AssetClass, number>,
+  );
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -55,7 +65,7 @@ export default function Landing() {
           Burrito<span className="text-accent">.</span>
         </span>
         <div className="flex items-center gap-2">
-          <SearchPalette />
+          <SearchPalette suiteIds={suiteIds} />
           <ThemeToggle />
           <Link
             href="/dashboard"
@@ -144,6 +154,33 @@ export default function Landing() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="pb-10">
+          <div className="mb-4 flex items-baseline justify-between">
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.15em] text-faint">
+              tracked assets
+            </h2>
+            <Link href="/assets" className="text-xs text-muted transition-colors hover:text-fg">
+              all {PAGE_ASSETS.length} assets →
+            </Link>
+          </div>
+          <p className="mb-4 max-w-2xl text-sm text-muted">
+            {classCounts.crypto ?? 0} cryptocurrencies, {classCounts.equity ?? 0} stocks and{" "}
+            {classCounts.index ?? 0} indices, plus the dollar stablecoin market, each fitted with the
+            same risk, cycle and valuation charts built for Bitcoin.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {PAGE_ASSETS.map((a) => (
+              <Link
+                key={a.id}
+                href={`/assets/${a.id}`}
+                className="rounded-full border border-line px-3 py-1 font-mono text-xs text-muted transition-colors hover:border-faint/60 hover:text-fg"
+              >
+                {a.symbol}
+              </Link>
+            ))}
           </div>
         </section>
 

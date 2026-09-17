@@ -1,0 +1,53 @@
+name: backfill-equities
+
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Comma-separated asset ids to backfill (blank = every equity/index)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: data:backfill-equities
+        run: |
+          if [ -n "${{ github.event.inputs.only }}" ]; then
+            npm run data:backfill-equities -- --only "${{ github.event.inputs.only }}"
+          else
+            npm run data:backfill-equities
+          fi
+
+      - run: npm run data:compute -- --refit
+
+      - run: npm run data:compute-assets
+
+      - run: npm run data:compute-cross
+
+      - run: npm run docs:generate
+
+      - name: Commit and push if data changed
+        run: |
+          if git diff --quiet -- data/; then
+            echo "No data changes."
+            exit 0
+          fi
+          git config user.name "burrito-bot"
+          git config user.email "actions@github.com"
+          git add data/ docs/ public/burrito-vault.zip
+          git commit -m "data: equity history backfill"
+          git push

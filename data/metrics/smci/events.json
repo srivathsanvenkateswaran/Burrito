@@ -1,0 +1,21 @@
+{
+"goldenDeath": [
+{"date":"2017-08-25","type":"up"},
+{"date":"2017-09-28","type":"down"},
+{"date":"2018-06-13","type":"up"},
+{"date":"2018-09-14","type":"down"},
+{"date":"2019-04-01","type":"up"},
+{"date":"2019-10-08","type":"down"},
+{"date":"2019-10-17","type":"up"},
+{"date":"2020-05-06","type":"down"},
+{"date":"2020-06-02","type":"up"},
+{"date":"2024-09-04","type":"down"},
+{"date":"2025-06-18","type":"up"},
+{"date":"2025-12-16","type":"down"},
+{"date":"2026-08-31","type":"up"}
+],
+"piCycle": [
+{"date":"2024-06-04","type":"up"},
+{"date":"2024-07-10","type":"down"}
+]
+}

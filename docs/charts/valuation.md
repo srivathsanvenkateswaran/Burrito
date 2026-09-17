@@ -17,4 +17,6 @@ The classic thresholds come from backtests over Bitcoin's history: buying when t
 
 Its weakness is the same as any moving-average metric: after a violent crash the 200-day SMA itself falls, so the multiple can look "normal" while the market is still damaged. Read it together with the risk metric, which uses a much slower baseline.
 
+**Available for:** crypto · equities · indices
+
 [View live chart →](https://burrito-finance.vercel.app/charts/mayer)

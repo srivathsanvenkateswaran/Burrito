@@ -25,7 +25,9 @@ BTC is on the log scale (right axis), DXY linear (left). The correlation is a re
 
 Benford's Law says that in many naturally occurring datasets, smaller leading digits dominate: numbers starting with 1 appear ~30% of the time, with 9 under 5%. The bars compare Bitcoin's daily closing prices against that theoretical curve.
 
-Data spanning many orders of magnitude (like a price that went from $0.07 to $120k) should follow Benford closely — and Bitcoin does, which is a neat statistical fingerprint of organic, multiplicative growth. Strong deviations in other assets can hint at manipulated or range-pinned prices.
+Data spanning many orders of magnitude should follow Benford closely — and Bitcoin, whose price went from $0.07 to over $100,000, does, which is a neat statistical fingerprint of organic, multiplicative growth. Strong deviations in other assets can hint at manipulated or range-pinned prices.
+
+**Available for:** crypto · equities · indices
 
 [View live chart →](https://burrito-finance.vercel.app/charts/benfords-law)
 
@@ -37,6 +39,8 @@ Each dot marks a day when price crossed a round-number milestone ($1k, $10k, $20
 
 Round numbers act as psychological support and resistance, and this chart makes the battlegrounds visible — the $10k and $20k levels were each crossed dozens of times before finally being left behind, while levels conquered in strong trends barely register a second dot.
 
+**Available for:** crypto · equities · indices
+
 [View live chart →](https://burrito-finance.vercel.app/charts/price-milestone-crossings)
 
 ## Days Since % Decline
@@ -47,6 +51,8 @@ The counter rises by one each day and resets to zero whenever a daily drop of at
 
 Long stretches without a big red day are a feature of maturing bull markets — and the counter's height going into a top measures how complacent the market had become. The declining frequency of 10%+ days across the years is also one of the cleanest views of Bitcoin's falling volatility.
 
+**Available for:** crypto · equities · indices
+
 [View live chart →](https://burrito-finance.vercel.app/charts/days-since-percentage-decline)
 
 ## Days Since % Gain
@@ -56,5 +62,7 @@ Long stretches without a big red day are a feature of maturing bull markets — 
 The mirror image of Days Since % Decline: the counter resets whenever a single-day gain of at least the chosen size occurs.
 
 Big green days cluster in two regimes: euphoric bull runs and violent bear-market rallies. A very tall counter means the market has gone a long time without explosive upside — historically common in late bears and early accumulation phases, when volatility is compressed.
+
+**Available for:** crypto · equities · indices
 
 [View live chart →](https://burrito-finance.vercel.app/charts/days-since-percentage-gain)

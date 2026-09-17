@@ -6,29 +6,50 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import type { ChartDef } from "../src/lib/charts";
 import { CHARTS, CATEGORIES } from "../src/lib/charts";
+import { chartAppliesTo, chartText, type AssetClass } from "../src/lib/chartText";
 
 const docsDir = path.join(process.cwd(), "docs");
 const chartsDir = path.join(docsDir, "charts");
 
 const catSlug = (c: string) => c.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
+/** Order and prose for the "Available for" line on asset-scoped chart docs. */
+const CLASS_ORDER: AssetClass[] = ["crypto", "equity", "index", "stablecoin"];
+const CLASS_LABEL: Record<AssetClass, string> = {
+  crypto: "crypto",
+  equity: "equities",
+  index: "indices",
+  stablecoin: "stablecoins",
+};
+
+function availabilityLine(def: ChartDef): string | null {
+  if (def.scope !== "asset") return null;
+  const classes = CLASS_ORDER.filter((cls) => chartAppliesTo(def, cls));
+  if (!classes.length) return null;
+  return `**Available for:** ${classes.map((c) => CLASS_LABEL[c]).join(" · ")}`;
+}
+
 function chartReference() {
   fs.mkdirSync(chartsDir, { recursive: true });
   for (const cat of CATEGORIES) {
     const charts = CHARTS.filter((c) => c.category === cat);
     const body = charts
-      .map((c) =>
-        [
-          `## ${c.title}`,
+      .map((c) => {
+        const text = chartText(c);
+        const avail = availabilityLine(c);
+        return [
+          `## ${text.title}`,
           "",
-          `*${c.description}*`,
+          `*${text.description}*`,
           "",
-          ...c.explanation.map((p) => p + "\n"),
+          ...text.explanation.map((p) => p + "\n"),
+          ...(avail ? [avail, ""] : []),
           `[View live chart →](https://burrito-finance.vercel.app/charts/${c.slug})`,
           "",
-        ].join("\n"),
-      )
+        ].join("\n");
+      })
       .join("\n");
     fs.writeFileSync(
       path.join(chartsDir, `${catSlug(cat)}.md`),
@@ -64,6 +85,28 @@ function snapshot() {
     )
     .join("\n");
 
+  // Equities & indices: only once assets-summary carries class/sector/risk/mayer
+  // for them (agent E's cross-asset work) — an empty or partial summary just
+  // means no equities section, not a broken snapshot.
+  const equities = (summary.assets ?? []).filter(
+    (a: any) =>
+      (a.class === "equity" || a.class === "index") &&
+      typeof a.symbol === "string" &&
+      typeof a.name === "string" &&
+      typeof a.sector === "string" &&
+      typeof a.close === "number" &&
+      typeof a.risk === "number" &&
+      typeof a.mayer === "number",
+  );
+  const equitiesSection = equities.length
+    ? `\n## Equities & indices\n\n| Symbol | Name | Sector | Close | Risk | Mayer |\n|---|---|---|---|---|---|\n${equities
+        .map(
+          (a: any) =>
+            `| ${a.symbol} | ${a.name} | ${a.sector} | $${a.close.toLocaleString("en-US", { maximumFractionDigits: a.close > 100 ? 0 : 2 })} | ${a.risk.toFixed(2)} | ${a.mayer.toFixed(2)} |`,
+        )
+        .join("\n")}\n`
+    : "";
+
   fs.writeFileSync(
     path.join(docsDir, "snapshot.md"),
     `---
@@ -92,7 +135,7 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 | Asset | Price | 24h | Risk |
 |---|---|---|---|
 ${top}
-
+${equitiesSection}
 *Not financial advice. Just a burrito.* 🌯
 `,
   );

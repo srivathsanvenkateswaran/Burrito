@@ -1,0 +1,11 @@
+{
+"goldenDeath": [
+{"date":"2021-08-09","type":"down"},
+{"date":"2021-10-07","type":"up"},
+{"date":"2021-12-03","type":"down"},
+{"date":"2023-04-05","type":"up"},
+{"date":"2026-02-27","type":"down"},
+{"date":"2026-09-09","type":"up"}
+],
+"piCycle": []
+}

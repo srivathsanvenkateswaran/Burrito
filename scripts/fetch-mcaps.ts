@@ -69,7 +69,7 @@ async function fetchBatch(cmIds: string[]): Promise<Map<string, McapRow[]>> {
 }
 
 async function main() {
-  const covered = ASSETS.filter((a) => a.coinmetrics !== null);
+  const covered = ASSETS.filter((a) => a.coinmetrics);
   let failures = 0;
   for (let i = 0; i < covered.length; i += BATCH_SIZE) {
     const batch = covered.slice(i, i + BATCH_SIZE);

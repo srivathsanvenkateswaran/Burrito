@@ -10,15 +10,22 @@
     "data:backfill": "tsx scripts/backfill.ts",
     "data:update": "tsx scripts/update.ts",
     "data:compute": "tsx scripts/compute.ts",
+    "data:compute-stables": "tsx scripts/compute-stables.ts",
     "data:external": "tsx scripts/fetch-external.ts",
     "data:assets": "tsx scripts/update-assets.ts",
+    "data:backfill-equities": "tsx scripts/backfill-equities.ts",
+    "data:equities": "tsx scripts/update-equities.ts",
+    "data:stables": "tsx scripts/fetch-stables.ts",
+    "data:sec": "tsx scripts/fetch-sec.ts",
     "data:mcaps": "tsx scripts/fetch-mcaps.ts && tsx scripts/fetch-mcaps-estimate.ts",
     "data:compute-assets": "tsx scripts/compute-assets.ts",
+    "data:compute-cross": "tsx scripts/compute-cross.ts",
     "data:onchain": "tsx scripts/fetch-onchain.ts && tsx scripts/fetch-onchain-bc.ts && tsx scripts/fetch-wiki.ts",
     "data:compute-onchain": "tsx scripts/compute-onchain.ts",
     "data:fred": "tsx scripts/fetch-fred.ts",
     "data:derivs": "tsx scripts/fetch-derivs.ts",
-    "docs:generate": "tsx scripts/generate-docs.ts"
+    "docs:generate": "tsx scripts/generate-docs.ts",
+    "test": "tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",

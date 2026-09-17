@@ -11,7 +11,7 @@ export function generateStaticParams() {
   ];
 }
 
-const NAV_ORDER = ["index", "risk-metric", "data-pipeline", "charts/index", "snapshot", "faq"];
+const NAV_ORDER = ["index", "risk-metric", "assets", "data-pipeline", "charts/index", "snapshot", "faq"];
 
 export default async function DocPage({
   params,

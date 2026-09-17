@@ -384,6 +384,30 @@ export function fanPosition(value: number, levels: number[], taus: number[]): nu
   return taus[taus.length - 1];
 }
 
+/**
+ * Legend labels for a set of event dates: the year alone where that is
+ * unambiguous, `YYYY-MM` where two events share a year (TSLA has two 2021
+ * peaks, VST two 2025 ones), and the full date in the rare case that a month
+ * still collides. Two identically named lines in a chart legend are
+ * indistinguishable, which is what this avoids.
+ */
+export function eventLabels(dates: string[]): string[] {
+  const count = (keys: string[]) => {
+    const m = new Map<string, number>();
+    for (const k of keys) m.set(k, (m.get(k) ?? 0) + 1);
+    return m;
+  };
+  const years = dates.map((d) => d.slice(0, 4));
+  const months = dates.map((d) => d.slice(0, 7));
+  const byYear = count(years);
+  const byMonth = count(months);
+  return dates.map((d, i) => {
+    if (byYear.get(years[i]) === 1) return years[i];
+    if (byMonth.get(months[i]) === 1) return months[i];
+    return d;
+  });
+}
+
 /** ROI paths from a list of event dates, each capped at the next event (or capDays). */
 export function eventRoi(
   rows: { date: string; close: number }[],
@@ -392,6 +416,7 @@ export function eventRoi(
 ): { label: string; points: { day: number; pct: number }[] }[] {
   const out: { label: string; points: { day: number; pct: number }[] }[] = [];
   const sorted = [...eventDates].sort();
+  const labels = eventLabels(sorted);
   for (let e = 0; e < sorted.length; e++) {
     const start = rows.findIndex((r) => r.date >= sorted[e]);
     if (start === -1) continue;
@@ -402,7 +427,7 @@ export function eventRoi(
     for (let i = start; i < end; i++) {
       points.push({ day: i - start, pct: Number(((rows[i].close / base - 1) * 100).toFixed(1)) });
     }
-    out.push({ label: sorted[e].slice(0, 4), points });
+    out.push({ label: labels[e], points });
   }
   return out;
 }
@@ -499,4 +524,219 @@ export function monthlyReturns(
     });
   }
   return out;
+}
+
+// ---------------------------------------------------------------------------
+// Multi-asset helpers: period-scaled windows, calendar-day time axes, and
+// fan parameters that can be cached and re-evaluated without refitting.
+// ---------------------------------------------------------------------------
+
+export interface Windows {
+  d50: number;
+  d200: number;
+  w20: number;
+  w21ema: number;
+  w50: number;
+  w200: number;
+  y1: number;
+  risk: { window: number; warmup: number };
+  pi111: number;
+  pi350: number;
+  volAnnualize: number;
+}
+
+/**
+ * Lookback windows in rows for a series with `ppy` rows per year. Weekly
+ * windows use rows-per-week = round(7·ppy/365): 7 for daily crypto (20W =
+ * 140, 21W = 147, 50W = 350, 200W = 1400 — today's BTC constants) and 5 for
+ * exchange-traded assets (100 / 105 / 250 / 1000 trading days).
+ */
+export function W(ppy: number): Windows {
+  const perWeek = Math.round((7 * ppy) / 365);
+  return {
+    d50: 50,
+    d200: 200,
+    w20: 20 * perWeek,
+    w21ema: 21 * perWeek,
+    w50: 50 * perWeek,
+    w200: 200 * perWeek,
+    y1: ppy,
+    risk: { window: 4 * ppy, warmup: ppy },
+    pi111: 111,
+    pi350: 350,
+    volAnnualize: Math.sqrt(ppy),
+  };
+}
+
+const DAY_MS = 86_400_000;
+
+/** Whole days from the Unix epoch for a YYYY-MM-DD date. */
+export function dayNumber(date: string): number {
+  return Math.round(Date.parse(`${date}T00:00:00Z`) / DAY_MS);
+}
+
+/** Calendar days from `from` to `to` (negative if `to` is earlier). */
+export function daysBetween(from: string, to: string): number {
+  return dayNumber(to) - dayNumber(from);
+}
+
+/** Round to at most `sig` significant digits (null passes through). */
+export function roundSig(v: number | null | undefined, sig = 6): number | null {
+  if (v === null || v === undefined || !Number.isFinite(v)) return null;
+  if (v === 0) return 0;
+  return Number(v.toPrecision(sig));
+}
+
+/**
+ * Calendar-day version of `daysSinceMove`: for each row, calendar days since
+ * the last single-row move of at least `pct` percent in the given direction
+ * (0 on event rows; counted from the first row before any event). Identical
+ * to the row-count version on gap-free daily series.
+ */
+export function daysSinceMoveByDate(
+  dates: string[],
+  closes: number[],
+  pct: number,
+  direction: "decline" | "gain",
+): number[] {
+  const out: number[] = new Array(closes.length).fill(0);
+  let last = 0;
+  for (let i = 1; i < closes.length; i++) {
+    const change = (closes[i] / closes[i - 1] - 1) * 100;
+    const hit = direction === "decline" ? change <= -pct : change >= pct;
+    if (hit) last = i;
+    out[i] = daysBetween(dates[last], dates[i]);
+  }
+  return out;
+}
+
+/** Calendar-day version of `daysToMultiple`. */
+export function daysToMultipleByDate(
+  dates: string[],
+  closes: number[],
+  multiple: number,
+): (number | null)[] {
+  const out: (number | null)[] = new Array(closes.length).fill(null);
+  for (let i = 0; i < closes.length; i++) {
+    const target = closes[i] * multiple;
+    for (let j = i + 1; j < closes.length; j++) {
+      if (closes[j] >= target) {
+        out[i] = daysBetween(dates[i], dates[j]);
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+export interface EventRoiPath {
+  label: string;
+  points: { day: number; pct: number }[];
+}
+
+/**
+ * Calendar-day version of `eventRoi`: `day` is calendar days since the event
+ * and `capDays` is a calendar-day cap. Each path also stops at the next event.
+ */
+export function eventRoiByDate(
+  rows: { date: string; close: number }[],
+  eventDates: string[],
+  capDays = 1460,
+): EventRoiPath[] {
+  const out: EventRoiPath[] = [];
+  const sorted = [...eventDates].sort();
+  const labels = eventLabels(sorted);
+  for (let e = 0; e < sorted.length; e++) {
+    const start = rows.findIndex((r) => r.date >= sorted[e]);
+    if (start === -1) continue;
+    const nextStart = e + 1 < sorted.length ? rows.findIndex((r) => r.date >= sorted[e + 1]) : -1;
+    const end = nextStart === -1 ? rows.length : nextStart;
+    const base = rows[start].close;
+    const points: { day: number; pct: number }[] = [];
+    for (let i = start; i < end; i++) {
+      const day = daysBetween(rows[start].date, rows[i].date);
+      if (day >= capDays) break;
+      points.push({ day, pct: Number(((rows[i].close / base - 1) * 100).toFixed(1)) });
+    }
+    out.push({ label: labels[e], points });
+  }
+  return out;
+}
+
+/** Fitted quantile-fan parameters: enough to evaluate the fan at any t. */
+export interface FanParams {
+  taus: number[];
+  /** Standardisation of ln(t): z = (ln t − mx) / sx. */
+  norm: { mx: number; sx: number };
+  /** One [a, b, c] per tau: ln(price) = a + b·z + c·z². */
+  coeffs: number[][];
+}
+
+/** Evaluate a fan from stored parameters (rearranged so quantiles never cross). */
+export function fanPredictor(params: FanParams): (t: number, tauIdx: number) => number {
+  const { mx, sx } = params.norm;
+  return (t, tauIdx) => {
+    const z = (Math.log(t) - mx) / sx;
+    const vals = params.coeffs.map((p) => p[0] + p[1] * z + p[2] * z * z).sort((a, b) => a - b);
+    return Math.exp(vals[tauIdx]);
+  };
+}
+
+/** Like `quantileFan` but also returns the fitted parameters for caching. */
+export function quantileFanParams(
+  daysSinceOrigin: number[],
+  closes: number[],
+  taus: number[],
+  iters = 4000,
+): FanParams {
+  const xs = daysSinceOrigin.map((t) => Math.log(t));
+  const ys = closes.map((c) => Math.log(c));
+  const n = xs.length;
+  const mx = xs.reduce((a, b) => a + b, 0) / n;
+  const sx = Math.sqrt(xs.reduce((a, b) => a + (b - mx) ** 2, 0) / n);
+  const zs = xs.map((x) => (x - mx) / sx);
+
+  const X = zs.map((z) => [1, z, z * z]);
+  const XtX = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ];
+  const Xty = [0, 0, 0];
+  for (let i = 0; i < n; i++) {
+    for (let r = 0; r < 3; r++) {
+      Xty[r] += X[i][r] * ys[i];
+      for (let c = 0; c < 3; c++) XtX[r][c] += X[i][r] * X[i][c];
+    }
+  }
+  const ols = solve3(XtX, Xty);
+  const olsResiduals = ys.map((y, i) => y - (ols[0] + ols[1] * zs[i] + ols[2] * zs[i] ** 2));
+  const sortedRes = [...olsResiduals].sort((a, b) => a - b);
+
+  const coeffs: number[][] = taus.map((tau) => {
+    const p = [...ols];
+    p[0] += sortedRes[Math.min(n - 1, Math.floor(tau * n))];
+    const m = [0, 0, 0];
+    const v = [0, 0, 0];
+    const lr = 0.02;
+    for (let it = 1; it <= iters; it++) {
+      const g = [0, 0, 0];
+      for (let i = 0; i < n; i++) {
+        const r = ys[i] - (p[0] + p[1] * zs[i] + p[2] * zs[i] * zs[i]);
+        const w = (r < 0 ? 1 : 0) - tau;
+        g[0] += w;
+        g[1] += w * zs[i];
+        g[2] += w * zs[i] * zs[i];
+      }
+      for (let k = 0; k < 3; k++) {
+        const gk = g[k] / n;
+        m[k] = 0.9 * m[k] + 0.1 * gk;
+        v[k] = 0.999 * v[k] + 0.001 * gk * gk;
+        p[k] -= (lr * m[k]) / (Math.sqrt(v[k]) + 1e-9);
+      }
+    }
+    return p;
+  });
+
+  return { taus, norm: { mx, sx }, coeffs };
 }

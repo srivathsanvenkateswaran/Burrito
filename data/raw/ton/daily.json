@@ -1,7 +1,7 @@
 {
   "asset": "TON",
   "quote": "USDT",
-  "updatedAt": "2026-07-04T03:49:48.145Z",
+  "updatedAt": "2026-09-15T13:11:35.815Z",
   "rows": [
     {"date":"2024-08-08","open":4.352,"high":6.47,"low":4.352,"close":6.218,"volumeUsd":44731989.4385},
     {"date":"2024-08-09","open":6.217,"high":6.832,"low":6.081,"close":6.619,"volumeUsd":72823702.05494},

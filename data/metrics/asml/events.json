@@ -1,0 +1,13 @@
+{
+"goldenDeath": [
+{"date":"2018-10-04","type":"down"},
+{"date":"2019-04-04","type":"up"},
+{"date":"2022-02-04","type":"down"},
+{"date":"2022-12-23","type":"up"},
+{"date":"2023-09-27","type":"down"},
+{"date":"2023-12-22","type":"up"},
+{"date":"2024-09-16","type":"down"},
+{"date":"2025-06-26","type":"up"}
+],
+"piCycle": []
+}

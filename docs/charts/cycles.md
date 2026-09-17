@@ -15,15 +15,19 @@ Each line starts at 1× on a halving day (2012, 2016, 2020, 2024) and tracks the
 
 Note the shrinking amplitude — each successive halving cycle has delivered a smaller multiple, consistent with diminishing returns as market cap grows. Comparing the current halving line against its predecessors at the same day-count is the cleanest "where are we in the cycle" view this framework offers.
 
+**Available for:** crypto
+
 [View live chart →](https://burrito-finance.vercel.app/charts/roi-after-halving)
 
 ## ROI After Cycle Bottom
 
 *Recovery paths from each bear-market low, overlaid on a shared timeline.*
 
-Each line starts at 1× on a bear-market bottom (2011, 2015, 2018, 2022) and shows the recovery multiple from that low on a days-since axis (log scale, since early cycles reached 100×+). Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.
+Each line starts at 1× on a bear-market bottom — for Bitcoin, 2011, 2015, 2018 and 2022; for other coins, every low that followed a drawdown of at least 60% — and shows the recovery multiple from that low on a days-since axis (log scale, since early cycles reached 100×+). Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.
 
 The recoveries rhyme: roughly two years of choppy appreciation, then a steep leg. Overlaying the current cycle on the old ones shows whether the market is running hot or cold against its own precedent — and the shrinking peak multiples echo the same diminishing-returns story as the halving chart.
+
+**Available for:** crypto · equities · indices
 
 [View live chart →](https://burrito-finance.vercel.app/charts/roi-after-cycle-bottom)
 
@@ -31,19 +35,23 @@ The recoveries rhyme: roughly two years of choppy appreciation, then a steep leg
 
 *Drawdown-and-recovery paths from each cycle top, overlaid day by day.*
 
-The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top (2011, 2013, 2017, 2021, 2025) and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?
+The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top — for Bitcoin, 2011, 2013, 2017, 2021 and 2025; for other coins, each all-time high that preceded a 60%+ drawdown — and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?
 
 History's answer has been two to three years underwater, with the depth of the trough shrinking each cycle. It's also the best illustration of why the risk metric emphasizes selling into strength — the cost of buying the top is measured in years, not percent.
 
+**Available for:** crypto · equities · indices
+
 [View live chart →](https://burrito-finance.vercel.app/charts/roi-after-cycle-peak)
 
-## ROI After Latest Cycle Peak (Multiple Coins)
+## ROI After Latest Cycle Peak
 
-*Each asset's multiple since the October 2025 market peak.*
+*Bitcoin's multiple since its latest cycle peak, day by day.*
 
 Every line starts at 1× on 2025-10-06 — the latest cycle's ATH close — and tracks each asset's path through the current drawdown. Toggle assets to compare who is weathering it and who is collapsing.
 
 Drawdown dispersion is a leadership signal: assets falling least from a shared peak tend to lead the next advance, while the deepest fallers historically either die or produce the most violent (and least reliable) bounces.
+
+**Available for:** crypto · equities · indices
 
 [View live chart →](https://burrito-finance.vercel.app/charts/roi-after-latest-cycle-peak)
 
@@ -61,9 +69,11 @@ Anything holding above 1× through a bear phase is showing genuine relative stre
 
 *How far the current cycle's ROI deviates from the average of past cycles.*
 
-The line is the current cycle's return (from the 2022 bottom) minus the average return of the three prior cycles at the same day-count. Above zero: running hotter than the historical average; below: colder.
+The line is the current cycle's return (from the latest bear-market bottom — for Bitcoin, November 2022) minus the average return of the prior cycles at the same day-count. Above zero: running hotter than the historical average; below: colder.
 
 It compresses the whole overlay-the-cycles exercise into one series. Persistent negative deviation is the quantitative form of the "lengthening/weakening cycles" argument; a crossover back above zero would mean the current cycle started outperforming its precedent.
+
+**Available for:** crypto · equities · indices
 
 [View live chart →](https://burrito-finance.vercel.app/charts/cycles-deviation)
 
@@ -73,7 +83,9 @@ It compresses the whole overlay-the-cycles exercise into one series. Persistent 
 
 For every historical buy date, the lines show how many days that purchase took to double, 4×, 10×, or 100× — with gaps where it simply never happened (yet). The y-axis is days, so lower means faster.
 
-The pattern is stark: buys made in bear-market depths multiplied within a few hundred days, while buys near tops show multi-thousand-day waits or open gaps. The 100× line ends early — no purchase after 2013 has ever 100×'d, the bluntest possible statement of diminishing returns.
+The pattern is stark: buys made in bear-market depths multiplied within a few hundred days, while buys near tops show multi-thousand-day waits or open gaps. The 100× line ends early — no Bitcoin purchase after 2013 has ever 100×'d, the bluntest possible statement of diminishing returns.
+
+**Available for:** crypto · equities · indices
 
 [View live chart →](https://burrito-finance.vercel.app/charts/roi-bands)
 
@@ -84,6 +96,8 @@ The pattern is stark: buys made in bear-market depths multiplied within a few hu
 Each marker flags the day the 20-week SMA — not price itself, but its smoothed trend — climbed above the previous cycle's peak close. Price crosses old highs many times amid volatility; the slow average doing it is a stronger statement that the market has durably outgrown the last cycle.
 
 Historically these breakouts have landed early in the steep phase of bull markets (2013, 2017, 2021), making this one of the simpler regime-confirmation signals in the cycle toolkit.
+
+**Available for:** crypto · equities · indices
 
 [View live chart →](https://burrito-finance.vercel.app/charts/sma-cycle-top-breakout)
 

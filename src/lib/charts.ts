@@ -1,10 +1,28 @@
+import type { AssetClass } from "./chartText";
+
 export interface ChartDef {
   slug: string;
+  /** May contain `{name}` / `{symbol}` tokens on asset-scoped charts; resolve with `chartText()`. */
   title: string;
   category: string;
   description: string;
   /** Longer educational text rendered below the chart, one string per paragraph. */
   explanation: string[];
+  /**
+   * `asset`: rendered per asset under /assets/[asset]/[slug] (and for BTC under /charts/[slug]).
+   * `btc`: Bitcoin-only data (on-chain, mining, derivatives, ...), only under /charts/[slug].
+   * `global`: market-wide or macro, not tied to one asset.
+   */
+  scope: "asset" | "btc" | "global";
+  /** Asset-scoped only: restrict to these classes. Absent means crypto, equity and index. */
+  classes?: AssetClass[];
+  /** Asset-scoped only: replaces `explanation` wholesale for the given class. */
+  explanationByClass?: Partial<Record<AssetClass, string[]>>;
+}
+
+/** Stocks and indices share the 252-trading-day calendar, so most of their variants are identical. */
+function forEquities(paras: string[]): Partial<Record<AssetClass, string[]>> {
+  return { equity: paras, index: paras };
 }
 
 export const CHARTS: ChartDef[] = [
@@ -12,55 +30,124 @@ export const CHARTS: ChartDef[] = [
     slug: "price",
     title: "Price + Moving Averages",
     category: "Price",
+    scope: "asset",
     description:
-      "BTC/USD with toggleable overlays: log regression bands, Bull Market Support Band (20W SMA / 21W EMA), 50W and 200W SMAs.",
+      "{symbol} with toggleable overlays: log regression bands, Bull Market Support Band (20W SMA / 21W EMA), 50W and 200W SMAs.",
     explanation: [
-      "Bitcoin's long-term history only makes sense on a logarithmic scale: each gridline step is a multiplication (10×), not an addition. On a linear scale everything before 2017 flattens into a line at zero; on a log scale the early $1 → $100 move is given the same visual weight as $1,000 → $100,000, which is how returns actually compound.",
-      "The log regression line is a best-fit curve through the entire price history in log-log space (log of price against log of time since Bitcoin's genesis block). It is a slow-moving estimate of fair value; the shaded band around it is one standard deviation of how far price has historically strayed. Price spends years above and below this line — the point is not that price follows it, but that price has always eventually reverted toward it.",
+      "{name}'s long-term history only makes sense on a logarithmic scale: each gridline step is a multiplication (10×), not an addition. On a linear scale the early years flatten into a line at zero; on a log scale a move from $1 to $100 is given the same visual weight as $1,000 to $100,000, which is how returns actually compound.",
+      "The log regression line is a best-fit curve through the entire price history in log-log space (log of price against log of time since Bitcoin's genesis block, or since a coin's first day of price history). It is a slow-moving estimate of fair value; the shaded band around it is one standard deviation of how far price has historically strayed. Price spends years above and below this line — the point is not that price follows it, but that price has always eventually reverted toward it.",
       "The Bull Market Support Band (20-week SMA and 21-week EMA) is the zone that has repeatedly acted as support during bull markets and resistance during bear markets. Weekly closes above a rising band have historically indicated bull conditions. The 50W and 200W SMAs are the longer-term regime lines: the 200W SMA in particular has marked every major cycle bottom to date.",
     ],
+    explanationByClass: forEquities([
+      "{name}'s long-term history only makes sense on a logarithmic scale: each gridline step is a multiplication (10×), not an addition. On a linear scale the early decades flatten into a line near zero; on a log scale a move from $1 to $10 is given the same visual weight as $100 to $1,000, which is how returns actually compound. Prices are split-adjusted, so the early history is in today's share terms.",
+      "The log regression line is a best-fit curve through the entire price history in log-log space (log of price against log of time since {name}'s listing). It is a slow-moving estimate of fair value; the shaded band around it is one standard deviation of how far price has historically strayed. The fit is least stable in the first few years after a listing, when the time axis is short, and most informative on names with decades of history.",
+      "The Bull Market Support Band (20-week SMA and 21-week EMA) is the zone that has tended to act as support in uptrends and resistance in downtrends. Because {symbol} trades about 252 days a year, the weekly windows are computed in trading days: 100 for the 20-week SMA, 105 for the 21-week EMA, 250 for the 50W and 1,000 for the 200W SMA. The 200W line is roughly a four-year average; stocks and indices have spent long stretches below it only in severe bear markets, which is what makes it a regime line rather than a trading level.",
+    ]),
+  },
+  {
+    slug: "volume",
+    title: "Volume",
+    category: "Price",
+    scope: "asset",
+    classes: ["crypto", "equity"],
+    description: "Daily traded volume of {symbol} with a 30-period average, under price.",
+    explanation: [
+      "Each bar is one day's traded volume of {symbol} — how many units changed hands — with a 30-period simple moving average drawn through it and price above for context. Volume is the one market series not derived from price: it measures how much conviction was behind a move, not just its direction.",
+      "The classic reads: rallies on expanding volume are being bought, rallies on shrinking volume are drifting; the largest bars of a decline tend to print at its end, when everyone who was going to sell has sold; and a breakout to new highs on thin volume is the one most likely to fail. Volume also tends to surge on the way down and build more slowly on the way up, which is why capitulation looks like a spike and accumulation looks like a plateau.",
+      "Crypto volume here comes from the venue the price series is built on, not from every exchange, and it is quoted in {symbol}'s own units, so a bar's height cannot be compared across assets — read the shape against its own 30-day average. Weekends trade, but thinly, which gives the average a mild weekly ripple.",
+    ],
+    explanationByClass: {
+      equity: [
+        "Each bar is one day's traded volume of {symbol} — how many shares changed hands across US exchanges — with a 30-period simple moving average drawn through it and price above for context. Volume is the one market series not derived from price: it measures how much conviction was behind a move, not just its direction.",
+        "The classic reads: rallies on expanding volume are being bought, rallies on shrinking volume are drifting; the largest bars of a decline tend to print at its end, when everyone who was going to sell has sold; and a breakout to new highs on thin volume is the one most likely to fail. Volume also tends to surge on the way down and build more slowly on the way up, which is why capitulation looks like a spike and accumulation looks like a plateau.",
+        "Share counts are split-adjusted, so a bar from 2005 is comparable to one from today. Options-expiration Fridays, index rebalances and earnings days print outsized bars that say little about the trend; the 30-period average (30 trading days, about six weeks) smooths them out. Indices have no volume of their own, which is why this chart is not offered for them.",
+      ],
+    },
+  },
+  {
+    slug: "vs-benchmark",
+    title: "{symbol} vs Benchmark",
+    category: "Price",
+    scope: "asset",
+    description:
+      "{symbol} divided by its benchmark — a ratio that rises when {symbol} outperforms — with a 90-period relative-strength line.",
+    explanation: [
+      "The ratio line is {symbol}'s price divided by its benchmark's price, rebased so the start of the series reads 1.0. It only moves when the two diverge: a flat ratio through a crash means {symbol} fell exactly as much as its benchmark; a rising ratio means it is winning, whichever way the market is going. Relative strength is the basis of every rotation strategy because it removes the market's own beta, which nobody controls.",
+      "Benchmarks follow the asset's class: coins are measured against Bitcoin, and Bitcoin itself against the S&P 500 — the question for BTC being whether it beats plain equity exposure, the question for every other coin being whether it beats just holding BTC. The 90-period relative-strength line is the ratio's change over the trailing 90 days, in percent: positive means {symbol} has beaten its benchmark over roughly the last quarter.",
+      "Two reads matter more than the rest. A ratio making new highs while the absolute price is still below its own high is early leadership: the asset is being accumulated before the market turns. Price at new highs on a falling ratio is late-cycle beta: the whole market is rising and the asset is along for the ride. For coins, a ratio to Bitcoin that bleeds for years is the base rate, which is why holding above 1.0 here for any length of time is the strongest single filter for next-cycle leadership.",
+    ],
+    explanationByClass: {
+      equity: [
+        "The ratio line is {symbol}'s price divided by its benchmark's level, rebased so the start of the series reads 1.0. It only moves when the two diverge: a flat ratio through a crash means {symbol} fell exactly as much as its benchmark; a rising ratio means it is winning, whichever way the market is going. Relative strength is the basis of every rotation strategy because it removes the market's own beta, which nobody controls.",
+        "Stocks are measured against the S&P 500, the broadest large-cap benchmark and the one most funds are judged by. The 90-period relative-strength line is the ratio's change over the trailing 90 trading days (about four months), in percent: positive means {symbol} has beaten the index over roughly the last quarter.",
+        "Two reads matter more than the rest. A ratio making new highs while the absolute price is still below its own high is early leadership: the stock is being accumulated before the market turns. Price at new highs on a falling ratio is late-cycle beta: the whole market is rising and the stock is along for the ride. Most stocks underperform the index over long windows — a handful of large winners carry the average — so a ratio that has risen for years is rarer than the price chart makes it look.",
+      ],
+      index: [
+        "The ratio line is {symbol} divided by its benchmark index, rebased so the start of the series reads 1.0. It only moves when the two diverge: a flat ratio through a crash means {symbol} fell exactly as much as its benchmark; a rising ratio means it is winning, whichever way the market is going.",
+        "The Nasdaq-100 and Nasdaq Composite are measured against the S&P 500, and the S&P 500 against the Nasdaq-100, so the ratio always reads as large-cap technology against the broad market. The 90-period relative-strength line is the ratio's change over the trailing 90 trading days (about four months), in percent.",
+        "The ratio is a cleaner growth-versus-everything-else gauge than either index alone. It rose through the late 1990s, collapsed from 2000 to 2002, and has climbed almost without interruption since 2009 as the largest technology companies became the largest companies; the 2022 reversal, when rates rose and long-duration growth stocks were hit hardest, is the exception that shows what a regime change looks like on this line.",
+      ],
+    },
   },
   {
     slug: "risk",
     title: "Risk Metric",
     category: "Risk",
+    scope: "asset",
     description:
       "0–1 risk score: price's percentile position inside the quantile regression fan. v2.",
     explanation: [
-      "The risk metric compresses \"how stretched is price right now?\" into a single number between 0 and 1. Version 2 reads it directly off the quantile regression fan: if price sits on the fan's median curve, risk is 0.5; on the 95th-percentile curve, 0.95. It is the statistical answer to \"how expensive is today relative to Bitcoin's entire trend history?\"",
-      "How to use it: low readings (green, below 0.2) have historically coincided with bear-market bottoms and accumulation zones; high readings (red, above 0.8) with euphoric tops where risk-reward favors taking profit. Backtested against known reference points, v2 scores the 2013/2017/2021 tops at 0.98–0.99 and the 2022 bottom at 0.01. It is a slow valuation signal, not a trade timer.",
-      "Caveats: this is our own model — same family of methods ITC describes (asymmetric quantile regression), but independently fitted. The fan is refit on the full history each day, so all readings shift slightly as new data arrives; extremes are meaningful, mid-range is noise.",
+      "The risk metric compresses \"how stretched is price right now?\" into a single number between 0 and 1. Version 2 reads it directly off the quantile regression fan: if price sits on the fan's median curve, risk is 0.5; on the 95th-percentile curve, 0.95. It is the statistical answer to \"how expensive is today relative to {name}'s entire trend history?\"",
+      "How to use it: low readings (green, below 0.2) have historically coincided with bear-market bottoms and accumulation zones; high readings (red, above 0.8) with euphoric tops where risk-reward favors taking profit. Backtested against Bitcoin's known reference points, v2 scores the 2013/2017/2021 tops at 0.98–0.99 and the 2022 bottom at 0.01. It is a slow valuation signal, not a trade timer.",
+      "Caveats: this is our own model — same family of methods ITC describes (asymmetric quantile regression), but independently fitted. The fan is refit on the full history as new data arrives, so all readings shift slightly over time; extremes are meaningful, mid-range is noise.",
     ],
+    explanationByClass: forEquities([
+      "The risk metric compresses \"how stretched is price right now?\" into a single number between 0 and 1. Version 2 reads it directly off the quantile regression fan: if price sits on the fan's median curve, risk is 0.5; on the 95th-percentile curve, 0.95. It is the statistical answer to \"how expensive is today relative to {name}'s entire trend history?\"",
+      "How to use it: low readings (green, below 0.2) mark the times {symbol} traded in the cheapest fifth of its own trend history — bear-market lows and drawdown troughs; high readings (red, above 0.8) mark the most stretched. The model was calibrated on crypto cycles, where it scores the major tops at 0.98–0.99 and the bottoms near 0.01. Stocks and indices have no four-year cycle, and a company in a multi-year re-rating can hold above 0.9 for a long time while the business grows into its price, so read a high value as \"expensive against its own past\", not as a top call. It is a slow valuation signal, not a trade timer.",
+      "Caveats: this is our own model — same family of methods ITC describes (asymmetric quantile regression), but independently fitted per asset. The time axis is days since {name}'s listing, the fan is refit on the full history as new data arrives, and the first 252 trading days carry no reading because the regression needs a year of history. Extremes are meaningful, mid-range is noise.",
+    ]),
   },
   {
     slug: "asymmetric-quantile-regression-fan",
     title: "Quantile Regression Fan",
     category: "Risk",
+    scope: "asset",
     description:
       "Fan chart from asymmetric quadratic quantile regression — the model behind the risk metric.",
     explanation: [
-      "Each curve is a separate quadratic quantile regression of log price against log time: the 0.50 curve is the median trend (fair value), while the 0.01 and 0.99 curves bound the historically cheapest and most euphoric extremes. Unlike a least-squares fit, quantile regression is robust to bubbles — the median curve ignores outliers instead of being dragged by them — and fitting each quantile separately lets the fan be asymmetric, wider above than below, like Bitcoin's actual return distribution.",
+      "Each curve is a separate quadratic quantile regression of log price against log time: the 0.50 curve is the median trend (fair value), while the 0.01 and 0.99 curves bound the historically cheapest and most euphoric extremes. Unlike a least-squares fit, quantile regression is robust to bubbles — the median curve ignores outliers instead of being dragged by them — and fitting each quantile separately lets the fan be asymmetric, wider above than below, like {name}'s actual return distribution.",
       "Every band is fit on the full history and rearranged so curves can't cross. Price touching the lower curves has marked every major bottom; riding the upper curves, every mania phase. The risk metric is literally price's interpolated position between these curves.",
       "This mirrors the methodology ITC now uses in place of its retired logarithmic regression (they describe theirs as a \"rearranged asymmetric quadratic quantile regression\") — ours is an independent implementation of the same idea, so the exact curves will differ.",
     ],
+    explanationByClass: forEquities([
+      "Each curve is a separate quadratic quantile regression of log price against log time since {name}'s listing: the 0.50 curve is the median trend (fair value), while the 0.01 and 0.99 curves bound the historically cheapest and most stretched extremes. Unlike a least-squares fit, quantile regression is robust to outliers — the median curve ignores a blow-off instead of being dragged by it — and fitting each quantile separately lets the fan be asymmetric, wider above than below, like {name}'s actual return distribution.",
+      "Every band is fit on the full history and rearranged so curves can't cross. Price touching the lower curves has marked {symbol}'s deepest drawdown lows; riding the upper curves, its strongest multi-year runs. The curves bend hardest in the first years after a listing, when the time axis is shortest and the fit least stable, so a young stock's fan should be read loosely. The risk metric is literally price's interpolated position between these curves.",
+      "This mirrors the methodology ITC uses for crypto (they describe theirs as a \"rearranged asymmetric quadratic quantile regression\") — ours is an independent implementation applied to a stock or index, so the curves are a description of {symbol}'s own history rather than a model with any track record on equities.",
+    ]),
   },
   {
     slug: "risk-colorcoded",
     title: "Price Color Coded By Risk",
     category: "Risk",
+    scope: "asset",
     description: "The full price history, colored by the risk metric at each point in time.",
     explanation: [
       "Same data as the Risk Metric chart, painted directly onto price: green stretches are low-risk accumulation zones, red stretches are euphoric extension. The mapping makes the strategy visceral — the green you'd want to have bought is always at the bottom of crashes, which is exactly when buying feels worst.",
-      "This is also the fastest way to sanity-check the risk model itself: red lining up with the 2013/2017/2021 tops and green with the 2015/2018/2022 bottoms is exactly the calibration the quantile-fan version of the metric was chosen for.",
+      "This is also the fastest way to sanity-check the risk model itself: red lining up with the crypto market's 2013/2017/2021 tops and green with the 2015/2018/2022 bottoms is exactly the calibration the quantile-fan version of the metric was chosen for.",
     ],
+    explanationByClass: forEquities([
+      "Same data as the Risk Metric chart, painted directly onto price: green stretches are low-risk zones, red stretches are extension far above trend. The mapping makes the strategy visceral — the green you'd want to have bought is always at the bottom of drawdowns, which is exactly when buying feels worst.",
+      "This is also the fastest way to sanity-check the model on {name}: red should line up with the peaks before its biggest drawdowns and green with the troughs beneath them. Where it doesn't — a long green stretch that never resolved into a rally, or red that kept climbing for years — the fit is telling you {symbol}'s trend changed, not that the price was wrong.",
+    ]),
   },
   {
     slug: "risk-time",
     title: "Time In Risk Bands",
     category: "Risk",
-    description: "How many of Bitcoin's trading days fall into each 0.1-wide risk bucket.",
+    scope: "asset",
+    description: "How many of {name}'s trading days fall into each 0.1-wide risk bucket.",
     explanation: [
-      "Each bar counts the days spent in one 0.1-wide risk band across the full history. The shape tells you what \"normal\" looks like: most of Bitcoin's life is spent mid-band, and the extreme bands are rare by construction.",
+      "Each bar counts the days spent in one 0.1-wide risk band across the full history. The shape tells you what \"normal\" looks like: most of {name}'s life is spent mid-band, and the extreme bands are rare by construction.",
       "Practical use: it calibrates patience. If the sub-0.1 band holds only a small fraction of all days, then deep-value windows are short — when the metric gets there, hesitation has historically been expensive. The same logic applies in reverse for the 0.9+ band.",
     ],
   },
@@ -68,6 +155,7 @@ export const CHARTS: ChartDef[] = [
     slug: "risk-levels",
     title: "Current Risk Levels",
     category: "Risk",
+    scope: "asset",
     description: "Today's risk bands projected onto the price scale.",
     explanation: [
       "The horizontal lines answer \"what price would move risk to 0.3? To 0.8?\" — each line is the price that corresponds to a given risk level under today's model state, drawn over the recent price action.",
@@ -78,16 +166,23 @@ export const CHARTS: ChartDef[] = [
     slug: "short-term-bubble-risk",
     title: "Short Term Bubble Risk",
     category: "Risk",
+    scope: "asset",
     description: "How stretched price is above or below its 20-week average, ranked against history.",
     explanation: [
-      "Where the main risk metric measures extension from a multi-year fair value, this one measures extension from the 20-week SMA — the same baseline as the Bull Market Support Band — percentile-ranked the same way. It captures short-term froth rather than cycle-scale valuation.",
+      "Where the main risk metric measures extension from a multi-year fair value, this one measures extension from the 20-week SMA — the same baseline as the Bull Market Support Band — percentile-ranked the same way, within a trailing four-year window. It captures short-term froth rather than cycle-scale valuation.",
       "The two risks disagree in useful ways: mid-bull, cycle risk can be moderate while short-term bubble risk pins near 1.0 after a vertical few weeks — historically a local-top warning even when the larger trend had further to run.",
     ],
+    explanationByClass: forEquities([
+      "Where the main risk metric measures extension from a multi-year fair value, this one measures extension from the 20-week SMA — 100 trading days for {symbol}, the same baseline as the Bull Market Support Band — percentile-ranked within a trailing four-year window of 1,008 trading days. It captures short-term froth rather than long-run valuation.",
+      "The two risks disagree in useful ways: trend risk can be moderate while short-term bubble risk pins near 1.0 after a vertical few weeks — an earnings gap, an index inclusion, a short squeeze — which has historically been a local-top warning even when the larger trend had further to run. On an index, readings near 1.0 are rarer and usually mark the melt-up phase of a bull market.",
+    ]),
   },
   {
     slug: "roi-after-halving",
     title: "ROI After Halving",
     category: "Cycles",
+    scope: "asset",
+    classes: ["crypto"],
     description: "Price multiples following each of Bitcoin's four halvings, overlaid day by day.",
     explanation: [
       "Each line starts at 1× on a halving day (2012, 2016, 2020, 2024) and tracks the multiple of that day's price forward, on a shared days-since axis with a logarithmic y-axis — without the log scale, 2012's 90× would flatten every later cycle into invisibility. This is the chart behind the entire halving-cycle thesis: historically, the 12–18 months after each halving contained the bulk of the cycle's gains.",
@@ -98,36 +193,64 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-cycle-bottom",
     title: "ROI After Cycle Bottom",
     category: "Cycles",
+    scope: "asset",
     description: "Recovery paths from each bear-market low, overlaid on a shared timeline.",
     explanation: [
-      "Each line starts at 1× on a bear-market bottom (2011, 2015, 2018, 2022) and shows the recovery multiple from that low on a days-since axis (log scale, since early cycles reached 100×+). Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.",
+      "Each line starts at 1× on a bear-market bottom — for Bitcoin, 2011, 2015, 2018 and 2022; for other coins, every low that followed a drawdown of at least 60% — and shows the recovery multiple from that low on a days-since axis (log scale, since early cycles reached 100×+). Bottoms are only knowable in hindsight, so the anchor dates are fixed historical lows, not predictions.",
       "The recoveries rhyme: roughly two years of choppy appreciation, then a steep leg. Overlaying the current cycle on the old ones shows whether the market is running hot or cold against its own precedent — and the shrinking peak multiples echo the same diminishing-returns story as the halving chart.",
     ],
+    explanationByClass: {
+      equity: [
+        "Each line starts at 1× on a bear-market bottom and shows the recovery multiple from that low on a days-since axis (log scale). Bottoms are detected mechanically: a peak is any all-time-high close that was followed by a drawdown of at least 35%, and the bottom is the lowest close between that peak and the recovery to a new high. Bottoms are only knowable in hindsight, so the most recent 90 days are never counted as one.",
+        "Stock recoveries rhyme less than crypto cycles do: some lows were followed by a V-shaped recovery within a year (March 2020), others by years of sideways repair (2000–2003 for most technology names). Overlaying the current path on the old ones shows whether {name} is running hot or cold against its own precedent, and how many calendar days each past recovery needed to reach a given multiple.",
+      ],
+      index: [
+        "Each line starts at 1× on a bear-market bottom and shows the recovery multiple from that low on a days-since axis. Bottoms are detected mechanically: a peak is any all-time-high close that was followed by a drawdown of at least 19%, and the bottom is the lowest close between that peak and the recovery to a new high. Bottoms are only knowable in hindsight, so the most recent 90 days are never counted as one.",
+        "Index recoveries range from months (2020, when the low was in and out within weeks) to years: the S&P 500's 2000 and 2007 tops were not reclaimed until 2007 and 2013. Overlaying the current path on the old ones shows whether {name} is running hot or cold against its own precedent, and how many calendar days each past recovery needed to reach a given multiple.",
+      ],
+    },
   },
   {
     slug: "roi-after-cycle-peak",
     title: "ROI After Cycle Peak",
     category: "Cycles",
+    scope: "asset",
     description: "Drawdown-and-recovery paths from each cycle top, overlaid day by day.",
     explanation: [
-      "The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top (2011, 2013, 2017, 2021, 2025) and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?",
+      "The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top — for Bitcoin, 2011, 2013, 2017, 2021 and 2025; for other coins, each all-time high that preceded a 60%+ drawdown — and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?",
       "History's answer has been two to three years underwater, with the depth of the trough shrinking each cycle. It's also the best illustration of why the risk metric emphasizes selling into strength — the cost of buying the top is measured in years, not percent.",
     ],
+    explanationByClass: {
+      equity: [
+        "The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top — every all-time-high close that was followed by a drawdown of at least 35% — and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?",
+        "For a single stock the answer has ranged from months to never; technology names bought at the 2000 top needed a decade or more, and some never recovered. It's the best illustration of why the risk metric emphasizes selling into strength — the cost of buying the top is measured in years, not percent.",
+      ],
+      index: [
+        "The mirror image of ROI After Cycle Bottom: each line starts at 1× on a cycle top — every all-time-high close that was followed by a drawdown of at least 19% — and tracks the drawdown-and-recovery multiple from that day, on a log axis so the deep-drawdown region stays readable next to the eventual recoveries. It answers the question every top-buyer asks: how long until break-even?",
+        "For an index the answer has ranged from months (2020) to well over a decade: the Nasdaq Composite's March 2000 close was not reclaimed until 2015, and the S&P 500's 2000 top took until 2007, then again until 2013. It's the best illustration of why the risk metric emphasizes selling into strength — the cost of buying the top is measured in years, not percent.",
+      ],
+    },
   },
   {
     slug: "roi-after-latest-cycle-peak",
-    title: "ROI After Latest Cycle Peak (Multiple Coins)",
+    title: "ROI After Latest Cycle Peak",
     category: "Cycles",
-    description: "Each asset's multiple since the October 2025 market peak.",
+    scope: "asset",
+    description: "{name}'s multiple since its latest cycle peak, day by day.",
     explanation: [
       "Every line starts at 1× on 2025-10-06 — the latest cycle's ATH close — and tracks each asset's path through the current drawdown. Toggle assets to compare who is weathering it and who is collapsing.",
       "Drawdown dispersion is a leadership signal: assets falling least from a shared peak tend to lead the next advance, while the deepest fallers historically either die or produce the most violent (and least reliable) bounces.",
     ],
+    explanationByClass: forEquities([
+      "The line starts at 1× on {symbol}'s most recent all-time-high close and tracks its path since, on a calendar-day axis. If {symbol} is at a new high the line is only a point long; the longer and deeper it runs, the further the current drawdown has gone.",
+      "How a stock or index behaves after its own peak is a leadership signal: shallow, short drawdowns that resolve into new highs are the signature of a name still in secular favour, while a deep and long one means the market is repricing the business — or the whole asset class — rather than just trimming the multiple.",
+    ]),
   },
   {
     slug: "roi-after-latest-cycle-peak-for-crypto-pairs",
     title: "ROI After Latest Peak (Crypto Pairs)",
     category: "Cycles",
+    scope: "global",
     description: "Each asset against BTC since the October 2025 peak.",
     explanation: [
       "The current drawdown in BTC terms: lines above 1× have outperformed Bitcoin since the top — rare in down markets, since capital hides in BTC during fear.",
@@ -138,71 +261,116 @@ export const CHARTS: ChartDef[] = [
     slug: "cycles-deviation",
     title: "Cycles Deviation",
     category: "Cycles",
+    scope: "asset",
     description: "How far the current cycle's ROI deviates from the average of past cycles.",
     explanation: [
-      "The line is the current cycle's return (from the 2022 bottom) minus the average return of the three prior cycles at the same day-count. Above zero: running hotter than the historical average; below: colder.",
+      "The line is the current cycle's return (from the latest bear-market bottom — for Bitcoin, November 2022) minus the average return of the prior cycles at the same day-count. Above zero: running hotter than the historical average; below: colder.",
       "It compresses the whole overlay-the-cycles exercise into one series. Persistent negative deviation is the quantitative form of the \"lengthening/weakening cycles\" argument; a crossover back above zero would mean the current cycle started outperforming its precedent.",
     ],
+    explanationByClass: forEquities([
+      "The line is the current cycle's return — from {symbol}'s latest detected bear-market bottom — minus the average return of its prior cycles at the same day-count in calendar days. Above zero: running hotter than {symbol}'s own historical average recovery; below: colder. Cycles are the drawdown-and-recovery episodes detected on the ROI After Cycle Bottom chart, so an asset with a single past cycle compares against one precedent only.",
+      "It compresses the whole overlay-the-cycles exercise into one series. Persistent negative deviation means the current recovery is slower than {symbol}'s past recoveries; a crossover back above zero would mean it started outperforming its own precedent. Equity cycles are less regular than crypto's, so read the sign and the trend rather than the exact level.",
+    ]),
   },
   {
     slug: "roi-bands",
     title: "ROI Bands",
     category: "Cycles",
+    scope: "asset",
     description: "The amount of days it took to 2×, 4×, 10× and 100× a purchase from each date.",
     explanation: [
       "For every historical buy date, the lines show how many days that purchase took to double, 4×, 10×, or 100× — with gaps where it simply never happened (yet). The y-axis is days, so lower means faster.",
-      "The pattern is stark: buys made in bear-market depths multiplied within a few hundred days, while buys near tops show multi-thousand-day waits or open gaps. The 100× line ends early — no purchase after 2013 has ever 100×'d, the bluntest possible statement of diminishing returns.",
+      "The pattern is stark: buys made in bear-market depths multiplied within a few hundred days, while buys near tops show multi-thousand-day waits or open gaps. The 100× line ends early — no Bitcoin purchase after 2013 has ever 100×'d, the bluntest possible statement of diminishing returns.",
     ],
+    explanationByClass: forEquities([
+      "For every historical buy date, the lines show how many calendar days that purchase took to double, 4×, 10×, or 100× — with gaps where it simply never happened (yet). The y-axis is days, so lower means faster.",
+      "For a stock or index the 2× and 4× lines carry the information: buys made at drawdown lows doubled within a few years, while buys near tops show decade-long waits or open gaps. The 10× line exists only for the great compounders and only for purchases early in their history, and the 100× line is sparse or empty — for an index it is empty across any history this site holds.",
+    ]),
   },
   {
     slug: "sma-cycle-top-breakout",
     title: "SMA Cycle-Top Breakout",
     category: "Cycles",
+    scope: "asset",
     description: "Marks where the 20W SMA crosses above the previous cycle's top price.",
     explanation: [
       "Each marker flags the day the 20-week SMA — not price itself, but its smoothed trend — climbed above the previous cycle's peak close. Price crosses old highs many times amid volatility; the slow average doing it is a stronger statement that the market has durably outgrown the last cycle.",
       "Historically these breakouts have landed early in the steep phase of bull markets (2013, 2017, 2021), making this one of the simpler regime-confirmation signals in the cycle toolkit.",
     ],
+    explanationByClass: {
+      equity: [
+        "Each marker flags the day the 20-week SMA (100 trading days for {symbol}) — not price itself, but its smoothed trend — climbed above the previous cycle's peak close, where a cycle peak is an all-time high that preceded a drawdown of at least 35%. Price crosses old highs many times amid volatility; the slow average doing it is a stronger statement that the stock has durably outgrown its last bear market.",
+        "On a stock these breakouts mark the point where a recovery becomes a new advance: the old high stops being resistance. They are rare by construction — one per completed cycle — and the interesting cases are the ones that never arrive, when a stock spends years below a prior peak.",
+      ],
+      index: [
+        "Each marker flags the day the 20-week SMA (100 trading days for {symbol}) — not price itself, but its smoothed trend — climbed above the previous cycle's peak close, where a cycle peak is an all-time high that preceded a drawdown of at least 19%. Price crosses old highs many times amid volatility; the slow average doing it is a stronger statement that the index has durably outgrown its last bear market.",
+        "On an index these breakouts have landed at the start of each new leg of a secular bull market — for the S&P 500, 2013 after the 2007 top, 2020 after the pandemic bear and 2024 after the 2022 bear — making this one of the simpler regime-confirmation signals in the toolkit.",
+      ],
+    },
   },
   {
     slug: "best-day-to-dca",
     title: "Best Day To DCA",
     category: "Returns",
+    scope: "asset",
     description: "Whether any weekday has historically offered cheaper buys relative to trend.",
     explanation: [
       "Each bar is the average extension of price above its 50-day SMA for that weekday, across the full history. The weekday with the lowest average extension has, historically, offered slightly cheaper buys relative to trend.",
       "Honest framing: the differences are tiny — fractions of a percent against daily volatility measured in whole percents. If a weekday edge exists (weekend closes have historically been marginally softer), it's a tie-breaker for an existing DCA habit, not a strategy.",
     ],
+    explanationByClass: forEquities([
+      "Each bar is the average extension of price above its 50-day SMA (50 trading days) for that weekday, across the full history. Only Monday to Friday trade, so the weekend bars are empty. The weekday with the lowest average extension has, historically, offered slightly cheaper buys relative to trend.",
+      "Honest framing: the differences are tiny — fractions of a percent against daily volatility measured in whole percents. The old \"Monday effect\" in US equities, where Monday closes were on average the softest of the week, has faded since the 1990s; if an edge shows up here it's a tie-breaker for an existing DCA habit, not a strategy.",
+    ]),
   },
   {
     slug: "supertrend",
     title: "Supertrend",
     category: "Momentum",
+    scope: "asset",
     description: "An ATR-based trailing stop that flips between support and resistance with the trend.",
     explanation: [
       "Supertrend places a trailing stop line a multiple of Average True Range (here 3× the 10-day ATR) below price in uptrends and above it in downtrends, flipping sides when price crosses it. Green segments mark uptrend support; red segments mark downtrend resistance.",
-      "Because ATR widens with volatility, the stop gives more room in wild markets and tightens in calm ones. It shines as a trend-following exit discipline; it chops badly in sideways markets, like every trend indicator. Series starts in 2017, when true daily high/low data begins.",
+      "Because ATR widens with volatility, the stop gives more room in wild markets and tightens in calm ones. It shines as a trend-following exit discipline; it chops badly in sideways markets, like every trend indicator. The series starts where true daily high/low data begins — 2017 for Bitcoin, the listing day for Binance-listed coins.",
     ],
+    explanationByClass: forEquities([
+      "Supertrend places a trailing stop line a multiple of Average True Range (here 3× the 10-day ATR) below price in uptrends and above it in downtrends, flipping sides when price crosses it. Green segments mark uptrend support; red segments mark downtrend resistance.",
+      "Because ATR widens with volatility, the stop gives more room in wild markets and tightens in calm ones. It shines as a trend-following exit discipline; it chops badly in sideways markets, like every trend indicator. Exchange data carries daily highs and lows for {symbol}'s whole history, so the series runs from the first listed day; overnight gaps count as range, which is why an earnings gap can flip the line in a single session.",
+    ]),
   },
   {
     slug: "mayer",
     title: "Mayer Multiple",
     category: "Valuation",
+    scope: "asset",
     description: "Price divided by the 200-day SMA. Historically hot above 2.4, cheap below 0.8.",
     explanation: [
       "The Mayer Multiple, named after Trace Mayer, is simply the current price divided by its 200-day simple moving average. At 1.0, price sits exactly on its long-term trend; at 2.0 it is double the trend; below 1.0 it trades under it.",
       "The classic thresholds come from backtests over Bitcoin's history: buying when the multiple exceeded 2.4 has historically produced poor forward returns (price far above trend, late in a rally), while readings below 0.8 marked the deep-value zones of bear markets. The multiple mean-reverts: extended periods above 2 have always been followed by a return to the 200-day average.",
       "Its weakness is the same as any moving-average metric: after a violent crash the 200-day SMA itself falls, so the multiple can look \"normal\" while the market is still damaged. Read it together with the risk metric, which uses a much slower baseline.",
     ],
+    explanationByClass: {
+      equity: [
+        "The Mayer Multiple, named after Trace Mayer, is simply the current price divided by its 200-day simple moving average — 200 trading days for {symbol}, about ten months. At 1.0, price sits exactly on its long-term trend; at 2.0 it is double the trend; below 1.0 it trades under it.",
+        "The classic thresholds (hot above 2.4, cheap below 0.8) come from crypto backtests, where trading 140% above the 200-day average is routine. The arithmetic is the same for a stock but the scale compresses: a large-cap rarely runs more than 50% above its 200-day line, so a reading of 1.5 on {symbol} is about as stretched as 2.4 is on a cryptocurrency, and the names that do print 2+ are in the vertical phase of a re-rating. Readings below 0.8 still mark the deep drawdowns, and the multiple still mean-reverts to the average.",
+        "Its weakness is the same as any moving-average metric: after a violent crash the 200-day SMA itself falls, so the multiple can look \"normal\" while the stock is still damaged. Read it together with the risk metric, which uses a much slower baseline.",
+      ],
+      index: [
+        "The Mayer Multiple, named after Trace Mayer, is simply the current level divided by its 200-day simple moving average — 200 trading days for {symbol}, about ten months. At 1.0, the index sits exactly on its long-term trend; below 1.0 it trades under it.",
+        "The classic thresholds (hot above 2.4, cheap below 0.8) come from crypto backtests and are far out of an index's range: the S&P 500 has rarely traded more than 20% above its 200-day average, and readings below 0.8 have been confined to the worst bear markets (late 2008, March 2020). For {symbol}, read 1.1 and above as extended and anything under 0.9 as a washout. The multiple still mean-reverts to the average, on a gentler scale.",
+        "Its weakness is the same as any moving-average metric: after a violent crash the 200-day SMA itself falls, so the multiple can look \"normal\" while the market is still damaged. Read it together with the risk metric, which uses a much slower baseline.",
+      ],
+    },
   },
   {
     slug: "rsi",
     title: "RSI (14d)",
     category: "Momentum",
+    scope: "asset",
     description: "Wilder's Relative Strength Index on daily closes. Overbought above 70, oversold below 30.",
     explanation: [
       "The Relative Strength Index (J. Welles Wilder, 1978) measures the speed of recent price changes: it compares the average size of up-days against down-days over the last 14 days and maps the result to a 0–100 scale. Persistent buying pushes it toward 100, persistent selling toward 0.",
-      "The standard reading: above 70 is \"overbought\" (the rally is stretched and prone to a pause), below 30 is \"oversold\" (selling is exhausted). In strong crypto bull markets the daily RSI can pin above 70 for weeks, so overbought is not an automatic sell — the more reliable signals are oversold readings during established uptrends, and divergences, where price makes a new high but RSI makes a lower high, hinting momentum is fading.",
+      "The standard reading: above 70 is \"overbought\" (the rally is stretched and prone to a pause), below 30 is \"oversold\" (selling is exhausted). In strong uptrends the daily RSI can pin above 70 for weeks, so overbought is not an automatic sell — the more reliable signals are oversold readings during established uptrends, and divergences, where price makes a new high but RSI makes a lower high, hinting momentum is fading.",
       "RSI is a fast momentum gauge, best for timing within a trend. It says nothing about valuation — pair it with the slower metrics (risk, Mayer) for the bigger picture.",
     ],
   },
@@ -210,17 +378,24 @@ export const CHARTS: ChartDef[] = [
     slug: "running-roi",
     title: "Running ROI (1y)",
     category: "Returns",
+    scope: "asset",
     description: "Rolling 1-year return on investment, in percent.",
     explanation: [
       "Each point answers one question: if you had bought exactly one year earlier, what would your return be today? A reading of +150% means price is 2.5× what it was a year ago; −50% means it halved.",
-      "The chart makes Bitcoin's cyclicality unmissable: the 1-year ROI oscillates in huge waves, from several-hundred-percent peaks in bull manias to −70%+ troughs in bear-market capitulations. The zero line is the regime boundary — extended time below it has historically been the accumulation phase, and the steep climbs off the lows mark new cycle beginnings.",
-      "Note the diminishing amplitude across cycles: early peaks reached +9,000%, recent ones in the hundreds. That decay of returns as Bitcoin's market cap grows is one of the core arguments behind the log-regression approach used elsewhere on this site.",
+      "The chart makes {name}'s cyclicality unmissable: the 1-year ROI oscillates in huge waves, from several-hundred-percent peaks in bull manias to −70%+ troughs in bear-market capitulations. The zero line is the regime boundary — extended time below it has historically been the accumulation phase, and the steep climbs off the lows mark new cycle beginnings.",
+      "Note the diminishing amplitude across cycles: early peaks reached +9,000%, recent ones in the hundreds. That decay of returns as {name}'s market cap grows is one of the core arguments behind the log-regression approach used elsewhere on this site.",
     ],
+    explanationByClass: forEquities([
+      "Each point answers one question: if you had bought exactly one year earlier — 252 trading days, the equity year — what would your return be today? A reading of +150% means price is 2.5× what it was a year ago; −50% means it halved.",
+      "The waves are gentler than a cryptocurrency's: a broad index's 1-year ROI has ranged roughly from −45% (early 2009) to +70% (early 2021, measured off the pandemic low), and a single stock swings wider. The zero line plays the same role either way — extended time below it has been the accumulation phase, and the steep climbs off the lows mark the start of new advances.",
+      "For {name} the amplitude does not decay with age the way a young asset's does, but the arithmetic still binds: the larger the company or the index, the more capital each further doubling requires, which is why multi-year runs of +100% are the exception for large caps and the rule only for small ones.",
+    ]),
   },
   {
     slug: "ytd-roi",
     title: "YTD ROI",
     category: "Returns",
+    scope: "asset",
     description:
       "Year-to-date return for each calendar year, overlayable to compare how different years unfolded.",
     explanation: [
@@ -228,91 +403,141 @@ export const CHARTS: ChartDef[] = [
       "Use the year pills to toggle years on and off, or the presets to jump to a cycle view. Overlaying halving years (2012, 2016, 2020, 2024) reveals how similar their second-half accelerations were; post-halving years (2013, 2017, 2021, 2025) and bear years (2014, 2018, 2022) each have their own recognizable shapes. The presidential presets slice the same calendar by the US political cycle — and note the coincidence: election years and halving years are the same years, so the two 4-year rhythms are perfectly in phase, with pre-election years being the one phase the crypto presets don't cover.",
       "Reading tip: the absolute levels matter less than the shape. Years that spent H1 flat and exploded in Q4 look very different from years that front-loaded their gains — and where the current year sits inside that family of shapes is a quick sanity check on cycle narratives.",
     ],
+    explanationByClass: forEquities([
+      "Each line tracks one calendar year's cumulative return, starting from that year's first close (0% on the year's first trading day). All years are drawn on a shared January-to-December axis, so you can overlay any set of them and compare their paths day by day.",
+      "Use the year pills to toggle years on and off, or the presets to jump to a group of years. The presidential presets slice the calendar by the US political cycle, which has a documented pattern for equities: the pre-election year has historically been the strongest of the four and the mid-term year the weakest, with mid-term-year lows often marking the start of the next advance. The crypto-cycle presets group years by the four-year rhythm of that market; on a stock or index they are just another way to pick four years at a time.",
+      "Reading tip: the absolute levels matter less than the shape. Years that spent H1 flat and rallied in Q4 look very different from years that front-loaded their gains or broke in the autumn (2008, 2018) — and where the current year sits inside that family of shapes is a quick sanity check on any seasonal narrative.",
+    ]),
   },
   {
     slug: "quarterly-returns",
     title: "Quarterly Returns",
     category: "Returns",
+    scope: "asset",
     description: "Close-to-close returns for each calendar quarter across the full history.",
     explanation: [
       "Each cell is one quarter's return, measured from the prior quarter's final daily close. Green closed up, red closed down, intensity scaled to the size of the move.",
       "Quarters smooth out the noise that monthly cells still carry: Q4's historical strength and Q3's weakness stand out clearly, and each year compresses into four readable numbers. Q2 2011 or Q1 2013 style outliers also make it obvious which quarters defined their entire cycle.",
     ],
+    explanationByClass: forEquities([
+      "Each cell is one quarter's return, measured from the prior quarter's final daily close. Green closed up, red closed down, intensity scaled to the size of the move.",
+      "Quarters smooth out the noise that monthly cells still carry, and each year compresses into four readable numbers. For US equities Q4 has historically been the strongest quarter and Q3 the weakest, and the outliers — Q4 2008, Q1 2020 and the Q2 2020 rebound — make it obvious which quarters defined their year. For {symbol}, single earnings reports can do the same to a quarter.",
+    ]),
   },
   {
     slug: "monthly-average-roi",
     title: "Monthly Average ROI",
     category: "Returns",
+    scope: "asset",
     description: "The average return of each calendar month across all years.",
     explanation: [
-      "Each bar averages every January, every February, and so on across Bitcoin's full history — the long-run seasonal fingerprint of the market.",
-      "Averages hide variance: a +10% average month can still lose money four years out of ten. Read this next to the Monthly Returns heatmap, which shows the spread behind each bar. Small-sample caveat applies — there are only ~15 observations per month.",
+      "Each bar averages every January, every February, and so on across {name}'s full history — the long-run seasonal fingerprint of the market.",
+      "Averages hide variance: a +10% average month can still lose money four years out of ten. Read this next to the Monthly Returns heatmap, which shows the spread behind each bar. Small-sample caveat applies — each bar has only as many observations as {name} has years of history.",
     ],
   },
   {
     slug: "historical-monthly-average-roi",
     title: "Historical Monthly ROI by Year",
     category: "Returns",
+    scope: "asset",
     description: "Each month's return shown separately for every year.",
     explanation: [
       "The grouped bars break the Monthly Average ROI apart: within each month, one bar per year. This shows the distribution behind the seasonal average — how often October actually delivered, and how wild the spread is.",
       "Hover any bar for its exact year and value. The dominance of a few enormous early-cycle months (2011–2013) is a useful reminder of why averages alone mislead.",
     ],
+    explanationByClass: forEquities([
+      "The grouped bars break the Monthly Average ROI apart: within each month, one bar per year. This shows the distribution behind the seasonal average — how often a \"strong\" month actually delivered, and how wide the spread is.",
+      "Hover any bar for its exact year and value. A few outsized months — crisis months such as October 2008 and March 2020, or rebound months such as April 2020, where {symbol}'s history reaches back that far — are a useful reminder of why averages alone mislead.",
+    ]),
   },
   {
     slug: "average-daily-returns",
     title: "Average Daily Returns",
     category: "Returns",
-    description: "Bitcoin's average daily move for each calendar day of the month.",
+    scope: "asset",
+    description: "{name}'s average daily move for each calendar day of the month.",
     explanation: [
       "Each bar is the average daily % change for that day of the month across all years — day 1 averages every 1st of the month in history, and so on.",
       "This is the chart behind \"best day to DCA\" folklore. The honest reading: differences between days are small relative to daily volatility, so treat any pattern here as weak evidence — which is itself useful to know before over-optimizing a DCA schedule.",
     ],
+    explanationByClass: forEquities([
+      "Each bar is the average daily % change for that day of the month across all years — day 1 averages every 1st of the month on which {symbol} traded, and so on. Weekends and holidays fall on different calendar days each year, so every day of the month has observations, but fewer than the year count.",
+      "This is the chart behind \"best day to DCA\" folklore, and for equities behind the turn-of-the-month effect — the documented tendency for the last and first few trading days of a month to be stronger, attributed to payroll and fund inflows. The honest reading: differences between days are small relative to daily volatility, so treat any pattern here as weak evidence.",
+    ]),
   },
   {
     slug: "price-drawdown-ath",
     title: "Price Drawdown From ATH",
     category: "Returns",
+    scope: "asset",
     description: "How far price sits below the highest close ever reached.",
     explanation: [
-      "The line shows how far price sits below the highest close ever reached up to that point. Zero means a new all-time high; the deep troughs are the bear-market capitulations (−93% in 2011, −84% in 2015, −83% in 2018, −77% in 2022).",
-      "Two uses: gauging where the current decline ranks against history, and internalizing Bitcoin's true risk profile — every cycle so far has spent years more than 50% below its high. Note the progressively shallower cycle lows, consistent with a maturing (lower-volatility) asset.",
+      "The line shows how far price sits below the highest close ever reached up to that point. Zero means a new all-time high; the deep troughs are the bear-market capitulations (for Bitcoin, −93% in 2011, −84% in 2015, −83% in 2018, −77% in 2022).",
+      "Two uses: gauging where the current decline ranks against history, and internalizing {name}'s true risk profile — every cycle so far has spent years more than 50% below its high. Note the progressively shallower cycle lows, consistent with a maturing (lower-volatility) asset.",
     ],
+    explanationByClass: {
+      equity: [
+        "The line shows how far price sits below the highest close ever reached up to that point. Zero means a new all-time high; the troughs are the bear markets. Single stocks fall further than indices — drawdowns of 80–90% are common in the histories of companies that later became the largest in the world — which is why the log price chart alone understates what holding {symbol} has required.",
+        "Two uses: gauging where the current decline ranks against {symbol}'s own history, and internalizing the time spent underwater, which matters as much as the depth: a stock that needs a decade to reclaim a high has cost its top-buyers a decade of compounding, whatever the eventual recovery.",
+      ],
+      index: [
+        "The line shows how far the index sits below the highest close ever reached up to that point. Zero means a new all-time high; the deep troughs are the bear markets — for the S&P 500, roughly −49% in 2000–2002, −57% in 2007–2009, −34% in early 2020 and −25% in 2022.",
+        "Two uses: gauging where the current decline ranks against {symbol}'s own history, and internalizing the time spent underwater, which matters as much as the depth: the Nasdaq Composite needed fifteen years to reclaim its March 2000 high. An index recovers by construction — losers are replaced — which is one reason its drawdowns are shallower and shorter than most of its constituents'.",
+      ],
+    },
   },
   {
     slug: "volatility",
     title: "Volatility",
     category: "Momentum",
+    scope: "asset",
     description: "Rolling standard deviation of daily log returns, over 30, 60, and 180-day windows.",
     explanation: [
       "Each line is the standard deviation of daily log returns over a rolling window, in percent per day. The 30-day line reacts fast; the 180-day line shows the regime.",
       "Volatility clusters: calm periods and violent periods each persist. Historically, multi-month volatility compression (all three lines low and converging) has preceded large directional moves — the coiled-spring pattern — while volatility peaks coincide with capitulations and blow-off tops. The long-term trend is also visibly downward as the asset matures.",
     ],
+    explanationByClass: {
+      equity: [
+        "Each line is the standard deviation of daily log returns over a rolling window of 30, 60 or 180 trading days, in percent per day. The 30-day line reacts fast; the 180-day line shows the regime.",
+        "Volatility clusters: calm periods and violent periods each persist. Multi-month compression (all three lines low and converging) has tended to precede large directional moves, while the spikes are the crises — 2008, March 2020 — and, for a single stock, its own events: earnings gaps, guidance cuts, index inclusion. A calm large-cap runs near 1% a day; {symbol} above 3% a day for months is a stock in a regime change.",
+      ],
+      index: [
+        "Each line is the standard deviation of daily log returns over a rolling window of 30, 60 or 180 trading days, in percent per day. The 30-day line reacts fast; the 180-day line shows the regime.",
+        "Volatility clusters: calm periods and violent periods each persist. Multi-month compression (all three lines low and converging) has tended to precede large directional moves, while the spikes are the crises — October 1987 where the history reaches back that far, 2008, and March 2020, when the 30-day line briefly exceeded 5% a day. The calm baseline for {symbol} is well under 1% a day, an order of magnitude below a cryptocurrency's.",
+      ],
+    },
   },
   {
     slug: "golden-death-crosses",
     title: "Golden/Death Crosses",
     category: "Momentum",
+    scope: "asset",
     description: "Golden crosses (50d SMA over 200d) and death crosses (under) marked on price.",
     explanation: [
       "A golden cross is the 50-day SMA crossing above the 200-day SMA; a death cross is the reverse. Markers show each event on the price history with both averages plotted.",
       "The classical reading — golden bullish, death bearish — is right about half the time in crypto, because the signal lags: crosses confirm a trend that is already months old, and choppy markets produce whipsaws (a cross followed quickly by its opposite). The interesting historical pattern is that death crosses have often landed near local bottoms rather than before further decline.",
     ],
+    explanationByClass: forEquities([
+      "A golden cross is the 50-day SMA crossing above the 200-day SMA (50 and 200 trading days for {symbol}); a death cross is the reverse. Markers show each event on the price history with both averages plotted.",
+      "The classical reading — golden bullish, death bearish — has a better record on indices than on individual stocks, but the same lag applies: crosses confirm a trend that is already months old, and sideways markets produce whipsaws (a cross followed quickly by its opposite). Death crosses on {symbol} have often landed near the end of a decline rather than the start of one, which is why some traders read them as contrarian rather than as a sell signal.",
+    ]),
   },
   {
     slug: "moving-average-convergence-divergence",
     title: "MACD",
     category: "Momentum",
+    scope: "asset",
     description: "Momentum read from the gap between fast and slow EMAs, with signal line and histogram.",
     explanation: [
       "MACD is the gap between the 12- and 26-day EMAs (the orange line), with a 9-day EMA of that gap as the signal line, and the histogram showing their difference. Positive and rising = accelerating upward momentum.",
-      "The standard signals: MACD crossing its signal line (short-term momentum shifts) and zero-line crossings (trend direction changes). On an asset this volatile the daily MACD fires often — the higher-value readings are divergences at extremes, where price makes a new high or low that the MACD refuses to confirm.",
+      "The standard signals: MACD crossing its signal line (short-term momentum shifts) and zero-line crossings (trend direction changes). On a volatile asset the daily MACD fires often — the higher-value readings are divergences at extremes, where price makes a new high or low that the MACD refuses to confirm.",
     ],
   },
   {
     slug: "bollinger-bands",
     title: "Bollinger Bands",
     category: "Momentum",
+    scope: "asset",
     description: "A 20-day average with ±2σ bands that widen and squeeze with volatility.",
     explanation: [
       "The bands sit two standard deviations above and below a 20-day moving average, so they widen when volatility rises and squeeze when it falls. Roughly 95% of closes fall inside them by construction.",
@@ -323,16 +548,22 @@ export const CHARTS: ChartDef[] = [
     slug: "pi-cycle-bottom-top",
     title: "Pi Cycle Bottom/Top",
     category: "Momentum",
+    scope: "asset",
     description: "The cycle-top signal that fires when the 111-day SMA crosses twice the 350-day SMA.",
     explanation: [
-      "When the fast 111-day SMA crosses above twice the 350-day SMA, the Pi Cycle Top has historically flagged cycle peaks with eerie precision — within days of the 2013, 2017 and 2021 tops. The name comes from 350/111 ≈ π.",
+      "When the fast 111-day SMA crosses above twice the 350-day SMA, the Pi Cycle Top has historically flagged cycle peaks with eerie precision — within days of Bitcoin's 2013, 2017 and 2021 tops. The name comes from 350/111 ≈ π.",
       "It is a curve-fit discovery, not a theory — there is no economic reason the ratio should be π — so treat each new cycle as an out-of-sample test. It fires rarely (a handful of events in 15 years), which is exactly what makes it worth marking on the chart.",
     ],
+    explanationByClass: forEquities([
+      "The signal was discovered on crypto, where the fast 111-day SMA crossing above twice the 350-day SMA landed within days of three successive cycle tops. The name comes from 350/111 ≈ π. On {name} it is an out-of-sample test on a different kind of market: for the fast average to reach double the slow one, price must roughly double within a few months, which a stock does only in its most violent rallies and an index essentially never.",
+      "It is a curve-fit discovery, not a theory — there is no economic reason the ratio should be π. Expect few or no markers here; where one does appear on a stock, read it as a note that the move is extreme by any standard, not as a top call with a track record.",
+    ]),
   },
   {
     slug: "heatmap",
     title: "Crypto Heatmap",
     category: "Market Cap",
+    scope: "global",
     description: "Relative market-cap sizes with the day's biggest gainers and losers.",
     explanation: [
       "Each tile's area scales with the square root of the asset's market cap; color shows the 24-hour move. One glance answers two questions: what dominates the market, and what's moving today.",
@@ -343,6 +574,7 @@ export const CHARTS: ChartDef[] = [
     slug: "market-capitalization-hypotheticals",
     title: "Market Cap Hypotheticals",
     category: "Market Cap",
+    scope: "global",
     description: "What each asset's price would be at another asset's market cap.",
     explanation: [
       "The classic \"if X had Y's market cap\" table: each cell scales an asset's price by the ratio of the target's market cap to its own. The small multiplier shows how many × away that scenario is.",
@@ -353,6 +585,7 @@ export const CHARTS: ChartDef[] = [
     slug: "portfolios-weighted-by-market-cap",
     title: "Portfolios Weighted By Market Cap",
     category: "Market Cap",
+    scope: "global",
     description: "Historical performance of top-5/10/20 market-cap-weighted portfolios vs. holding BTC.",
     explanation: [
       "Three index portfolios — the top 5, 10, and 20 tracked assets, weighted by market cap and rebalanced monthly — against simply holding Bitcoin, all indexed to 100 at the start of 2019.",
@@ -360,9 +593,23 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "stablecoin-supply",
+    title: "{name} Supply",
+    category: "Market Cap",
+    scope: "asset",
+    classes: ["stablecoin"],
+    description: "Circulating supply of {symbol} over time, with 30- and 90-day changes and the all-time high.",
+    explanation: [
+      "The line is {symbol}'s circulating supply: every token issued minus every token redeemed and burned, aggregated across the chains it lives on (source: DefiLlama). For a dollar-pegged stablecoin the supply is the market cap, and it is the cleanest available measure of how many dollars are parked inside crypto rather than on the sidelines.",
+      "Stablecoin supply is a flow signal with a long memory. It grows when new capital enters — the issuer mints against dollar deposits, mostly to exchanges — and shrinks only when capital leaves for good, through redemptions the issuer honours by burning. Expansion has accompanied every sustained crypto advance, and the contractions — mid-2022 after the Terra collapse being the sharpest — mark the periods when the market was bleeding capital rather than rotating it. The 30-day and 90-day changes put the current trend in one number each; the all-time high says whether the pool of dry powder is at a record.",
+      "Supply is not demand: tokens minted to an exchange treasury can sit idle for months, and growth on one chain can be migration from another. Read it alongside the Stablecoin Supply Ratio, which compares this pool to Bitcoin's market cap.",
+    ],
+  },
+  {
     slug: "advance-decline-ratios",
     title: "Advance Decline Ratios",
     category: "Breadth",
+    scope: "global",
     description: "The daily share of tracked assets closing up.",
     explanation: [
       "Each day, what fraction of tracked assets closed higher? Smoothed over time this is the market's participation rate — rallies where 80% of assets advance are broad and healthy; rallies where 40% advance are narrow, carried by a few names.",
@@ -373,6 +620,7 @@ export const CHARTS: ChartDef[] = [
     slug: "advance-decline-index",
     title: "Advance Decline Index (ADI)",
     category: "Breadth",
+    scope: "global",
     description: "The running sum of daily advances minus declines.",
     explanation: [
       "ADI accumulates each day's (advances − declines) into a single line — the market's cumulative participation. Rising ADI means most assets are winning most days, regardless of what the total market cap says.",
@@ -383,6 +631,7 @@ export const CHARTS: ChartDef[] = [
     slug: "absolute-breadth-index",
     title: "Absolute Breadth Index (ABI)",
     category: "Breadth",
+    scope: "global",
     description: "The absolute gap between advances and declines — directionless market intensity.",
     explanation: [
       "ABI is |advances − declines|: how one-sided the day was, ignoring direction. High readings mean the market moved as one block (everything up or everything down); low readings mean an even, mixed tape.",
@@ -393,6 +642,7 @@ export const CHARTS: ChartDef[] = [
     slug: "above-below-ma",
     title: "Coins Above/Below Moving Average",
     category: "Breadth",
+    scope: "global",
     description: "The percentage of tracked assets trading above their 20-week SMA.",
     explanation: [
       "The bull-market participation gauge: what share of assets sit above their own 20-week average — the same line the Bull Market Support Band is built on. Above ~80%: broad bull. Below ~20%: broad bear, and historically the washout zone where bottoms form.",
@@ -403,6 +653,7 @@ export const CHARTS: ChartDef[] = [
     slug: "color-coded-moving-average-strength",
     title: "Color-Coded MA Strength",
     category: "Breadth",
+    scope: "global",
     description: "Each asset's moving-average stack: green where the faster average is above the slower.",
     explanation: [
       "Four checks per asset — price above the 20-day, 20 above 50, 50 above 100, 100 above 200 — colored green when true. A full green row is a perfectly bullish MA stack; full red, a perfect downtrend.",
@@ -413,6 +664,7 @@ export const CHARTS: ChartDef[] = [
     slug: "alts-vs-btc",
     title: "Alts vs BTC",
     category: "Breadth",
+    scope: "global",
     description: "Altcoin prices measured in BTC, indexed — which alts actually hold their value against Bitcoin?",
     explanation: [
       "Every line is an alt's BTC-denominated price, indexed to 1.0 two years ago. Below 1.0: you'd hold more value in Bitcoin — the alt \"bleeds.\" The USD chart flatters alts in bull markets; the BTC pair is the honest benchmark.",
@@ -423,6 +675,7 @@ export const CHARTS: ChartDef[] = [
     slug: "correlation-coefficients",
     title: "Correlation Coefficients",
     category: "Breadth",
+    scope: "global",
     description: "90-day return correlations between the top assets and the dollar index.",
     explanation: [
       "Pearson correlation of daily returns over the trailing 90 days, for the top tracked assets plus DXY. Red cells move together; blue cells move opposite. The BTC row is the one to read: how tightly is everything chained to Bitcoin right now?",
@@ -430,9 +683,36 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "cross-asset-correlations",
+    title: "Cross-Asset Correlations",
+    category: "Breadth",
+    scope: "global",
+    description:
+      "90-day return correlations between the major cryptocurrencies, the US indices and the largest technology stocks.",
+    explanation: [
+      "Pearson correlation of daily log returns over the trailing 90 trading days, computed on the dates the assets share — crypto trades every day, stocks and indices only on exchange sessions, so the overlap is the equity calendar. Red cells move together, blue cells move opposite. The matrix covers Bitcoin, Ethereum and Solana against the S&P 500, the Nasdaq-100 and Composite, the largest technology stocks, and the dollar index where its data is present.",
+      "The rolling lines below track the pairs that define the regime: BTC–S&P 500, BTC–Nasdaq-100, ETH–Nasdaq-100 and BTC–Nvidia. Before 2020 Bitcoin's correlation with equities hovered near zero — the \"uncorrelated asset\" era. From the March 2020 crash onward it has run positive and at times above 0.5, peaking during the 2022 tightening cycle, when everything liquidity-sensitive sold together. The Nvidia pair became a story of its own once both traded as proxies for AI enthusiasm and dollar liquidity at the same time.",
+      "How to read it: high, rising correlation means macro is driving prices and diversification across these assets is doing little; a correlation falling back toward zero means crypto is trading on its own news again. Ninety days is short enough to catch a regime change and long enough that single days barely move it — but every reading is a window average, so it turns late.",
+    ],
+  },
+  {
+    slug: "crypto-vs-equities",
+    title: "Crypto vs Equities",
+    category: "Price",
+    scope: "global",
+    description:
+      "Bitcoin, Ethereum, the S&P 500, the Nasdaq-100 and Nvidia, each rebased to 100 — from January 2020 and from January 2023.",
+    explanation: [
+      "Every line is a price rebased to 100 on a common start date, so the chart shows relative performance rather than levels: an asset at 300 has tripled since the start. Two rebasings are offered — January 2020, which spans the pandemic crash, the stimulus bull and the 2022 bear; and January 2023, which isolates the current cycle. Log scale, so a doubling takes the same vertical space at any level.",
+      "The comparison is the answer to \"was the risk worth it?\": Bitcoin and Ethereum have outrun the indices over multi-year windows that begin before a crypto bull, and lagged a plain index fund for years over windows that begin near a crypto top. Nvidia is included as the one large equity that has matched crypto's amplitude in this period — roughly a thirtyfold rise from the start of 2020 to its 2025 highs — which is exactly why its correlation with Bitcoin has become a fixture of the cross-asset chart.",
+      "Rebased charts are sensitive to the start date by construction — move it a few months and the ranking reshuffles — which is the point of offering two. Read the lines' slopes and drawdowns against each other, not their end values.",
+    ],
+  },
+  {
     slug: "roi-after-bottom-comparison",
     title: "ROI After Bottom (Multiple Coins)",
     category: "Cycles",
+    scope: "global",
     description: "Each asset's multiple from the November 2022 cycle bottom.",
     explanation: [
       "Every line starts at 1× on 2022-11-21 — the cycle low — and tracks that asset's multiple since, on a log axis. Toggle assets to compare recoveries.",
@@ -443,6 +723,7 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-cycle-bottom-for-crypto-pairs",
     title: "ROI After Bottom (Crypto Pairs)",
     category: "Cycles",
+    scope: "global",
     description: "Each asset's performance against BTC since the November 2022 bottom.",
     explanation: [
       "Same anchor as the multiple-coins chart, but every line is the asset's BTC pair — above 1× means it beat Bitcoin since the bottom, below means it lagged. This strips out the market's beta and leaves pure relative strength.",
@@ -453,6 +734,7 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-inception-comparison",
     title: "ROI After Inception (Multiple Coins)",
     category: "Cycles",
+    scope: "global",
     description: "Each asset's multiple since its own first trading day, on a shared days axis.",
     explanation: [
       "All assets aligned at day 0 = their Binance listing, tracking the multiple since. This normalizes for age: a 2017 coin and a 2023 coin can be compared at the same point in their lifecycle.",
@@ -463,6 +745,7 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-inception-for-crypto-pairs",
     title: "ROI After Inception (Crypto Pairs)",
     category: "Cycles",
+    scope: "global",
     description: "Each asset against BTC since its own listing day.",
     explanation: [
       "The inception chart in BTC terms: from each asset's first day, did holding it beat just holding Bitcoin? Lines below 1× — the majority, most of the time — answer no.",
@@ -473,6 +756,7 @@ export const CHARTS: ChartDef[] = [
     slug: "roi-after-sub-cycle-bottom",
     title: "ROI After Sub-Cycle Bottom (ETH)",
     category: "Cycles",
+    scope: "global",
     description: "Ethereum's recovery multiple from each of its major lows.",
     explanation: [
       "Ethereum's cycle lows don't always coincide with Bitcoin's — the 2020 COVID crash and the mid-2022 capitulation were ETH-specific extremes. Each line tracks ETH's multiple from one of those lows, plus its latest 400-day low, on a shared days axis.",
@@ -483,6 +767,7 @@ export const CHARTS: ChartDef[] = [
     slug: "mvrv",
     title: "MVRV",
     category: "On-Chain",
+    scope: "btc",
     description: "Market cap divided by realized cap — price relative to the market's aggregate cost basis.",
     explanation: [
       "Realized cap values every coin at the price it last moved on-chain, making it the market's aggregate cost basis. MVRV is market cap divided by that: above 1, the average holder is in profit; below 1, underwater. It's the on-chain cousin of the risk metric — valuation measured from actual coin movements instead of price trend.",
@@ -493,6 +778,7 @@ export const CHARTS: ChartDef[] = [
     slug: "mvrv-z-score",
     title: "MVRV Z-Score",
     category: "On-Chain",
+    scope: "btc",
     description: "Market cap minus realized cap, in standard deviations of their historical gap.",
     explanation: [
       "The Z-score version of MVRV: instead of a ratio, it measures how many standard deviations the gap between market cap and realized cap sits from its historical average. This normalization makes extremes comparable across cycles despite Bitcoin's growth.",
@@ -503,6 +789,7 @@ export const CHARTS: ChartDef[] = [
     slug: "nupl",
     title: "NUPL",
     category: "On-Chain",
+    scope: "btc",
     description: "Net unrealized profit/loss: the share of market cap that is unrealized gain.",
     explanation: [
       "NUPL is (market cap − realized cap) ÷ market cap: the fraction of Bitcoin's value that exists as paper profit. At 0.75, three quarters of the market cap is unrealized gain (historic euphoria); below 0, the market in aggregate holds at a loss (historic capitulation).",
@@ -513,6 +800,7 @@ export const CHARTS: ChartDef[] = [
     slug: "puell-multiple",
     title: "Puell Multiple",
     category: "On-Chain",
+    scope: "btc",
     description: "Daily issuance value divided by its 365-day moving average.",
     explanation: [
       "The Puell Multiple measures miner revenue stress: the USD value of newly issued coins today versus its one-year average. High values mean mining is extraordinarily profitable (historically at cycle tops); low values mean miners earn far below trend (capitulation zones, where weak miners shut off).",
@@ -523,6 +811,7 @@ export const CHARTS: ChartDef[] = [
     slug: "stock-to-flow",
     title: "Stock to Flow (S2F)",
     category: "On-Chain",
+    scope: "btc",
     description: "Current supply divided by annualized issuance — Bitcoin's scarcity ratio.",
     explanation: [
       "Stock-to-flow divides what exists (supply) by what's produced per year (flow). Each halving doubles the ratio in one step — the staircase in the line. Bitcoin's S2F now exceeds 100, i.e. over a century of current production to replicate the existing supply, putting it beyond gold (~60).",
@@ -533,6 +822,7 @@ export const CHARTS: ChartDef[] = [
     slug: "issuance",
     title: "Supply Issued & Inflation",
     category: "On-Chain",
+    scope: "btc",
     description: "Daily issuance in USD and the annualized supply inflation rate.",
     explanation: [
       "Two views of new supply: the dollar value of coins issued each day (what miners can sell), and the annualized inflation rate of the supply. Bitcoin's inflation is now ~0.8%/yr — below gold's and most fiat targets — and halves again every four years.",
@@ -543,6 +833,7 @@ export const CHARTS: ChartDef[] = [
     slug: "supply-eth-btc",
     title: "Ethereum Supply Dynamics vs Bitcoin",
     category: "On-Chain",
+    scope: "btc",
     description: "Circulating supply of ETH and BTC over time.",
     explanation: [
       "BTC's supply follows a fixed asymptote toward 21M — the smooth flattening curve. ETH's is policy-driven: fast early inflation, slowed by successive issuance cuts, then post-Merge (Sep 2022) burn mechanics that made it roughly flat and at times deflationary.",
@@ -553,6 +844,7 @@ export const CHARTS: ChartDef[] = [
     slug: "address-activity",
     title: "Address Activity",
     category: "On-Chain",
+    scope: "btc",
     description: "Daily count of unique active addresses on Bitcoin and Ethereum.",
     explanation: [
       "Active addresses are the closest thing to a daily-users metric that a public ledger offers — every address that sent or received that day. It's a network-usage pulse independent of price.",
@@ -563,6 +855,7 @@ export const CHARTS: ChartDef[] = [
     slug: "transfer-count-statistics",
     title: "Transfer Count Statistics",
     category: "On-Chain",
+    scope: "btc",
     description: "Daily on-chain transactions and value-transfer counts for Bitcoin.",
     explanation: [
       "Two counts: total transactions (every on-chain operation) and transfers (those that actually moved value between distinct parties). The gap between them reflects batching, consolidation, and protocol overhead like inscriptions.",
@@ -573,6 +866,7 @@ export const CHARTS: ChartDef[] = [
     slug: "transaction-fees",
     title: "Transaction Fees",
     category: "On-Chain",
+    scope: "btc",
     description: "Total daily fees paid on Bitcoin and Ethereum, in USD.",
     explanation: [
       "Fees are the purest demand signal a chain has: what users actually pay for block space. Log scale, because fee days range from thousands of dollars to the $70M+ frenzy days of 2017 and 2021.",
@@ -583,6 +877,7 @@ export const CHARTS: ChartDef[] = [
     slug: "hash-rate",
     title: "Hash Rate",
     category: "Mining",
+    scope: "btc",
     description: "The Bitcoin network's total mining computation rate.",
     explanation: [
       "Hash rate is the physical security budget of Bitcoin — the aggregate computation racing to produce blocks, now above 1,000 EH/s (a billion terahashes per second). Log scale: it has grown ~15 orders of magnitude since 2009.",
@@ -593,6 +888,7 @@ export const CHARTS: ChartDef[] = [
     slug: "hash-ribbons",
     title: "Hash Ribbons",
     category: "Mining",
+    scope: "btc",
     description: "30d vs 60d moving averages of hash rate; crossovers mark miner capitulation and recovery.",
     explanation: [
       "When the 30-day average of hash rate drops below the 60-day, miners are switching off at scale — capitulation. When it crosses back above, the weakest miners are gone and the survivors are healthy — recovery. The recovery cross is the famous buy signal.",
@@ -603,6 +899,7 @@ export const CHARTS: ChartDef[] = [
     slug: "hash-over-price",
     title: "Hash Rate / Price",
     category: "Mining",
+    scope: "btc",
     description: "Hash rate divided by price — mining effort per dollar of Bitcoin.",
     explanation: [
       "This ratio asks how much security the network provides per dollar of price. Rising ratio means hash rate is outgrowing price (mining margins compressing); falling means price is outrunning the miners.",
@@ -613,6 +910,7 @@ export const CHARTS: ChartDef[] = [
     slug: "miner-revenue",
     title: "Miner Revenue",
     category: "Mining",
+    scope: "btc",
     description: "Total daily miner income: block subsidies plus transaction fees, in USD.",
     explanation: [
       "Everything miners earn per day. The subsidy portion halves every four years, so the long-term survival question for mining economics is whether fees grow into the gap — so far, fee share remains small outside congestion events.",
@@ -623,6 +921,7 @@ export const CHARTS: ChartDef[] = [
     slug: "mcap-thermocap",
     title: "MarketCap / ThermoCap (MCTC)",
     category: "Mining",
+    scope: "btc",
     description: "Market cap divided by cumulative all-time miner revenue.",
     explanation: [
       "Thermocap is every dollar ever paid to miners — the cumulative security spend, a proxy for total resources sunk into producing Bitcoin. MCTC asks: how many times over does the market value the network versus what it cost to secure it?",
@@ -633,6 +932,7 @@ export const CHARTS: ChartDef[] = [
     slug: "rcap-thermocap",
     title: "RealizedCap / ThermoCap (RCTC)",
     category: "Mining",
+    scope: "btc",
     description: "Realized cap divided by cumulative miner revenue.",
     explanation: [
       "The steadier sibling of MCTC: realized cap (the market's cost basis) over thermocap (the security spend). Because both numerator and denominator move slowly, RCTC filters out price noise and shows the structural relationship between capital stored in Bitcoin and capital spent securing it.",
@@ -643,6 +943,7 @@ export const CHARTS: ChartDef[] = [
     slug: "block",
     title: "Block Statistics",
     category: "Mining",
+    scope: "btc",
     description: "Daily block count and average block size.",
     explanation: [
       "Block count per day hovers around 144 (one per ten minutes) with drift from difficulty lag — sustained deviations reveal hash rate shocks between difficulty adjustments. Average block size shows how full blocks run.",
@@ -653,6 +954,7 @@ export const CHARTS: ChartDef[] = [
     slug: "exchange-supply",
     title: "Supply Held By Exchanges",
     category: "Exchanges",
+    scope: "btc",
     description: "Coins held on exchange addresses that Coin Metrics tracks, for BTC and ETH.",
     explanation: [
       "Coins on exchanges are sellable inventory; coins withdrawn to self-custody are, statistically, being shelved. The multi-year decline in exchange balances since 2020 is one of the strongest structural bull arguments on-chain analysts cite.",
@@ -663,6 +965,7 @@ export const CHARTS: ChartDef[] = [
     slug: "exchange-flow",
     title: "Supply Flow To Exchanges",
     category: "Exchanges",
+    scope: "btc",
     description: "Daily USD value flowing into and out of tracked exchanges, with the net.",
     explanation: [
       "Inflows are potential sell pressure arriving; outflows are coins leaving to custody. The net line below zero means more value left exchanges than arrived — the accumulation signature.",
@@ -673,6 +976,7 @@ export const CHARTS: ChartDef[] = [
     slug: "futures-open-interest",
     title: "Futures Open Interest",
     category: "Derivatives",
+    scope: "btc",
     description: "Total value of outstanding BTC and ETH futures contracts on Binance.",
     explanation: [
       "Open interest is the total capital locked in unsettled futures — the amount of leverage in the system. Rising OI with rising price means new longs are driving the move; rising OI into falling price means shorts are pressing; collapsing OI is liquidation, the deleveraging event.",
@@ -683,6 +987,7 @@ export const CHARTS: ChartDef[] = [
     slug: "options-open-interest",
     title: "Options Open Interest",
     category: "Derivatives",
+    scope: "btc",
     description: "Notional value of outstanding BTC and ETH options on Deribit.",
     explanation: [
       "Deribit clears the large majority of crypto options; this is the notional value of all its outstanding contracts. Options OI clusters around monthly and quarterly expiries — the sawtooth as big expiries roll off is normal, not a signal.",
@@ -693,6 +998,7 @@ export const CHARTS: ChartDef[] = [
     slug: "long-short-ratios",
     title: "Long/Short Ratios",
     category: "Derivatives",
+    scope: "btc",
     description: "Who's positioned long vs short on Binance futures — the biggest traders and the whole crowd.",
     explanation: [
       "Three views of positioning: top traders by account count, top traders by position size, and the entire exchange. Above 1.0, more longs than shorts. The gap between the top-position and global lines is the smart-money-vs-crowd divergence.",
@@ -703,6 +1009,7 @@ export const CHARTS: ChartDef[] = [
     slug: "long-short-percent",
     title: "Long/Short Percentages",
     category: "Derivatives",
+    scope: "btc",
     description: "The share of top-trader accounts positioned long vs short.",
     explanation: [
       "The same top-trader data as the ratios chart, expressed as percentages that always sum to 100 — easier to read at a glance: 64% long means nearly two-thirds of Binance's biggest accounts are positioned for upside.",
@@ -713,6 +1020,7 @@ export const CHARTS: ChartDef[] = [
     slug: "wikipedia-page-views",
     title: "Wikipedia Page Views",
     category: "Social",
+    scope: "btc",
     description: "Daily Wikipedia page views for Bitcoin, Ethereum, Cryptocurrency, and Blockchain.",
     explanation: [
       "Wikipedia lookups are the purest measure of fresh retail curiosity: people who need the encyclopedia article are, definitionally, newcomers. Log scale, since mania days run 100× the baseline.",
@@ -723,6 +1031,7 @@ export const CHARTS: ChartDef[] = [
     slug: "fear-greed-index",
     title: "Fear & Greed Index",
     category: "Sentiment",
+    scope: "global",
     description: "The full price history, painted by each day's crypto Fear & Greed reading.",
     explanation: [
       "The Fear & Greed Index (published daily by alternative.me since 2018) blends volatility, momentum, social media activity, dominance, and survey data into a 0–100 sentiment score: 0 is extreme fear, 100 is extreme greed. Here it's painted onto the price line — red stretches are fearful markets, green stretches greedy ones.",
@@ -734,6 +1043,7 @@ export const CHARTS: ChartDef[] = [
     slug: "risk-dashboard",
     title: "Risk Dashboard",
     category: "Risk",
+    scope: "global",
     description: "Current risk, momentum, and cycle position across all tracked assets.",
     explanation: [
       "Every tracked asset gets the same treatment BTC does: its own quantile-regression fan fitted to its full price history, with risk = the price's current percentile inside that fan. The table sorts by market cap and adds 24h/30d/1y returns, the Mayer Multiple, and whether price sits above its 20-week SMA (the bull-market line).",
@@ -741,9 +1051,22 @@ export const CHARTS: ChartDef[] = [
     ],
   },
   {
+    slug: "equity-risk-dashboard",
+    title: "Equity Risk Dashboard",
+    category: "Risk",
+    scope: "global",
+    description: "Current risk, momentum and drawdown position across every tracked stock and index.",
+    explanation: [
+      "Every tracked stock and index gets the same treatment Bitcoin does: its own quantile-regression fan fitted to its full price history (log price against log time since listing), with risk = the price's current percentile inside that fan. The table adds 24h/30d/1y returns, the 30-day return relative to each asset's benchmark, the Mayer Multiple (price over the 200-day SMA), and whether price sits above its 20-week SMA — computed over 100 trading days, since these markets trade about 252 days a year.",
+      "The grouping is by sector — big tech, semiconductors, AI infrastructure and power, indices — because that is how equity risk clusters: a semiconductor sell-off reprices every name in that row at once. Risk dispersed across sectors is a rotation market; risk uniformly high or low across the board is a macro market, the same read the crypto dashboard offers.",
+      "Calibration caveat: each fan is fitted per asset, so 0.9 means \"in the top decile of that stock's own historical extension\", and a company in a secular re-rating can stay there for years. Names marked * have under two years of history — their fans are fitted to a fragment — and companies that changed shape through a spin-off or SPAC listing (Vertiv, GE Vernova, Constellation Energy) start their series at the relevant listing date.",
+    ],
+  },
+  {
     slug: "dominance",
     title: "Dominance",
     category: "Market Cap",
+    scope: "global",
     description: "Each asset's market cap as a share of the total tracked crypto market cap.",
     explanation: [
       "Dominance is an asset's market cap divided by the whole market's. BTC dominance is the market's risk dial: money rotates from BTC into alts as cycles heat up (dominance falls) and flees back to BTC — or out entirely — in fear (dominance rises).",
@@ -754,6 +1077,7 @@ export const CHARTS: ChartDef[] = [
     slug: "market-cap-logarithmic-regression",
     title: "Total Crypto Market Cap & Trendline",
     category: "Market Cap",
+    scope: "global",
     description: "Aggregate market cap of tracked assets with a fitted trendline and bands.",
     explanation: [
       "The total market cap of all tracked assets (log scale) with a quantile-regression trendline: the middle curve is the median fit, the outer curves the 15th/85th percentile bands. It's the market-wide version of BTC's fair-value model.",
@@ -764,6 +1088,7 @@ export const CHARTS: ChartDef[] = [
     slug: "market-cap-vs-fair-value",
     title: "Total Crypto Valuation vs. Trendline",
     category: "Market Cap",
+    scope: "global",
     description: "Extension of the total market cap above or below its fitted trendline.",
     explanation: [
       "This is the trendline chart flattened into a single oscillator: the ratio of total market cap to its median trendline fit. 1.0 means the market sits exactly on trend; 2.0 means double the trend; 0.5 means half.",
@@ -774,6 +1099,7 @@ export const CHARTS: ChartDef[] = [
     slug: "altcoin-market-capitalizations",
     title: "Altcoin Market Capitalizations",
     category: "Market Cap",
+    scope: "global",
     description: "What the market is worth once Bitcoin is removed — and then Ethereum and stablecoins too.",
     explanation: [
       "Two views of the market without its anchor: total minus BTC (everything that isn't Bitcoin), and total minus BTC, ETH, and stablecoins (the speculative long tail). Log scale.",
@@ -784,6 +1110,7 @@ export const CHARTS: ChartDef[] = [
     slug: "ssr",
     title: "Stablecoin Supply Ratio (SSR)",
     category: "Market Cap",
+    scope: "global",
     description: "Bitcoin market cap divided by the aggregate stablecoin market cap.",
     explanation: [
       "SSR compares Bitcoin's market cap to the combined market cap of major stablecoins (USDT, USDC, DAI). Stablecoins are the market's dry powder — capital parked on-exchange, one click from buying.",
@@ -794,6 +1121,7 @@ export const CHARTS: ChartDef[] = [
     slug: "altcoin-season-index",
     title: "Altcoin Season Index",
     category: "Returns",
+    scope: "global",
     description: "The share of tracked altcoins outperforming Bitcoin over the trailing 90 days.",
     explanation: [
       "For each day, the index asks: what fraction of tracked altcoins beat Bitcoin's return over the previous 90 days? Above 75 is conventionally \"altcoin season\"; below 25 is \"Bitcoin season.\"",
@@ -804,6 +1132,7 @@ export const CHARTS: ChartDef[] = [
     slug: "inflation-yoy",
     title: "Inflation YoY",
     category: "Macro",
+    scope: "global",
     description: "US CPI and core CPI, year-over-year.",
     explanation: [
       "Headline CPI includes everything; core strips food and energy to show the underlying trend the Fed actually steers by. Both are year-over-year changes in the official index — the number that sets the policy weather for every risk asset.",
@@ -814,6 +1143,7 @@ export const CHARTS: ChartDef[] = [
     slug: "money-supply",
     title: "M1 / M2 Money Supply",
     category: "Macro",
+    scope: "global",
     description: "US money supply since 1959, log scale.",
     explanation: [
       "M1 is money you can spend now (currency + checking); M2 adds savings and money-market funds. The log scale shows six decades of monetary expansion — including the unprecedented 2020 vertical, when M2 grew ~25% in a year.",
@@ -824,6 +1154,7 @@ export const CHARTS: ChartDef[] = [
     slug: "fed-liquidity",
     title: "Fed Balance Sheet & ON RRP",
     category: "Macro",
+    scope: "global",
     description: "Fed total assets alongside the overnight reverse repo facility.",
     explanation: [
       "Two plumbing gauges: the Fed's total assets (the QE/QT dial) and the overnight reverse repo facility, where money-market funds park excess cash. RRP drained from $2.5T to near zero through 2023–24 — a drain that quietly offset QT and cushioned markets.",
@@ -834,6 +1165,7 @@ export const CHARTS: ChartDef[] = [
     slug: "yield-curves",
     title: "Treasury Yield Spreads",
     category: "Macro",
+    scope: "global",
     description: "The 10y−2y and 10y−3m Treasury spreads — the recession signal.",
     explanation: [
       "When short rates exceed long rates (spread below zero), the curve is inverted: markets expect rate cuts ahead, historically because a recession forces them. Inversion has preceded every US recession for half a century.",
@@ -844,6 +1176,7 @@ export const CHARTS: ChartDef[] = [
     slug: "fed-funds-rate",
     title: "Fed Funds Rate",
     category: "Macro",
+    scope: "global",
     description: "The federal funds effective rate since 1954.",
     explanation: [
       "The price of money itself. Every hiking and easing cycle since 1954 in one line — including the 2022 sprint from zero to 5%+, the fastest since Volcker, which repriced every asset on earth.",
@@ -854,6 +1187,7 @@ export const CHARTS: ChartDef[] = [
     slug: "employment",
     title: "Unemployment & Payrolls",
     category: "Macro",
+    scope: "global",
     description: "The unemployment rate and total nonfarm payrolls.",
     explanation: [
       "The Fed's second mandate. Unemployment is a stair-stepper: it falls slowly for years and spikes fast in recessions — the spikes align with every recession since 1948.",
@@ -864,6 +1198,7 @@ export const CHARTS: ChartDef[] = [
     slug: "gdp-and-debt",
     title: "GDP & Debt-to-GDP",
     category: "Macro",
+    scope: "global",
     description: "Nominal US GDP and federal debt as a share of GDP.",
     explanation: [
       "Output and the leverage carried against it. Debt-to-GDP crossing 100% and staying there post-2020 is the fiscal backdrop for the \"debasement trade\" — the argument that deficits eventually force accommodative policy regardless of inflation.",
@@ -874,6 +1209,7 @@ export const CHARTS: ChartDef[] = [
     slug: "personal-income",
     title: "Personal Income & Saving Rate",
     category: "Macro",
+    scope: "global",
     description: "Real personal income (ex transfers) and the personal saving rate.",
     explanation: [
       "Real income ex-transfers is the organic earning power of households — one of the four official recession-dating indicators. The saving rate shows what's left after spending: its 2020 spike to 30%+ (stimulus with nowhere to go) was the retail wave that flooded into markets, crypto included.",
@@ -884,6 +1220,7 @@ export const CHARTS: ChartDef[] = [
     slug: "consumer-sentiment",
     title: "Consumer Sentiment (MCSI)",
     category: "Macro",
+    scope: "global",
     description: "The University of Michigan consumer sentiment index since 1952.",
     explanation: [
       "Seven decades of how Americans feel about the economy. The 2022 print was the lowest in the survey's history — below both oil crises and 2008 — driven by inflation's unique power to sour sentiment.",
@@ -894,6 +1231,7 @@ export const CHARTS: ChartDef[] = [
     slug: "housing",
     title: "Housing Starts & New Home Sales",
     category: "Macro",
+    scope: "global",
     description: "New residential construction and new single-family home sales.",
     explanation: [
       "Housing is the economy's most interest-rate-sensitive sector and its most reliable early-cycle indicator — starts roll over a year or more before recessions and trough before recoveries.",
@@ -904,6 +1242,7 @@ export const CHARTS: ChartDef[] = [
     slug: "home-prices-and-mortgages",
     title: "House Prices & Mortgage Rates",
     category: "Macro",
+    scope: "global",
     description: "Case-Shiller national home price index against the 30-year mortgage rate.",
     explanation: [
       "The affordability vice: prices (Case-Shiller, left) against the cost of financing them (30-year fixed, right). The 2022 anomaly — rates doubling while prices barely dipped — came from rate lock-in: nobody sells a 3% mortgage to buy a 7% one, so supply vanished alongside demand.",
@@ -914,6 +1253,7 @@ export const CHARTS: ChartDef[] = [
     slug: "bank-loans",
     title: "Bank Loans",
     category: "Macro",
+    scope: "global",
     description: "Consumer, business, and real-estate loans at US commercial banks.",
     explanation: [
       "Credit creation is the economy's private money supply — most money is born as bank loans. Expanding credit is expansionary regardless of what the Fed does; contracting credit (rare — 2009, briefly 2023) is the true crunch signal.",
@@ -924,6 +1264,7 @@ export const CHARTS: ChartDef[] = [
     slug: "nfci",
     title: "Financial Conditions (NFCI)",
     category: "Macro",
+    scope: "global",
     description: "The Chicago Fed's National Financial Conditions Index — one number for how tight money is.",
     explanation: [
       "The NFCI compresses 105 indicators of risk, credit, and leverage into one weekly number: positive = tighter than average, negative = looser. It's the closest thing to a single dial for \"is the financial system easy or stressed?\"",
@@ -934,6 +1275,7 @@ export const CHARTS: ChartDef[] = [
     slug: "qt-ending-bear-markets",
     title: "Bear Markets & Quantitative Tightening",
     category: "Macro",
+    scope: "btc",
     description:
       "Bitcoin against the Fed's balance sheet, with Quantitative Tightening episodes marked.",
     explanation: [
@@ -946,6 +1288,7 @@ export const CHARTS: ChartDef[] = [
     slug: "btc-vs-dxy",
     title: "BTC vs. DXY",
     category: "Other",
+    scope: "btc",
     description: "Bitcoin against the US Dollar Index — historically strongly negatively correlated.",
     explanation: [
       "The DXY measures the dollar's strength against a basket of major currencies (euro, yen, pound, and others). Bitcoin, priced in dollars and behaving like a liquidity-sensitive risk asset, has historically moved inversely to it: dollar strength coincides with BTC weakness and vice versa.",
@@ -957,52 +1300,84 @@ export const CHARTS: ChartDef[] = [
     slug: "benfords-law",
     title: "Benford's Law",
     category: "Other",
-    description: "Do Bitcoin's price digits follow the distribution of naturally occurring numbers?",
+    scope: "asset",
+    description: "Do {name}'s price digits follow the distribution of naturally occurring numbers?",
     explanation: [
-      "Benford's Law says that in many naturally occurring datasets, smaller leading digits dominate: numbers starting with 1 appear ~30% of the time, with 9 under 5%. The bars compare Bitcoin's daily closing prices against that theoretical curve.",
-      "Data spanning many orders of magnitude (like a price that went from $0.07 to $120k) should follow Benford closely — and Bitcoin does, which is a neat statistical fingerprint of organic, multiplicative growth. Strong deviations in other assets can hint at manipulated or range-pinned prices.",
+      "Benford's Law says that in many naturally occurring datasets, smaller leading digits dominate: numbers starting with 1 appear ~30% of the time, with 9 under 5%. The bars compare {name}'s daily closing prices against that theoretical curve.",
+      "Data spanning many orders of magnitude should follow Benford closely — and Bitcoin, whose price went from $0.07 to over $100,000, does, which is a neat statistical fingerprint of organic, multiplicative growth. Strong deviations in other assets can hint at manipulated or range-pinned prices.",
     ],
+    explanationByClass: forEquities([
+      "Benford's Law says that in many naturally occurring datasets, smaller leading digits dominate: numbers starting with 1 appear ~30% of the time, with 9 under 5%. The bars compare {name}'s daily closing prices against that theoretical curve.",
+      "Data spanning many orders of magnitude follows Benford closely: a stock whose split-adjusted price has climbed from cents to hundreds of dollars over decades fits well, a fingerprint of organic, multiplicative growth. A stock or index that has spent most of its history inside one order of magnitude will deviate simply because it never visited the other leading digits — for {symbol}, a poor fit is usually a range effect, not evidence of anything untoward.",
+    ]),
   },
   {
     slug: "price-milestone-crossings",
     title: "Price Milestone Crossings",
     category: "Other",
+    scope: "asset",
     description: "Every crossing of a round-number price level, plotted as events over time.",
     explanation: [
       "Each dot marks a day when price crossed a round-number milestone ($1k, $10k, $20k, …) in either direction. Clusters of dots at one level show price churning around that milestone; a level with a single dot was crossed once and never revisited.",
       "Round numbers act as psychological support and resistance, and this chart makes the battlegrounds visible — the $10k and $20k levels were each crossed dozens of times before finally being left behind, while levels conquered in strong trends barely register a second dot.",
     ],
+    explanationByClass: forEquities([
+      "Each dot marks a day when price crossed a round-number milestone — the 1, 2 and 5 levels of each power of ten between {symbol}'s lowest and highest close ($10, $20, $50, $100, …) — in either direction. Clusters of dots at one level show price churning around that milestone; a level with a single dot was crossed once and never revisited.",
+      "Round numbers act as psychological support and resistance for stocks too — $100 and $1,000 are where splits get discussed and options strikes cluster — and the dots show which levels were fought over and which were passed in a single trend. Split-adjusted prices blur this for older history: a level that reads $100 today was a different number on the tape at the time.",
+    ]),
   },
   {
     slug: "days-since-percentage-decline",
     title: "Days Since % Decline",
     category: "Other",
+    scope: "asset",
     description: "A running counter of days since the last single-day drop of 5%, 10%, or 20%.",
     explanation: [
       "The counter rises by one each day and resets to zero whenever a daily drop of at least the chosen size (5%, 10%, 20%) occurs, with price shown behind it for context.",
-      "Long stretches without a big red day are a feature of maturing bull markets — and the counter's height going into a top measures how complacent the market had become. The declining frequency of 10%+ days across the years is also one of the cleanest views of Bitcoin's falling volatility.",
+      "Long stretches without a big red day are a feature of maturing bull markets — and the counter's height going into a top measures how complacent the market had become. The declining frequency of 10%+ days across the years is also one of the cleanest views of {name}'s falling volatility.",
     ],
+    explanationByClass: {
+      equity: [
+        "The counter rises by one each calendar day and resets to zero whenever a daily drop of at least the chosen size (5%, 10%, 20%) occurs, with price shown behind it for context.",
+        "Long stretches without a big red day are a feature of maturing bull markets — and the counter's height going into a top measures how complacent the market had become. Scale matters for a stock: a 5% day is routine for a volatile name and rare for a staid one, and a 20% day is almost always an earnings gap, a guidance cut or a takeover, so on {symbol} the 20% counter can run for years.",
+      ],
+      index: [
+        "The counter rises by one each calendar day and resets to zero whenever a daily drop of at least the chosen size (5%, 10%, 20%) occurs, with price shown behind it for context.",
+        "Long stretches without a big red day are a feature of maturing bull markets — and the counter's height going into a top measures how complacent the market had become. On an index a 5% day is a crisis event, seen only a few dozen times in half a century and clustered in 1987, 2008 and March 2020, and a 20% day has happened once in US index history — the S&P 500 on October 19, 1987 — so the higher counters here mostly measure the time since the last crash.",
+      ],
+    },
   },
   {
     slug: "days-since-percentage-gain",
     title: "Days Since % Gain",
     category: "Other",
+    scope: "asset",
     description: "A running counter of days since the last single-day gain of 5%, 10%, or 20%.",
     explanation: [
       "The mirror image of Days Since % Decline: the counter resets whenever a single-day gain of at least the chosen size occurs.",
       "Big green days cluster in two regimes: euphoric bull runs and violent bear-market rallies. A very tall counter means the market has gone a long time without explosive upside — historically common in late bears and early accumulation phases, when volatility is compressed.",
     ],
+    explanationByClass: forEquities([
+      "The mirror image of Days Since % Decline: the counter resets whenever a single-day gain of at least the chosen size occurs.",
+      "Big green days cluster in two regimes: euphoric rallies and violent bear-market bounces — the largest single-day gains in US equity history landed inside the 2008 and 2020 bear markets, not in bull runs. A very tall counter on {symbol} means it has gone a long time without explosive upside, which for a stock usually means a quiet, trending market rather than a depressed one.",
+    ]),
   },
   {
     slug: "monthly-returns",
     title: "Monthly Returns",
     category: "Returns",
+    scope: "asset",
     description: "Month-by-month close-to-close returns across the full history.",
     explanation: [
       "Each cell is one month's return, measured close-to-close from the prior month's final daily close. Green months closed up, red months closed down, and the color intensity scales with the size of the move (saturating at ±30%).",
-      "Scanning columns reveals Bitcoin's seasonal folklore and how real it is: October (\"Uptober\") and November have historically skewed green, September has skewed red, and the strongest months cluster in Q4. Scanning rows shows each year's character at a glance — the relentless green of 2013 and 2017, the almost unbroken red of 2018 and 2022.",
+      "Scanning columns reveals crypto's seasonal folklore and how real it is: October (\"Uptober\") and November have historically skewed green, September has skewed red, and the strongest months cluster in Q4. Scanning rows shows each year's character at a glance — the relentless green of 2013 and 2017, the almost unbroken red of 2018 and 2022.",
       "Seasonality in crypto is a weak effect layered on top of the cycle: a September in a raging bull market is still more likely green than an October in a deep bear. Use this as context, not as a signal on its own.",
     ],
+    explanationByClass: forEquities([
+      "Each cell is one month's return, measured close-to-close from the prior month's final daily close. Green months closed up, red months closed down, and the color intensity scales with the size of the move (saturating at ±30%).",
+      "Scanning columns shows the equity seasonal folklore and how real it is: September has been the weakest month for US stocks on average, November through January among the strongest (the year-end rally and the January effect), and \"sell in May\" refers to the historically softer May–October half. Scanning rows shows each year's character at a glance — the near-unbroken green of 2017, the red of 2008 and 2022.",
+      "Seasonality is a weak effect layered on top of the trend: a September in a strong bull market is still more likely green than a November in a bear. Use this as context, not as a signal on its own.",
+    ]),
   },
 ];
 

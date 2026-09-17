@@ -30,7 +30,7 @@ const COINGECKO_IDS: Record<string, string> = {
 
 async function main() {
   const targets = ASSETS.filter(
-    (a) => a.binance !== null && a.coinmetrics === null && COINGECKO_IDS[a.id],
+    (a) => a.price.kind === "binance" && a.coinmetrics === null && COINGECKO_IDS[a.id],
   );
   const ids = targets.map((a) => COINGECKO_IDS[a.id]).join(",");
   const res = await fetch(

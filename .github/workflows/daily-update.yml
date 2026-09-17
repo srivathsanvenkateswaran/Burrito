@@ -40,9 +40,31 @@ jobs:
 
       - run: npm run data:onchain
 
+      - run: npm run data:equities
+        continue-on-error: true
+
+      - run: npm run data:stables
+        continue-on-error: true
+
+      - name: data:sec (Mondays only)
+        # Optional: SEC's fair-access policy wants a working contact in the
+        # User-Agent. Unset falls back to the project's repository URL.
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: |
+          if [ "$(date -u +%u)" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            npm run data:sec || echo "data:sec failed; keeping stale shares.json"
+          else
+            echo "Not Monday; skipping data:sec."
+          fi
+
       - run: npm run data:compute
 
       - run: npm run data:compute-assets
+
+      - run: npm run data:compute-stables
+
+      - run: npm run data:compute-cross
 
       - run: npm run data:compute-onchain
 
