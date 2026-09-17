@@ -97,7 +97,7 @@ This is the screen for relative positioning: which majors are stretched, which a
 
 *Current risk, momentum and drawdown position across every tracked stock and index.*
 
-Every tracked stock and index gets the same treatment Bitcoin does: its own quantile-regression fan fitted to its full price history (log price against log time since listing), with risk = the price's current percentile inside that fan. The table adds 24h/30d/1y returns, the 30-day return relative to each asset's benchmark, the Mayer Multiple (price over the 200-day SMA), and whether price sits above its 20-week SMA — computed over 97 trading days, since these markets trade about 252 days a year.
+Every tracked stock and index gets the same treatment Bitcoin does: its own quantile-regression fan fitted to its full price history (log price against log time since listing), with risk = the price's current percentile inside that fan. The table adds 24h/30d/1y returns, the 30-day return relative to each asset's benchmark, the Mayer Multiple (price over the 200-day SMA), and whether price sits above its 20-week SMA — computed over 100 trading days, since these markets trade about 252 days a year.
 
 The grouping is by sector — big tech, semiconductors, AI infrastructure and power, indices — because that is how equity risk clusters: a semiconductor sell-off reprices every name in that row at once. Risk dispersed across sectors is a rotation market; risk uniformly high or low across the board is a macro market, the same read the crypto dashboard offers.
 

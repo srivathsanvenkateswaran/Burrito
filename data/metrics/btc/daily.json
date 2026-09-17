@@ -1,6 +1,6 @@
 {
-"updatedThrough": "2026-09-14",
-"regression": {"slope":5.605307505574219,"intercept":-37.34804263439237,"sigma":0.6935385710435852},
+"updatedThrough": "2026-09-16",
+"regression": {"slope":5.604895622475035,"intercept":-37.344940001623556,"sigma":0.6935040441319305},
 "rows": [
 {"date":"2010-08-18","close":0.07,"fair":0.0917247,"bandLow":0.0843369,"bandHigh":0.129258,"risk":null,"sma20w":null,"ema21w":null,"sma50w":null,"sma200w":null,"mayer":null,"rsi14":null,"roi1y":null},
 {"date":"2010-08-19","close":0.07,"fair":0.0927482,"bandLow":0.0851827,"bandHigh":0.130822,"risk":null,"sma20w":null,"ema21w":null,"sma50w":null,"sma200w":null,"mayer":null,"rsi14":null,"roi1y":null},
@@ -5873,6 +5873,8 @@
 {"date":"2026-09-11","close":76540.35,"fair":114485,"bandLow":97311.5,"bandHigh":134978,"risk":0.118,"sma20w":69678.8,"ema21w":71169.8,"sma50w":80073,"sma200w":65002.7,"mayer":1.094,"rsi14":52.8,"roi1y":-33.7},
 {"date":"2026-09-12","close":77209.87,"fair":114576,"bandLow":97398.4,"bandHigh":135071,"risk":0.123,"sma20w":69675.8,"ema21w":71251.4,"sma50w":79980.4,"sma200w":65045.8,"mayer":1.103,"rsi14":54.9,"roi1y":-33.5},
 {"date":"2026-09-13","close":77273.07,"fair":114668,"bandLow":97485.4,"bandHigh":135165,"risk":0.123,"sma20w":69665.9,"ema21w":71332.8,"sma50w":79880.7,"sma200w":65089.4,"mayer":1.103,"rsi14":55.1,"roi1y":-33.3},
-{"date":"2026-09-14","close":76829.51,"fair":114760,"bandLow":97572.5,"bandHigh":135258,"risk":0.119,"sma20w":69662,"ema21w":71407.1,"sma50w":79773.6,"sma200w":65132.4,"mayer":1.096,"rsi14":53.3,"roi1y":-33.3}
+{"date":"2026-09-14","close":76829.51,"fair":114760,"bandLow":97572.5,"bandHigh":135258,"risk":0.119,"sma20w":69662,"ema21w":71407.1,"sma50w":79773.6,"sma200w":65132.4,"mayer":1.096,"rsi14":53.3,"roi1y":-33.3},
+{"date":"2026-09-15","close":78169.72,"fair":114852,"bandLow":97659.6,"bandHigh":135352,"risk":0.128,"sma20w":69675.1,"ema21w":71498.4,"sma50w":79671.1,"sma200w":65176.1,"mayer":1.114,"rsi14":57.8,"roi1y":-32.2},
+{"date":"2026-09-16","close":75609.19,"fair":114944,"bandLow":97746.8,"bandHigh":135446,"risk":0.11,"sma20w":69673.9,"ema21w":71554,"sma50w":79548.3,"sma200w":65218.2,"mayer":1.077,"rsi14":48.2,"roi1y":-35.3}
 ]
 }
