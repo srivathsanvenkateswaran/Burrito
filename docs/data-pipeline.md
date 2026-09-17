@@ -27,7 +27,7 @@ site redeploys. This page documents each link in that chain.
 14. `data:compute-cross` — cross-asset correlations and normalized comparisons (crypto vs equities, BTC vs SPX/NVDA, …)
 15. `data:compute-onchain` — Bitcoin on-chain derived metrics
 16. `docs:generate` — chart reference + daily [[snapshot]] regenerated
-17. git commit → Vercel auto-deploys
+17. git commit → GitHub Actions deploys the static export to Cloudflare Workers
 
 A missed day self-heals: every fetcher requests *everything since its last stored candle*.
 A **separate** `backfill-equities.yml` workflow (manual trigger only) re-runs the equity

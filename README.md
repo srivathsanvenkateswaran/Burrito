@@ -8,7 +8,7 @@ A self-updating quantitative market-analysis site — 104 charts of price, risk,
 on-chain activity, breadth, derivatives, and US macro, run across crypto, equities and
 indices. Recomputed daily. Running cost: **$0/month**.
 
-**[burrito-finance.vercel.app](https://burrito-finance.vercel.app)**
+**[burrito-finance.workers.dev](https://burrito-finance.workers.dev)**
 
 ![charts](https://img.shields.io/badge/charts-104-e6a144) ![assets](https://img.shields.io/badge/assets-33_full--suite_+_27_coins-8ba7c9) ![cost](https://img.shields.io/badge/running_cost-%240%2Fmo-82b57a) ![license](https://img.shields.io/badge/license-MIT-b391bf)
 
@@ -48,7 +48,8 @@ A personal clone of the paid crypto-analytics platforms — built solo in a few 
 - **Every chart teaches** — each page has an "understanding this chart" section
 - **⌘K search**, dark/light themes, mobile drawer, date-range zoom, fullscreen charts
 - **Fully self-updating**: a GitHub Actions cron fetches data, recomputes every metric
-  (including refitting the quantile fans), commits, and Vercel redeploys — daily, unattended
+  (including refitting the quantile fans), commits, and redeploys to Cloudflare Workers —
+  daily, unattended
 
 <div align="center">
 <img src=".github/media/risk.png" alt="Risk metric" width="400" /> <img src=".github/media/landing-light.png" alt="Light theme" width="400" />
@@ -64,8 +65,8 @@ flowchart LR
     A[Free APIs<br/>Binance · Coin Metrics · FRED · blockchain.com<br/>Deribit · Wikimedia · Yahoo · Nasdaq.com<br/>Cboe · Naver · DefiLlama · SEC] -->|daily cron| B[data/raw/*.json<br/>immutable history]
     B --> C[compute scripts<br/>quantile fans · risk · aggregates]
     C --> D[data/metrics/*.json]
-    D --> E[Next.js SSG]
-    E --> F[Vercel]
+    D --> E[Next.js static export]
+    E --> F[Cloudflare Workers<br/>static assets]
     B -->|git commit| G[GitHub Actions] -->|auto-redeploy| F
 ```
 
@@ -95,6 +96,23 @@ US — expect it to fall back to Nasdaq.com's 10-year window when run locally fr
 non-US IP. The `backfill-equities.yml` GitHub Actions workflow (manual trigger) runs the
 same script from a US-based runner and commits full listing history; see
 [docs/data-pipeline.md](docs/data-pipeline.md) for the fallback chain.
+
+## Deploying
+
+The site is a Next.js static export (`output: "export"`) served straight from Cloudflare
+Workers' static-assets host — no server, no functions. `deploy.yml` deploys on every push
+to `main` that touches app or data code, and `daily-update.yml` redeploys after each cron
+run (even on a no-op data day). Both need two repo secrets:
+
+- `CLOUDFLARE_API_TOKEN` — a token scoped to `Workers Scripts:Edit`
+- `CLOUDFLARE_ACCOUNT_ID` — your Cloudflare account ID
+
+Locally, `npm run preview:cf` builds nothing by itself — run `npm run build` first, then
+`npm run preview:cf` to serve `out/` through `wrangler dev` the same way Cloudflare would.
+`npm run deploy:cf` pushes the current `out/` directly, for a manual deploy outside CI.
+
+Static asset requests on Workers are free and unlimited on the free tier, so the
+$0/month running cost carries over unchanged from the old Vercel hosting.
 
 ## Data sources & credits
 

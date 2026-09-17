@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:chart-data && next build",
+    "build:chart-data": "tsx scripts/build-chart-data.ts",
     "start": "next start",
     "lint": "eslint",
     "data:backfill": "tsx scripts/backfill.ts",
@@ -25,7 +26,9 @@
     "data:fred": "tsx scripts/fetch-fred.ts",
     "data:derivs": "tsx scripts/fetch-derivs.ts",
     "docs:generate": "tsx scripts/generate-docs.ts",
-    "test": "tsx --test tests/**/*.test.ts"
+    "test": "tsx --test tests/**/*.test.ts",
+    "preview:cf": "wrangler dev",
+    "deploy:cf": "wrangler deploy"
   },
   "dependencies": {
     "lightweight-charts": "^5.2.0",
@@ -43,6 +46,7 @@
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.133.0"
   }
 }

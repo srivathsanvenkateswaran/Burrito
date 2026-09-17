@@ -81,3 +81,34 @@ jobs:
           git add data/ docs/ public/burrito-vault.zip
           git commit -m "data: daily update $(date -u +%F)"
           git push
+
+  deploy:
+    needs: update
+    # Always attempt this, even when `update` exited early on "No data
+    # changes" (still success, but this makes the intent explicit) — the
+    # cron and workflow_dispatch triggers should redeploy regardless. Guard
+    # on the Cloudflare secrets existing so the job no-ops cleanly before
+    # they're configured instead of failing.
+    if: always() && secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # `update` may have just pushed a new commit to main; build from
+          # that, not the commit that triggered this workflow.
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Deploy to Cloudflare Workers
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

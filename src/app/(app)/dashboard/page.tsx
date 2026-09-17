@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CHARTS } from "@/lib/charts";
 import { loadMetrics } from "@/lib/data";
-import PriceChart from "@/components/PriceChart";
+import ChartRenderer from "@/components/chart-page/ChartRenderer";
 
 function riskTone(risk: number): string {
   if (risk < 0.25) return "text-gain";
@@ -77,7 +77,7 @@ export default function Home() {
       </div>
 
       <section className="mb-10">
-        <PriceChart rows={rows} />
+        <ChartRenderer src="/chart-data/btc/_price.json" />
       </section>
 
       <section>

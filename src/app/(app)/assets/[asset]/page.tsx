@@ -3,11 +3,10 @@ import { notFound } from "next/navigation";
 import { assetChartSlugs, FULL_SUITE_IDS, getAsset, toChartAsset, type AssetDef } from "@/lib/assets";
 import { chartBySlug } from "@/lib/charts";
 import { chartText } from "@/lib/chartText";
-import { hasMetrics, loadAssetDaily, loadMetrics, loadSupply } from "@/lib/data";
+import { hasMetrics, loadMetrics, loadSupply } from "@/lib/data";
 import { fmtPct, fmtPrice } from "@/lib/format";
 import { Stat, riskTone } from "@/components/StatTile";
-import PriceChart from "@/components/PriceChart";
-import MultiSeriesChart from "@/components/MultiSeriesChart";
+import ChartRenderer from "@/components/chart-page/ChartRenderer";
 
 export const dynamicParams = false;
 
@@ -105,19 +104,10 @@ export default async function AssetPage({ params }: { params: Promise<{ asset: s
 
   // --- Full-suite asset without a computed suite yet (e.g. spcx: too young) ---
   if (!hasMetrics(id)) {
-    const { rows } = loadAssetDaily(id);
     return (
       <main className="px-4 py-6 sm:px-8 sm:py-8">
         <Heading def={def} />
-        <MultiSeriesChart
-          series={[
-            {
-              label: `${def.symbol} close`,
-              color: "#e6a144",
-              points: rows.map((r) => ({ date: r.date, value: r.close })),
-            },
-          ]}
-        />
+        <ChartRenderer src={`/chart-data/${id}/_price.json`} />
         <p className="mt-4 max-w-2xl text-xs text-faint">
           {def.name}&apos;s listing is too recent for the fitted risk and cycle suite — those charts need
           roughly a year of history before the fit means anything. This is the raw close price so far.
@@ -156,7 +146,7 @@ export default async function AssetPage({ params }: { params: Promise<{ asset: s
       </div>
 
       <section className="mb-10">
-        <PriceChart rows={rows} />
+        <ChartRenderer src={`/chart-data/${id}/_price.json`} />
       </section>
 
       <section>
