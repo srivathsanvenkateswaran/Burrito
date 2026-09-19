@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":44.4615,"expected":30.103},
-{"digit":2,"actual":15.2577,"expected":17.6091},
-{"digit":3,"actual":9.55815,"expected":12.4939},
-{"digit":4,"actual":10.6705,"expected":9.691},
-{"digit":5,"actual":3.54403,"expected":7.91812},
-{"digit":6,"actual":3.62841,"expected":6.69468},
-{"digit":7,"actual":2.23995,"expected":5.79919},
-{"digit":8,"actual":3.80485,"expected":5.11525},
-{"digit":9,"actual":6.83492,"expected":4.57575}
+{"digit":1,"actual":44.4581,"expected":30.103},
+{"digit":2,"actual":15.2566,"expected":17.6091},
+{"digit":3,"actual":9.55741,"expected":12.4939},
+{"digit":4,"actual":10.6696,"expected":9.691},
+{"digit":5,"actual":3.54376,"expected":7.91812},
+{"digit":6,"actual":3.62814,"expected":6.69468},
+{"digit":7,"actual":2.24745,"expected":5.79919},
+{"digit":8,"actual":3.80456,"expected":5.11525},
+{"digit":9,"actual":6.83439,"expected":4.57575}
 ],
 "milestoneLevels": [100,200,500,1000,2000,5000],
 "milestones": [
@@ -348,7 +348,7 @@
 {"year":2025,"quarter":4,"pct":2.3},
 {"year":2026,"quarter":1,"pct":-4.6},
 {"year":2026,"quarter":2,"pct":14.9},
-{"year":2026,"quarter":3,"pct":1.8}
+{"year":2026,"quarter":3,"pct":2}
 ],
 "avgDaily": [
 {"day":1,"avg":0.191},
@@ -384,22 +384,22 @@
 {"day":31,"avg":0.098}
 ],
 "riskLevels": [
-{"risk":0.1,"price":2837.87},
-{"risk":0.2,"price":3392.26},
-{"risk":0.3,"price":3816.26},
-{"risk":0.4,"price":4107.14},
-{"risk":0.5,"price":4420.2},
-{"risk":0.6,"price":4829.17},
-{"risk":0.7,"price":5275.98},
-{"risk":0.8,"price":6054.73},
-{"risk":0.9,"price":6972.08}
+{"risk":0.1,"price":2838.23},
+{"risk":0.2,"price":3392.71},
+{"risk":0.3,"price":3816.78},
+{"risk":0.4,"price":4107.72},
+{"risk":0.5,"price":4420.83},
+{"risk":0.6,"price":4829.88},
+{"risk":0.7,"price":5276.78},
+{"risk":0.8,"price":6055.67},
+{"risk":0.9,"price":6973.14}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":0.796},
 {"dow":2,"avgExt":0.827},
 {"dow":3,"avgExt":0.842},
 {"dow":4,"avgExt":0.82},
-{"dow":5,"avgExt":0.807}
+{"dow":5,"avgExt":0.806}
 ],
 "smaTopBreakouts": [
 {"date":"1980-02-15","prevTop":107.83},
