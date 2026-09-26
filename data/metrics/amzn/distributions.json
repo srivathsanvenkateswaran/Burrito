@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":45.0615,"expected":30.103},
-{"digit":2,"actual":16.9377,"expected":17.6091},
-{"digit":3,"actual":2.30067,"expected":12.4939},
-{"digit":4,"actual":7.93336,"expected":9.691},
-{"digit":5,"actual":2.77668,"expected":7.91812},
-{"digit":6,"actual":0.99167,"expected":6.69468},
-{"digit":7,"actual":3.76835,"expected":5.79919},
-{"digit":8,"actual":9.40103,"expected":5.11525},
-{"digit":9,"actual":10.829,"expected":4.57575}
+{"digit":1,"actual":45.0436,"expected":30.103},
+{"digit":2,"actual":16.9707,"expected":17.6091},
+{"digit":3,"actual":2.29976,"expected":12.4939},
+{"digit":4,"actual":7.93021,"expected":9.691},
+{"digit":5,"actual":2.77557,"expected":7.91812},
+{"digit":6,"actual":0.991277,"expected":6.69468},
+{"digit":7,"actual":3.76685,"expected":5.79919},
+{"digit":8,"actual":9.3973,"expected":5.11525},
+{"digit":9,"actual":10.8247,"expected":4.57575}
 ],
 "milestoneLevels": [50,100,200],
 "milestones": [
@@ -100,7 +100,7 @@
 {"year":2025,"quarter":4,"pct":5.1},
 {"year":2026,"quarter":1,"pct":-9.8},
 {"year":2026,"quarter":2,"pct":14.4},
-{"year":2026,"quarter":3,"pct":4.6}
+{"year":2026,"quarter":3,"pct":4.8}
 ],
 "avgDaily": [
 {"day":1,"avg":0.21},
@@ -136,22 +136,22 @@
 {"day":31,"avg":1.013}
 ],
 "riskLevels": [
-{"risk":0.1,"price":215.748},
-{"risk":0.2,"price":220.543},
-{"risk":0.3,"price":229.227},
-{"risk":0.4,"price":229.934},
-{"risk":0.5,"price":230.643},
-{"risk":0.6,"price":232.019},
-{"risk":0.7,"price":233.402},
-{"risk":0.8,"price":239.462},
-{"risk":0.9,"price":252.131}
+{"risk":0.1,"price":215.796},
+{"risk":0.2,"price":220.608},
+{"risk":0.3,"price":229.403},
+{"risk":0.4,"price":230.02},
+{"risk":0.5,"price":230.638},
+{"risk":0.6,"price":232.097},
+{"risk":0.7,"price":233.566},
+{"risk":0.8,"price":239.51},
+{"risk":0.9,"price":252.123}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":1.625},
 {"dow":2,"avgExt":1.752},
 {"dow":3,"avgExt":1.759},
 {"dow":4,"avgExt":1.726},
-{"dow":5,"avgExt":1.624}
+{"dow":5,"avgExt":1.616}
 ],
 "smaTopBreakouts": [
 {"date":"2024-11-27","prevTop":186.571}

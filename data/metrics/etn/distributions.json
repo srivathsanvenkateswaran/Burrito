@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":29.5518,"expected":30.103},
-{"digit":2,"actual":9.71837,"expected":17.6091},
-{"digit":3,"actual":18.5244,"expected":12.4939},
-{"digit":4,"actual":3.53035,"expected":9.691},
-{"digit":5,"actual":0.0793336,"expected":7.91812},
-{"digit":6,"actual":4.44268,"expected":6.69468},
-{"digit":7,"actual":19.3574,"expected":5.79919},
-{"digit":8,"actual":10.7894,"expected":5.11525},
-{"digit":9,"actual":4.00635,"expected":4.57575}
+{"digit":1,"actual":29.54,"expected":30.103},
+{"digit":2,"actual":9.71451,"expected":17.6091},
+{"digit":3,"actual":18.517,"expected":12.4939},
+{"digit":4,"actual":3.5686,"expected":9.691},
+{"digit":5,"actual":0.0793021,"expected":7.91812},
+{"digit":6,"actual":4.44092,"expected":6.69468},
+{"digit":7,"actual":19.3497,"expected":5.79919},
+{"digit":8,"actual":10.7851,"expected":5.11525},
+{"digit":9,"actual":4.00476,"expected":4.57575}
 ],
 "milestoneLevels": [100,200],
 "milestones": [
@@ -92,7 +92,7 @@
 {"day":22,"avg":0.22},
 {"day":23,"avg":-0.079},
 {"day":24,"avg":0.354},
-{"day":25,"avg":0.316},
+{"day":25,"avg":0.312},
 {"day":26,"avg":0.185},
 {"day":27,"avg":-0.157},
 {"day":28,"avg":-0.041},
@@ -101,22 +101,22 @@
 {"day":31,"avg":0.218}
 ],
 "riskLevels": [
-{"risk":0.1,"price":420.997},
-{"risk":0.2,"price":433.885},
-{"risk":0.3,"price":447.917},
-{"risk":0.4,"price":463.423},
-{"risk":0.5,"price":479.465},
-{"risk":0.6,"price":487.075},
-{"risk":0.7,"price":494.805},
-{"risk":0.8,"price":554.715},
-{"risk":0.9,"price":613.355}
+{"risk":0.1,"price":421.377},
+{"risk":0.2,"price":434.266},
+{"risk":0.3,"price":448.305},
+{"risk":0.4,"price":463.819},
+{"risk":0.5,"price":479.87},
+{"risk":0.6,"price":487.469},
+{"risk":0.7,"price":495.188},
+{"risk":0.8,"price":555.167},
+{"risk":0.9,"price":613.872}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":1.668},
 {"dow":2,"avgExt":1.735},
 {"dow":3,"avgExt":1.792},
 {"dow":4,"avgExt":1.73},
-{"dow":5,"avgExt":1.801}
+{"dow":5,"avgExt":1.807}
 ],
 "smaTopBreakouts": [
 {"date":"2020-12-07","prevTop":105.1}
