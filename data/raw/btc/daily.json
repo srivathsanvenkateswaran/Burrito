@@ -1,7 +1,7 @@
 {
   "asset": "BTC",
   "quote": "USD",
-  "updatedAt": "2026-09-30T05:50:28.803Z",
+  "updatedAt": "2026-10-01T06:23:31.327Z",
   "rows": [
     {"date":"2010-08-18","open":0.07,"high":0.07,"low":0.07,"close":0.07,"volumeUsd":0},
     {"date":"2010-08-19","open":0.07,"high":0.07,"low":0.07,"close":0.07,"volumeUsd":0},
