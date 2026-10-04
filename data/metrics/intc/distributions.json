@@ -226,8 +226,8 @@
 {"risk":0.5,"price":18.6539},
 {"risk":0.6,"price":26.1285},
 {"risk":0.7,"price":36.598},
-{"risk":0.8,"price":67.0262},
-{"risk":0.9,"price":104.198}
+{"risk":0.8,"price":66.8676},
+{"risk":0.9,"price":104.344}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":0.577},

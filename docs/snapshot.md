@@ -1,23 +1,23 @@
 ---
 title: Market Snapshot
 tags: [burrito, snapshot]
-updated: 2026-10-02
+updated: 2026-10-03
 ---
 
-# Market Snapshot — 2026-10-02
+# Market Snapshot — 2026-10-03
 
 Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 
 ## Bitcoin
 
-- **Price**: $84,862.44 · **Risk**: 0.17 ([[risk-metric|methodology]])
-- **Fair value** (fan median): $116,339
-- **MVRV**: 1.5747 · **NUPL**: 0.365 · **Puell**: 1.047
-- **Fear & Greed**: 67
+- **Price**: $84,502.85 · **Risk**: 0.166 ([[risk-metric|methodology]])
+- **Fair value** (fan median): $116,432
+- **MVRV**: 1.5789 · **NUPL**: 0.3667 · **Puell**: 0.998
+- **Fear & Greed**: 65
 
 ## Market
 
-- **Total market cap** (tracked): $2526.389B · **BTC dominance**: 67.22% · **SSR**: 6.56
+- **Total market cap** (tracked): $2534.717B · **BTC dominance**: 67.19% · **SSR**: 6.58
 
 ## Top assets by market cap
 
@@ -30,7 +30,7 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 | AMZN | $252 | +1.33% | 0.90 |
 | TSM | $473 | +2.96% | 0.99 |
 | META | $728 | +0.3% | 0.51 |
-| BTC | $84,862 | +1.55% | 0.17 |
+| BTC | $84,503 | -0.42% | 0.17 |
 | AVGO | $355 | +3.35% | 0.19 |
 | TSLA | $371 | +4.65% | 0.03 |
 
