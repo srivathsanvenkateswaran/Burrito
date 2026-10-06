@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":39.0582,"expected":30.103},
-{"digit":2,"actual":18.0451,"expected":17.6091},
-{"digit":3,"actual":7.9541,"expected":12.4939},
-{"digit":4,"actual":14.5627,"expected":9.691},
-{"digit":5,"actual":6.72734,"expected":7.91812},
-{"digit":6,"actual":7.83538,"expected":6.69468},
-{"digit":7,"actual":1.89949,"expected":5.79919},
-{"digit":8,"actual":2.0182,"expected":5.11525},
-{"digit":9,"actual":1.89949,"expected":4.57575}
+{"digit":1,"actual":39.0427,"expected":30.103},
+{"digit":2,"actual":18.0775,"expected":17.6091},
+{"digit":3,"actual":7.95095,"expected":12.4939},
+{"digit":4,"actual":14.557,"expected":9.691},
+{"digit":5,"actual":6.72468,"expected":7.91812},
+{"digit":6,"actual":7.83228,"expected":6.69468},
+{"digit":7,"actual":1.89873,"expected":5.79919},
+{"digit":8,"actual":2.01741,"expected":5.11525},
+{"digit":9,"actual":1.89873,"expected":4.57575}
 ],
 "milestoneLevels": [2,5,10,20,50,100,200],
 "milestones": [
@@ -115,14 +115,14 @@
 {"year":2026,"quarter":1,"pct":-6.5},
 {"year":2026,"quarter":2,"pct":14.7},
 {"year":2026,"quarter":3,"pct":14.1},
-{"year":2026,"quarter":4,"pct":2.4}
+{"year":2026,"quarter":4,"pct":4.6}
 ],
 "avgDaily": [
 {"day":1,"avg":0.07},
 {"day":2,"avg":0.531},
 {"day":3,"avg":-0.303},
 {"day":4,"avg":0.791},
-{"day":5,"avg":-0.074},
+{"day":5,"avg":-0.048},
 {"day":6,"avg":0.314},
 {"day":7,"avg":0.556},
 {"day":8,"avg":0.181},
@@ -151,18 +151,18 @@
 {"day":31,"avg":0.167}
 ],
 "riskLevels": [
-{"risk":0.1,"price":233.592},
-{"risk":0.2,"price":251.97},
-{"risk":0.3,"price":272.301},
-{"risk":0.4,"price":278.122},
-{"risk":0.5,"price":284.067},
-{"risk":0.6,"price":308.669},
-{"risk":0.7,"price":335.401},
-{"risk":0.8,"price":379.02},
-{"risk":0.9,"price":417.357}
+{"risk":0.1,"price":234.974},
+{"risk":0.2,"price":253.401},
+{"risk":0.3,"price":273.813},
+{"risk":0.4,"price":279.582},
+{"risk":0.5,"price":285.472},
+{"risk":0.6,"price":310.21},
+{"risk":0.7,"price":337.092},
+{"risk":0.8,"price":380.982},
+{"risk":0.9,"price":419.474}
 ],
 "dcaWeekday": [
-{"dow":1,"avgExt":4.063},
+{"dow":1,"avgExt":4.073},
 {"dow":2,"avgExt":4.445},
 {"dow":3,"avgExt":4.458},
 {"dow":4,"avgExt":4.403},
