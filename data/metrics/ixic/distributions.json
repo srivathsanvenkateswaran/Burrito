@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":29.131,"expected":30.103},
-{"digit":2,"actual":26.2372,"expected":17.6091},
-{"digit":3,"actual":12.0265,"expected":12.4939},
-{"digit":4,"actual":12.515,"expected":9.691},
-{"digit":5,"actual":5.46493,"expected":7.91812},
-{"digit":6,"actual":4.01806,"expected":6.69468},
-{"digit":7,"actual":7.46475,"expected":5.79919},
-{"digit":8,"actual":2.12884,"expected":5.11525},
-{"digit":9,"actual":1.01373,"expected":4.57575}
+{"digit":1,"actual":29.1283,"expected":30.103},
+{"digit":2,"actual":26.244,"expected":17.6091},
+{"digit":3,"actual":12.0254,"expected":12.4939},
+{"digit":4,"actual":12.5138,"expected":9.691},
+{"digit":5,"actual":5.46443,"expected":7.91812},
+{"digit":6,"actual":4.01769,"expected":6.69468},
+{"digit":7,"actual":7.46406,"expected":5.79919},
+{"digit":8,"actual":2.12864,"expected":5.11525},
+{"digit":9,"actual":1.01364,"expected":4.57575}
 ],
 "milestoneLevels": [500,1000,2000,5000,10000,20000],
 "milestones": [
@@ -311,7 +311,7 @@
 {"year":2026,"quarter":1,"pct":-7.1},
 {"year":2026,"quarter":2,"pct":21.4},
 {"year":2026,"quarter":3,"pct":2.5},
-{"year":2026,"quarter":4,"pct":2.8}
+{"year":2026,"quarter":4,"pct":2.5}
 ],
 "avgDaily": [
 {"day":1,"avg":0.238},
@@ -347,20 +347,20 @@
 {"day":31,"avg":0.197}
 ],
 "riskLevels": [
-{"risk":0.1,"price":12355.8},
-{"risk":0.2,"price":13640.9},
-{"risk":0.3,"price":15473.9},
-{"risk":0.4,"price":16067},
-{"risk":0.5,"price":16682.9},
-{"risk":0.6,"price":17880.9},
-{"risk":0.7,"price":19165},
-{"risk":0.8,"price":21027.5},
-{"risk":0.9,"price":23303.5}
+{"risk":0.1,"price":12358.8},
+{"risk":0.2,"price":13644},
+{"risk":0.3,"price":15477.5},
+{"risk":0.4,"price":16071.8},
+{"risk":0.5,"price":16688.9},
+{"risk":0.6,"price":17886.3},
+{"risk":0.7,"price":19169.6},
+{"risk":0.8,"price":21032.2},
+{"risk":0.9,"price":23307.9}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":0.932},
 {"dow":2,"avgExt":0.959},
-{"dow":3,"avgExt":1.007},
+{"dow":3,"avgExt":1.008},
 {"dow":4,"avgExt":1.011},
 {"dow":5,"avgExt":1.016}
 ],

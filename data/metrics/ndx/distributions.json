@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":48.3037,"expected":30.103},
-{"digit":2,"actual":19.9078,"expected":17.6091},
-{"digit":3,"actual":7.06696,"expected":12.4939},
-{"digit":4,"actual":8.15517,"expected":9.691},
-{"digit":5,"actual":2.41966,"expected":7.91812},
-{"digit":6,"actual":4.10959,"expected":6.69468},
-{"digit":7,"actual":4.57048,"expected":5.79919},
-{"digit":8,"actual":2.49648,"expected":5.11525},
-{"digit":9,"actual":2.97017,"expected":4.57575}
+{"digit":1,"actual":48.2975,"expected":30.103},
+{"digit":2,"actual":19.9053,"expected":17.6091},
+{"digit":3,"actual":7.07885,"expected":12.4939},
+{"digit":4,"actual":8.15412,"expected":9.691},
+{"digit":5,"actual":2.41935,"expected":7.91812},
+{"digit":6,"actual":4.10906,"expected":6.69468},
+{"digit":7,"actual":4.56989,"expected":5.79919},
+{"digit":8,"actual":2.49616,"expected":5.11525},
+{"digit":9,"actual":2.96979,"expected":4.57575}
 ],
 "milestoneLevels": [1000,2000,5000,10000,20000],
 "milestones": [
@@ -233,7 +233,7 @@
 {"year":2026,"quarter":1,"pct":-6},
 {"year":2026,"quarter":2,"pct":27.5},
 {"year":2026,"quarter":3,"pct":0.4},
-{"year":2026,"quarter":4,"pct":2.7}
+{"year":2026,"quarter":4,"pct":2.5}
 ],
 "avgDaily": [
 {"day":1,"avg":0.317},
@@ -269,20 +269,20 @@
 {"day":31,"avg":0.064}
 ],
 "riskLevels": [
-{"risk":0.1,"price":21948.6},
-{"risk":0.2,"price":22866.6},
-{"risk":0.3,"price":23817.5},
-{"risk":0.4,"price":24729.8},
-{"risk":0.5,"price":25677.1},
-{"risk":0.6,"price":27251.8},
-{"risk":0.7,"price":28923.1},
-{"risk":0.8,"price":31006.3},
-{"risk":0.9,"price":37253.7}
+{"risk":0.1,"price":21958},
+{"risk":0.2,"price":22876.4},
+{"risk":0.3,"price":23827.8},
+{"risk":0.4,"price":24740.6},
+{"risk":0.5,"price":25688.5},
+{"risk":0.6,"price":27264.4},
+{"risk":0.7,"price":28936.9},
+{"risk":0.8,"price":31021.8},
+{"risk":0.9,"price":37274.3}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":1.056},
 {"dow":2,"avgExt":1.112},
-{"dow":3,"avgExt":1.138},
+{"dow":3,"avgExt":1.14},
 {"dow":4,"avgExt":1.117},
 {"dow":5,"avgExt":1.071}
 ],
