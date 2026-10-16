@@ -11,7 +11,8 @@
 {"date":"2025-05-02","type":"down"},
 {"date":"2025-05-16","type":"up"},
 {"date":"2026-03-30","type":"down"},
-{"date":"2026-04-17","type":"up"}
+{"date":"2026-04-17","type":"up"},
+{"date":"2026-10-15","type":"down"}
 ],
 "piCycle": []
 }

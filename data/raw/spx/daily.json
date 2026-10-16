@@ -1,7 +1,7 @@
 {
   "asset": "SPX",
   "quote": "USD",
-  "updatedAt": "2026-10-15T05:05:37.638Z",
+  "updatedAt": "2026-10-16T04:54:27.505Z",
   "rows": [
     {"date":"1975-01-02","open":70.23,"high":70.23,"low":70.23,"close":70.23,"volumeUsd":0},
     {"date":"1975-01-03","open":70.71,"high":70.71,"low":70.71,"close":70.71,"volumeUsd":0},
@@ -13057,6 +13057,7 @@
     {"date":"2026-10-09","open":7811.54,"high":7811.54,"low":7811.54,"close":7811.54,"volumeUsd":0},
     {"date":"2026-10-12","open":7807.24,"high":7807.24,"low":7807.24,"close":7807.24,"volumeUsd":0},
     {"date":"2026-10-13","open":7805.45,"high":7805.45,"low":7805.45,"close":7805.45,"volumeUsd":0},
-    {"date":"2026-10-14","open":7718.94,"high":7718.94,"low":7718.94,"close":7718.94,"volumeUsd":0}
+    {"date":"2026-10-14","open":7718.94,"high":7718.94,"low":7718.94,"close":7718.94,"volumeUsd":0},
+    {"date":"2026-10-15","open":7744.06,"high":7744.06,"low":7744.06,"close":7744.06,"volumeUsd":0}
   ]
 }

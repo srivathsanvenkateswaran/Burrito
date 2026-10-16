@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":40.4734,"expected":30.103},
-{"digit":2,"actual":3.51085,"expected":17.6091},
-{"digit":3,"actual":9.34911,"expected":12.4939},
-{"digit":4,"actual":9.82249,"expected":9.691},
-{"digit":5,"actual":16.7653,"expected":7.91812},
-{"digit":6,"actual":7.73176,"expected":6.69468},
-{"digit":7,"actual":5.32544,"expected":5.79919},
-{"digit":8,"actual":3.23471,"expected":5.11525},
-{"digit":9,"actual":3.78698,"expected":4.57575}
+{"digit":1,"actual":40.4574,"expected":30.103},
+{"digit":2,"actual":3.50946,"expected":17.6091},
+{"digit":3,"actual":9.38486,"expected":12.4939},
+{"digit":4,"actual":9.81861,"expected":9.691},
+{"digit":5,"actual":16.7587,"expected":7.91812},
+{"digit":6,"actual":7.72871,"expected":6.69468},
+{"digit":7,"actual":5.32334,"expected":5.79919},
+{"digit":8,"actual":3.23344,"expected":5.11525},
+{"digit":9,"actual":3.78549,"expected":4.57575}
 ],
 "milestoneLevels": [50,100,200],
 "milestones": [
@@ -87,7 +87,7 @@
 {"year":2026,"quarter":1,"pct":-8.1},
 {"year":2026,"quarter":2,"pct":24.3},
 {"year":2026,"quarter":3,"pct":-3.7},
-{"year":2026,"quarter":4,"pct":1}
+{"year":2026,"quarter":4,"pct":1.5}
 ],
 "avgDaily": [
 {"day":1,"avg":0.242},
@@ -123,21 +123,21 @@
 {"day":31,"avg":0.004}
 ],
 "riskLevels": [
-{"risk":0.1,"price":224.621},
-{"risk":0.2,"price":238.772},
-{"risk":0.3,"price":254.037},
-{"risk":0.4,"price":275.592},
-{"risk":0.5,"price":298.977},
-{"risk":0.6,"price":325.051},
-{"risk":0.7,"price":353.4},
-{"risk":0.8,"price":368.508},
-{"risk":0.9,"price":383.518}
+{"risk":0.1,"price":224.757},
+{"risk":0.2,"price":238.912},
+{"risk":0.3,"price":254.189},
+{"risk":0.4,"price":275.767},
+{"risk":0.5,"price":299.177},
+{"risk":0.6,"price":325.274},
+{"risk":0.7,"price":353.646},
+{"risk":0.8,"price":368.735},
+{"risk":0.9,"price":383.727}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":1.963},
 {"dow":2,"avgExt":2.014},
 {"dow":3,"avgExt":2.035},
-{"dow":4,"avgExt":1.937},
+{"dow":4,"avgExt":1.936},
 {"dow":5,"avgExt":2.057}
 ],
 "smaTopBreakouts": [
