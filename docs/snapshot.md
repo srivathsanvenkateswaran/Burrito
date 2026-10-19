@@ -12,12 +12,12 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 
 - **Price**: $81,566.64 · **Risk**: 0.136 ([[risk-metric|methodology]])
 - **Fair value** (fan median): $117,551
-- **MVRV**: 1.5087 · **NUPL**: 0.3372 · **Puell**: 0.992
-- **Fear & Greed**: 53
+- **MVRV**: 1.5208 · **NUPL**: 0.3425 · **Puell**: 1.155
+- **Fear & Greed**: 59
 
 ## Market
 
-- **Total market cap** (tracked): $2394.861B · **BTC dominance**: 68.21% · **SSR**: 6.35
+- **Total market cap** (tracked): $2411.22B · **BTC dominance**: 68.3% · **SSR**: 6.4
 
 ## Top assets by market cap
 
@@ -26,7 +26,7 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 | NVDA | $214 | -1.43% | 0.01 |
 | AAPL | $343 | +0.43% | 0.99 |
 | GOOGL | $341 | -2.47% | 0.65 |
-| MSFT | $529 | -1.93% | 0.76 |
+| MSFT | $529 | -1.93% | 0.74 |
 | AMZN | $250 | -1.87% | 0.87 |
 | TSM | $413 | -2.28% | 0.74 |
 | META | $709 | -3.72% | 0.46 |
@@ -41,7 +41,7 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 | NVDA | NVIDIA | Semiconductors | $214 | 0.01 | 1.05 |
 | AAPL | Apple | Big Tech | $343 | 0.99 | 1.17 |
 | GOOGL | Alphabet | Big Tech | $341 | 0.65 | 1.00 |
-| MSFT | Microsoft | Big Tech | $529 | 0.76 | 1.22 |
+| MSFT | Microsoft | Big Tech | $529 | 0.74 | 1.22 |
 | AMZN | Amazon | Big Tech | $250 | 0.87 | 1.03 |
 | TSM | TSMC | Semiconductors | $413 | 0.74 | 1.04 |
 | META | Meta Platforms | Big Tech | $709 | 0.46 | 1.12 |
