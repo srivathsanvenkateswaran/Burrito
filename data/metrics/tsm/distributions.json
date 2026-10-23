@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":27.126,"expected":30.103},
-{"digit":2,"actual":8.85827,"expected":17.6091},
-{"digit":3,"actual":21.9685,"expected":12.4939},
-{"digit":4,"actual":16.3386,"expected":9.691},
-{"digit":5,"actual":6.02362,"expected":7.91812},
-{"digit":6,"actual":1.73228,"expected":6.69468},
-{"digit":7,"actual":2.75591,"expected":5.79919},
-{"digit":8,"actual":8.0315,"expected":5.11525},
-{"digit":9,"actual":7.16535,"expected":4.57575}
+{"digit":1,"actual":27.1153,"expected":30.103},
+{"digit":2,"actual":8.85478,"expected":17.6091},
+{"digit":3,"actual":21.9599,"expected":12.4939},
+{"digit":4,"actual":16.3715,"expected":9.691},
+{"digit":5,"actual":6.02125,"expected":7.91812},
+{"digit":6,"actual":1.7316,"expected":6.69468},
+{"digit":7,"actual":2.75482,"expected":5.79919},
+{"digit":8,"actual":8.02834,"expected":5.11525},
+{"digit":9,"actual":7.16253,"expected":4.57575}
 ],
 "milestoneLevels": [50,100,200],
 "milestones": [
@@ -117,7 +117,7 @@
 {"year":2026,"quarter":1,"pct":11.2},
 {"year":2026,"quarter":2,"pct":41.3},
 {"year":2026,"quarter":3,"pct":-4.5},
-{"year":2026,"quarter":4,"pct":-5.3}
+{"year":2026,"quarter":4,"pct":-9.6}
 ],
 "avgDaily": [
 {"day":1,"avg":0.398},
@@ -141,7 +141,7 @@
 {"day":19,"avg":0.009},
 {"day":20,"avg":-0.254},
 {"day":21,"avg":0.199},
-{"day":22,"avg":0.142},
+{"day":22,"avg":0.088},
 {"day":23,"avg":0.184},
 {"day":24,"avg":0.332},
 {"day":25,"avg":0.193},
@@ -153,21 +153,21 @@
 {"day":31,"avg":0.077}
 ],
 "riskLevels": [
-{"risk":0.1,"price":264.946},
-{"risk":0.2,"price":288.561},
-{"risk":0.3,"price":335.486},
-{"risk":0.4,"price":354.726},
-{"risk":0.5,"price":375.069},
-{"risk":0.6,"price":389.155},
-{"risk":0.7,"price":403.77},
-{"risk":0.8,"price":429.256},
-{"risk":0.9,"price":452.391}
+{"risk":0.1,"price":265.216},
+{"risk":0.2,"price":288.836},
+{"risk":0.3,"price":335.826},
+{"risk":0.4,"price":355.082},
+{"risk":0.5,"price":375.442},
+{"risk":0.6,"price":389.506},
+{"risk":0.7,"price":404.097},
+{"risk":0.8,"price":429.571},
+{"risk":0.9,"price":452.692}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":2.317},
 {"dow":2,"avgExt":2.493},
 {"dow":3,"avgExt":2.553},
-{"dow":4,"avgExt":2.506},
+{"dow":4,"avgExt":2.491},
 {"dow":5,"avgExt":2.376}
 ],
 "smaTopBreakouts": [
