@@ -1,6 +1,6 @@
 {
-"updatedThrough": "2026-10-23",
-"regression": {"slope":5.5981388717426865,"intercept":-37.29402978882335,"sigma":0.692554222437031},
+"updatedThrough": "2026-10-24",
+"regression": {"slope":5.597944781488063,"intercept":-37.29256701375884,"sigma":0.6925332048350209},
 "rows": [
 {"date":"2010-08-18","close":0.07,"fair":0.0902665,"bandLow":0.0834037,"bandHigh":0.129072,"risk":null,"sma20w":null,"ema21w":null,"sma50w":null,"sma200w":null,"mayer":null,"rsi14":null,"roi1y":null},
 {"date":"2010-08-19","close":0.07,"fair":0.0912821,"bandLow":0.0842462,"bandHigh":0.130635,"risk":null,"sma20w":null,"ema21w":null,"sma50w":null,"sma200w":null,"mayer":null,"rsi14":null,"roi1y":null},
@@ -5912,6 +5912,7 @@
 {"date":"2026-10-20","close":81842.66,"fair":115927,"bandLow":98622.5,"bandHigh":138900,"risk":0.139,"sma20w":71023.6,"ema21w":75800.9,"sma50w":76627.1,"sma200w":66825.6,"mayer":1.128,"rsi14":48,"roi1y":-26},
 {"date":"2026-10-21","close":82942.91,"fair":116018,"bandLow":98709.3,"bandHigh":138995,"risk":0.146,"sma20w":71157.8,"ema21w":75897.5,"sma50w":76567.3,"sma200w":66872.9,"mayer":1.142,"rsi14":52.6,"roi1y":-23.4},
 {"date":"2026-10-22","close":84018.76,"fair":116109,"bandLow":98796.2,"bandHigh":139090,"risk":0.154,"sma20w":71301.6,"ema21w":76007.2,"sma50w":76517.8,"sma200w":66920.9,"mayer":1.156,"rsi14":56.7,"roi1y":-21.9},
-{"date":"2026-10-23","close":81315.73,"fair":116200,"bandLow":98883.1,"bandHigh":139186,"risk":0.134,"sma20w":71446.4,"ema21w":76078.9,"sma50w":76454.8,"sma200w":66967,"mayer":1.117,"rsi14":46,"roi1y":-26.1}
+{"date":"2026-10-23","close":81315.73,"fair":116200,"bandLow":98883.1,"bandHigh":139186,"risk":0.134,"sma20w":71446.4,"ema21w":76078.9,"sma50w":76454.8,"sma200w":66967,"mayer":1.117,"rsi14":46,"roi1y":-26.1},
+{"date":"2026-10-24","close":81069.69,"fair":116292,"bandLow":98970.1,"bandHigh":139281,"risk":0.132,"sma20w":71590.5,"ema21w":76146.4,"sma50w":76394.1,"sma200w":67012.9,"mayer":1.113,"rsi14":45.2,"roi1y":-27}
 ]
 }
