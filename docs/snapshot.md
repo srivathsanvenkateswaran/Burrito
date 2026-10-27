@@ -1,71 +1,71 @@
 ---
 title: Market Snapshot
 tags: [burrito, snapshot]
-updated: 2026-10-25
+updated: 2026-10-26
 ---
 
-# Market Snapshot — 2026-10-25
+# Market Snapshot — 2026-10-26
 
 Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 
 ## Bitcoin
 
-- **Price**: $80,771.9 · **Risk**: 0.129 ([[risk-metric|methodology]])
-- **Fair value** (fan median): $116,383
-- **MVRV**: 1.4803 · **NUPL**: 0.3245 · **Puell**: 1.122
-- **Fear & Greed**: 50
+- **Price**: $80,022.79 · **Risk**: 0.124 ([[risk-metric|methodology]])
+- **Fair value** (fan median): $116,475
+- **MVRV**: 1.4785 · **NUPL**: 0.3236 · **Puell**: 1.165
+- **Fear & Greed**: 48
 
 ## Market
 
-- **Total market cap** (tracked): $2106.759B · **BTC dominance**: 76.38% · **SSR**: 356.2
+- **Total market cap** (tracked): $2104.91B · **BTC dominance**: 76.36% · **SSR**: 356.77
 
 ## Top assets by market cap
 
 | Asset | Price | 24h | Risk |
 |---|---|---|---|
-| NVDA | $211 | -0.59% | 0.01 |
-| AAPL | $348 | -0.14% | 0.99 |
-| GOOGL | $320 | -1.24% | 0.57 |
-| MSFT | $525 | +0.66% | 0.71 |
-| AMZN | $248 | -0.95% | 0.86 |
-| TSM | $419 | +1.49% | 0.76 |
-| META | $643 | -0.96% | 0.35 |
-| BTC | $80,772 | -0.37% | 0.13 |
-| AVGO | $322 | -0.48% | 0.01 |
-| TSLA | $372 | -0.63% | 0.03 |
+| NVDA | $216 | +2.39% | 0.01 |
+| AAPL | $344 | -1.1% | 0.99 |
+| MSFT | $533 | +1.54% | 0.77 |
+| GOOGL | $317 | -1.06% | 0.56 |
+| AMZN | $249 | +0.44% | 0.87 |
+| TSM | $424 | +1.4% | 0.78 |
+| META | $631 | -1.88% | 0.33 |
+| BTC | $80,023 | -0.93% | 0.12 |
+| AVGO | $329 | +2.33% | 0.01 |
+| TSLA | $392 | +5.21% | 0.07 |
 
 ## Equities & indices
 
 | Symbol | Name | Sector | Close | Risk | Mayer |
 |---|---|---|---|---|---|
-| NVDA | NVIDIA | Semiconductors | $211 | 0.01 | 1.04 |
-| AAPL | Apple | Big Tech | $348 | 0.99 | 1.18 |
-| GOOGL | Alphabet | Big Tech | $320 | 0.57 | 0.94 |
-| MSFT | Microsoft | Big Tech | $525 | 0.71 | 1.20 |
-| AMZN | Amazon | Big Tech | $248 | 0.86 | 1.02 |
-| TSM | TSMC | Semiconductors | $419 | 0.76 | 1.05 |
-| META | Meta Platforms | Big Tech | $643 | 0.35 | 1.02 |
-| AVGO | Broadcom | Semiconductors | $322 | 0.01 | 0.88 |
-| TSLA | Tesla | EV & Space | $372 | 0.03 | 0.96 |
-| MU | Micron | Semiconductors | $878 | 0.82 | 1.20 |
-| AMD | AMD | Semiconductors | $517 | 0.85 | 1.28 |
-| ASML | ASML | Semiconductors | $1,572 | 0.69 | 0.99 |
-| PLTR | Palantir | Software & data | $197 | 0.26 | 1.28 |
-| INTC | Intel | Semiconductors | $86.96 | 0.84 | 1.01 |
+| NVDA | NVIDIA | Semiconductors | $216 | 0.01 | 1.06 |
+| AAPL | Apple | Big Tech | $344 | 0.99 | 1.17 |
+| MSFT | Microsoft | Big Tech | $533 | 0.77 | 1.22 |
+| GOOGL | Alphabet | Big Tech | $317 | 0.56 | 0.93 |
+| AMZN | Amazon | Big Tech | $249 | 0.87 | 1.02 |
+| TSM | TSMC | Semiconductors | $424 | 0.78 | 1.07 |
+| META | Meta Platforms | Big Tech | $631 | 0.33 | 1.00 |
+| AVGO | Broadcom | Semiconductors | $329 | 0.01 | 0.90 |
+| TSLA | Tesla | EV & Space | $392 | 0.07 | 1.01 |
+| MU | Micron | Semiconductors | $904 | 0.83 | 1.23 |
+| AMD | AMD | Semiconductors | $531 | 0.88 | 1.32 |
+| ASML | ASML | Semiconductors | $1,591 | 0.71 | 1.00 |
+| PLTR | Palantir | Software & data | $199 | 0.27 | 1.30 |
+| INTC | Intel | Semiconductors | $90.47 | 0.84 | 1.05 |
 | ORCL | Oracle | Big Tech | $126 | 0.01 | 0.80 |
-| CAT | Caterpillar | AI infrastructure & power | $687 | 0.48 | 0.85 |
-| NFLX | Netflix | Big Tech | $65.85 | 0.01 | 0.80 |
-| ARM | Arm Holdings | Semiconductors | $210 | 0.60 | 0.93 |
-| GEV | GE Vernova | AI infrastructure & power | $815 | 0.01 | 0.87 |
-| SNDK | Sandisk | Semiconductors | $1,238 | 0.01 | 1.00 |
-| ETN | Eaton | AI infrastructure & power | $366 | 0.01 | 0.93 |
-| CEG | Constellation Energy | AI infrastructure & power | $253 | 0.01 | 0.90 |
-| VRT | Vertiv | AI infrastructure & power | $194 | 0.01 | 0.72 |
-| VST | Vistra | AI infrastructure & power | $140 | 0.47 | 0.91 |
-| SMCI | Super Micro Computer | Semiconductors | $32.94 | 0.04 | 1.01 |
+| CAT | Caterpillar | AI infrastructure & power | $692 | 0.49 | 0.85 |
+| NFLX | Netflix | Big Tech | $63.9 | 0.01 | 0.78 |
+| ARM | Arm Holdings | Semiconductors | $223 | 0.63 | 0.99 |
+| GEV | GE Vernova | AI infrastructure & power | $855 | 0.01 | 0.91 |
+| SNDK | Sandisk | Semiconductors | $1,256 | 0.01 | 1.01 |
+| ETN | Eaton | AI infrastructure & power | $372 | 0.01 | 0.94 |
+| CEG | Constellation Energy | AI infrastructure & power | $252 | 0.01 | 0.90 |
+| VRT | Vertiv | AI infrastructure & power | $200 | 0.01 | 0.74 |
+| VST | Vistra | AI infrastructure & power | $142 | 0.47 | 0.92 |
+| SMCI | Super Micro Computer | Semiconductors | $32.69 | 0.04 | 1.00 |
 | 005930.KS | Samsung Electronics | Semiconductors | $213,500 | 0.97 | 0.91 |
-| SPX | S&P 500 | Indices | $7,624 | 0.95 | 1.05 |
-| NDX | Nasdaq-100 | Indices | $28,958 | 0.69 | 1.04 |
-| IXIC | Nasdaq Composite | Indices | $25,955 | 0.97 | 1.04 |
+| SPX | S&P 500 | Indices | $7,677 | 0.96 | 1.05 |
+| NDX | Nasdaq-100 | Indices | $29,273 | 0.70 | 1.05 |
+| IXIC | Nasdaq Composite | Indices | $26,169 | 0.98 | 1.05 |
 
 *Not financial advice. Just a burrito.* 🌯
