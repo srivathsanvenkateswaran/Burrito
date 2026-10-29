@@ -1,5 +1,5 @@
 {
-"updatedAt": "2026-10-28T06:08:28.757Z",
+"updatedAt": "2026-10-29T06:19:09.435Z",
 "bases": {
 "2020-01-01": {
 "rows": [
@@ -2494,7 +2494,8 @@
 {"date":"2026-10-24","btc":1125.84,"eth":null,"spx":null,"ndx":null,"nvda":null,"aapl":null,"tsla":null},
 {"date":"2026-10-25","btc":1121.7,"eth":null,"spx":null,"ndx":null,"nvda":null,"aapl":null,"tsla":null},
 {"date":"2026-10-26","btc":1111.3,"eth":null,"spx":235.639,"ndx":329.944,"nvda":3601.38,"aapl":458.012,"tsla":1365.29},
-{"date":"2026-10-27","btc":1110.98,"eth":null,"spx":237.046,"ndx":334.205,"nvda":3633.73,"aapl":462.261,"tsla":1420.51}
+{"date":"2026-10-27","btc":1110.98,"eth":null,"spx":237.046,"ndx":334.205,"nvda":3633.73,"aapl":462.261,"tsla":1420.51},
+{"date":"2026-10-28","btc":1122.21,"eth":null,"spx":237.702,"ndx":336.028,"nvda":3591.04,"aapl":457.906,"tsla":1409.22}
 ]
 },
 "2023-01-01": {
@@ -3894,7 +3895,8 @@
 {"date":"2026-10-24","btc":487.879,"eth":null,"spx":null,"ndx":null,"nvda":null,"aapl":null,"tsla":null},
 {"date":"2026-10-25","btc":486.087,"eth":null,"spx":null,"ndx":null,"nvda":null,"aapl":null,"tsla":null},
 {"date":"2026-10-26","btc":481.579,"eth":null,"spx":200.745,"ndx":269.487,"nvda":1508.91,"aapl":274.974,"tsla":362.276},
-{"date":"2026-10-27","btc":481.444,"eth":null,"spx":201.943,"ndx":272.967,"nvda":1522.46,"aapl":277.525,"tsla":376.929}
+{"date":"2026-10-27","btc":481.444,"eth":null,"spx":201.943,"ndx":272.967,"nvda":1522.46,"aapl":277.525,"tsla":376.929},
+{"date":"2026-10-28","btc":486.308,"eth":null,"spx":202.503,"ndx":274.456,"nvda":1504.58,"aapl":274.91,"tsla":373.932}
 ]
 }
 }
