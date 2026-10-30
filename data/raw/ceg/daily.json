@@ -1,7 +1,7 @@
 {
   "asset": "CEG",
   "quote": "USD",
-  "updatedAt": "2026-10-29T06:18:25.380Z",
+  "updatedAt": "2026-10-30T06:19:19.449Z",
   "rows": [
     {"date":"2022-01-19","open":38,"high":43,"low":38,"close":42,"volumeUsd":5456724,"volume":129922},
     {"date":"2022-01-20","open":40.95,"high":48.37,"low":40.95,"close":45,"volumeUsd":6903630,"volume":153414},
@@ -1201,6 +1201,7 @@
     {"date":"2026-10-23","open":254,"high":256.79,"low":247.2,"close":253.45,"volumeUsd":732035326.35,"volume":2888283},
     {"date":"2026-10-26","open":253.99,"high":255.62,"low":249.2,"close":252.48,"volumeUsd":726975258.24,"volume":2879338},
     {"date":"2026-10-27","open":257.31,"high":265.78,"low":255.94,"close":258.98,"volumeUsd":825733385.8800001,"volume":3188406},
-    {"date":"2026-10-28","open":261.12,"high":261.88,"low":254.45,"close":258.08,"volumeUsd":659593379.68,"volume":2555771}
+    {"date":"2026-10-28","open":261.12,"high":261.88,"low":254.45,"close":258.08,"volumeUsd":659593379.68,"volume":2555771},
+    {"date":"2026-10-29","open":258.29,"high":266.89,"low":257,"close":264.58,"volumeUsd":720643160.5,"volume":2723725}
   ]
 }
