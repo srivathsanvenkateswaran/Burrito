@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":28.7903,"expected":30.103},
-{"digit":2,"actual":4.83111,"expected":17.6091},
-{"digit":3,"actual":3.49568,"expected":12.4939},
-{"digit":4,"actual":17.7141,"expected":9.691},
-{"digit":5,"actual":20.6991,"expected":7.91812},
-{"digit":6,"actual":4.94894,"expected":6.69468},
-{"digit":7,"actual":7.81618,"expected":5.79919},
-{"digit":8,"actual":8.05185,"expected":5.11525},
-{"digit":9,"actual":3.65279,"expected":4.57575}
+{"digit":1,"actual":28.8182,"expected":30.103},
+{"digit":2,"actual":4.82921,"expected":17.6091},
+{"digit":3,"actual":3.49431,"expected":12.4939},
+{"digit":4,"actual":17.7071,"expected":9.691},
+{"digit":5,"actual":20.691,"expected":7.91812},
+{"digit":6,"actual":4.947,"expected":6.69468},
+{"digit":7,"actual":7.81311,"expected":5.79919},
+{"digit":8,"actual":8.04868,"expected":5.11525},
+{"digit":9,"actual":3.65135,"expected":4.57575}
 ],
 "milestoneLevels": [50,100,200],
 "milestones": [
@@ -110,7 +110,7 @@
 {"year":2026,"quarter":1,"pct":-24.5},
 {"year":2026,"quarter":2,"pct":-0.4},
 {"year":2026,"quarter":3,"pct":-6.3},
-{"year":2026,"quarter":4,"pct":1.6}
+{"year":2026,"quarter":4,"pct":-4.8}
 ],
 "avgDaily": [
 {"day":1,"avg":0.449},
@@ -142,26 +142,26 @@
 {"day":27,"avg":-0.308},
 {"day":28,"avg":0.106},
 {"day":29,"avg":-0.036},
-{"day":30,"avg":-0.013},
+{"day":30,"avg":-0.095},
 {"day":31,"avg":0.042}
 ],
 "riskLevels": [
-{"risk":0.1,"price":150.19},
-{"risk":0.2,"price":167.85},
-{"risk":0.3,"price":189.741},
-{"risk":0.4,"price":208.532},
-{"risk":0.5,"price":229.185},
-{"risk":0.6,"price":249.371},
-{"risk":0.7,"price":271.334},
-{"risk":0.8,"price":306.646},
-{"risk":0.9,"price":357.051}
+{"risk":0.1,"price":150.269},
+{"risk":0.2,"price":167.945},
+{"risk":0.3,"price":189.86},
+{"risk":0.4,"price":208.676},
+{"risk":0.5,"price":229.356},
+{"risk":0.6,"price":249.566},
+{"risk":0.7,"price":271.556},
+{"risk":0.8,"price":306.91},
+{"risk":0.9,"price":357.378}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":1.124},
 {"dow":2,"avgExt":0.994},
 {"dow":3,"avgExt":1.11},
 {"dow":4,"avgExt":0.98},
-{"dow":5,"avgExt":1.021}
+{"dow":5,"avgExt":1.002}
 ],
 "smaTopBreakouts": [
 {"date":"2023-08-02","prevTop":103.65},

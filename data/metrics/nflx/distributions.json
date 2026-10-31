@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":21.2097,"expected":30.103},
-{"digit":2,"actual":10.9191,"expected":17.6091},
-{"digit":3,"actual":23.2522,"expected":12.4939},
-{"digit":4,"actual":12.1367,"expected":9.691},
-{"digit":5,"actual":10.6049,"expected":7.91812},
-{"digit":6,"actual":8.20896,"expected":6.69468},
-{"digit":7,"actual":4.35978,"expected":5.79919},
-{"digit":8,"actual":3.84918,"expected":5.11525},
-{"digit":9,"actual":5.45954,"expected":4.57575}
+{"digit":1,"actual":21.2014,"expected":30.103},
+{"digit":2,"actual":10.9148,"expected":17.6091},
+{"digit":3,"actual":23.243,"expected":12.4939},
+{"digit":4,"actual":12.1319,"expected":9.691},
+{"digit":5,"actual":10.6007,"expected":7.91812},
+{"digit":6,"actual":8.24499,"expected":6.69468},
+{"digit":7,"actual":4.35807,"expected":5.79919},
+{"digit":8,"actual":3.84766,"expected":5.11525},
+{"digit":9,"actual":5.4574,"expected":4.57575}
 ],
 "milestoneLevels": [10,20,50,100],
 "milestones": [
@@ -147,26 +147,26 @@
 {"day":27,"avg":-0.029},
 {"day":28,"avg":0.17},
 {"day":29,"avg":0.18},
-{"day":30,"avg":0.141},
+{"day":30,"avg":0.14},
 {"day":31,"avg":0.411}
 ],
 "riskLevels": [
-{"risk":0.1,"price":71.8379},
-{"risk":0.2,"price":72.526},
-{"risk":0.3,"price":73.0511},
-{"risk":0.4,"price":76.1173},
-{"risk":0.5,"price":79.3122},
-{"risk":0.6,"price":88.3859},
-{"risk":0.7,"price":98.4978},
-{"risk":0.8,"price":118.647},
-{"risk":0.9,"price":140.298}
+{"risk":0.1,"price":71.8877},
+{"risk":0.2,"price":72.5574},
+{"risk":0.3,"price":73.0659},
+{"risk":0.4,"price":76.1266},
+{"risk":0.5,"price":79.3155},
+{"risk":0.6,"price":88.393},
+{"risk":0.7,"price":98.5094},
+{"risk":0.8,"price":118.68},
+{"risk":0.9,"price":140.354}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":1.287},
 {"dow":2,"avgExt":1.534},
 {"dow":3,"avgExt":1.467},
 {"dow":4,"avgExt":1.581},
-{"dow":5,"avgExt":1.411}
+{"dow":5,"avgExt":1.377}
 ],
 "smaTopBreakouts": [
 {"date":"2020-07-21","prevTop":41.897},
