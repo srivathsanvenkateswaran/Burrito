@@ -12,12 +12,12 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 
 - **Price**: $81,275.48 · **Risk**: 0.131 ([[risk-metric|methodology]])
 - **Fair value** (fan median): $116,750
-- **MVRV**: 1.4273 · **NUPL**: 0.2994 · **Puell**: 1.004
-- **Fear & Greed**: 30
+- **MVRV**: 1.4325 · **NUPL**: 0.3019 · **Puell**: 1.029
+- **Fear & Greed**: 34
 
 ## Market
 
-- **Total market cap** (tracked): $2284.954B · **BTC dominance**: 67.85% · **SSR**: 6.05
+- **Total market cap** (tracked): $2292.657B · **BTC dominance**: 67.88% · **SSR**: 6.06
 
 ## Top assets by market cap
 
