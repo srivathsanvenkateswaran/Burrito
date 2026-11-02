@@ -12,12 +12,12 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 
 - **Price**: $81,275.48 · **Risk**: 0.131 ([[risk-metric|methodology]])
 - **Fair value** (fan median): $116,750
-- **MVRV**: 1.4325 · **NUPL**: 0.3019 · **Puell**: 1.029
-- **Fear & Greed**: 34
+- **MVRV**: 1.4465 · **NUPL**: 0.3087 · **Puell**: 1.047
+- **Fear & Greed**: 37
 
 ## Market
 
-- **Total market cap** (tracked): $2292.657B · **BTC dominance**: 67.88% · **SSR**: 6.06
+- **Total market cap** (tracked): $2308.927B · **BTC dominance**: 68.04% · **SSR**: 6.13
 
 ## Top assets by market cap
 
@@ -31,8 +31,8 @@ Auto-generated daily by the burrito pipeline. See [[data-pipeline]] for how.
 | TSM | $406 | -5.95% | 0.64 |
 | TSLA | $400 | -0.87% | 0.08 |
 | META | $615 | -1.53% | 0.30 |
-| AVGO | $326 | -5.48% | 0.01 |
 | BTC | $81,275 | +0.58% | 0.13 |
+| AVGO | $326 | -5.48% | 0.01 |
 
 ## Equities & indices
 
