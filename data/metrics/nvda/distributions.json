@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":38.7211,"expected":30.103},
-{"digit":2,"actual":18.7525,"expected":17.6091},
-{"digit":3,"actual":7.88545,"expected":12.4939},
-{"digit":4,"actual":14.437,"expected":9.691},
-{"digit":5,"actual":6.66928,"expected":7.91812},
-{"digit":6,"actual":7.76775,"expected":6.69468},
-{"digit":7,"actual":1.88309,"expected":5.79919},
-{"digit":8,"actual":2.00078,"expected":5.11525},
-{"digit":9,"actual":1.88309,"expected":4.57575}
+{"digit":1,"actual":38.7059,"expected":30.103},
+{"digit":2,"actual":18.7843,"expected":17.6091},
+{"digit":3,"actual":7.88235,"expected":12.4939},
+{"digit":4,"actual":14.4314,"expected":9.691},
+{"digit":5,"actual":6.66667,"expected":7.91812},
+{"digit":6,"actual":7.76471,"expected":6.69468},
+{"digit":7,"actual":1.88235,"expected":5.79919},
+{"digit":8,"actual":2,"expected":5.11525},
+{"digit":9,"actual":1.88235,"expected":4.57575}
 ],
 "milestoneLevels": [2,5,10,20,50,100,200],
 "milestones": [
@@ -115,13 +115,13 @@
 {"year":2026,"quarter":1,"pct":-6.5},
 {"year":2026,"quarter":2,"pct":14.7},
 {"year":2026,"quarter":3,"pct":14.1},
-{"year":2026,"quarter":4,"pct":-9.5}
+{"year":2026,"quarter":4,"pct":-12.4}
 ],
 "avgDaily": [
 {"day":1,"avg":0.07},
 {"day":2,"avg":0.51},
 {"day":3,"avg":-0.273},
-{"day":4,"avg":0.791},
+{"day":4,"avg":0.74},
 {"day":5,"avg":-0.048},
 {"day":6,"avg":0.312},
 {"day":7,"avg":0.541},
@@ -151,20 +151,20 @@
 {"day":31,"avg":0.167}
 ],
 "riskLevels": [
-{"risk":0.1,"price":236.228},
-{"risk":0.2,"price":262.172},
-{"risk":0.3,"price":285.284},
-{"risk":0.4,"price":289.405},
-{"risk":0.5,"price":293.586},
-{"risk":0.6,"price":322.605},
-{"risk":0.7,"price":354.492},
-{"risk":0.8,"price":393.657},
-{"risk":0.9,"price":433.614}
+{"risk":0.1,"price":236.684},
+{"risk":0.2,"price":262.665},
+{"risk":0.3,"price":285.81},
+{"risk":0.4,"price":289.908},
+{"risk":0.5,"price":294.065},
+{"risk":0.6,"price":323.138},
+{"risk":0.7,"price":355.086},
+{"risk":0.8,"price":394.329},
+{"risk":0.9,"price":434.339}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":4.01},
 {"dow":2,"avgExt":4.401},
-{"dow":3,"avgExt":4.429},
+{"dow":3,"avgExt":4.401},
 {"dow":4,"avgExt":4.353},
 {"dow":5,"avgExt":4.223}
 ],
