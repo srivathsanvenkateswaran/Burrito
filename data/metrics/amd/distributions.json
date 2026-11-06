@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":47.1373,"expected":30.103},
-{"digit":2,"actual":12,"expected":17.6091},
-{"digit":3,"actual":5.21569,"expected":12.4939},
-{"digit":4,"actual":4.5098,"expected":9.691},
-{"digit":5,"actual":6.39216,"expected":7.91812},
-{"digit":6,"actual":3.80392,"expected":6.69468},
-{"digit":7,"actual":5.37255,"expected":5.79919},
-{"digit":8,"actual":8.70588,"expected":5.11525},
-{"digit":9,"actual":6.86275,"expected":4.57575}
+{"digit":1,"actual":47.1188,"expected":30.103},
+{"digit":2,"actual":11.9953,"expected":17.6091},
+{"digit":3,"actual":5.21364,"expected":12.4939},
+{"digit":4,"actual":4.54724,"expected":9.691},
+{"digit":5,"actual":6.38965,"expected":7.91812},
+{"digit":6,"actual":3.80243,"expected":6.69468},
+{"digit":7,"actual":5.37044,"expected":5.79919},
+{"digit":8,"actual":8.70247,"expected":5.11525},
+{"digit":9,"actual":6.86005,"expected":4.57575}
 ],
 "milestoneLevels": [10,20,50,100,200,500],
 "milestones": [
@@ -175,14 +175,14 @@
 {"year":2026,"quarter":1,"pct":-5},
 {"year":2026,"quarter":2,"pct":185.6},
 {"year":2026,"quarter":3,"pct":5.3},
-{"year":2026,"quarter":4,"pct":-20.1}
+{"year":2026,"quarter":4,"pct":-33.9}
 ],
 "avgDaily": [
 {"day":1,"avg":0.31},
 {"day":2,"avg":0.065},
 {"day":3,"avg":-0.308},
 {"day":4,"avg":1.019},
-{"day":5,"avg":-0.519},
+{"day":5,"avg":-0.718},
 {"day":6,"avg":0.994},
 {"day":7,"avg":0.119},
 {"day":8,"avg":0.832},
@@ -211,21 +211,21 @@
 {"day":31,"avg":0.001}
 ],
 "riskLevels": [
-{"risk":0.1,"price":128.227},
-{"risk":0.2,"price":154.506},
-{"risk":0.3,"price":186.535},
-{"risk":0.4,"price":201.492},
-{"risk":0.5,"price":217.648},
-{"risk":0.6,"price":243.543},
-{"risk":0.7,"price":272.519},
-{"risk":0.8,"price":417.744},
-{"risk":0.9,"price":551.686}
+{"risk":0.1,"price":128.246},
+{"risk":0.2,"price":154.534},
+{"risk":0.3,"price":186.586},
+{"risk":0.4,"price":201.546},
+{"risk":0.5,"price":217.705},
+{"risk":0.6,"price":243.61},
+{"risk":0.7,"price":272.598},
+{"risk":0.8,"price":417.957},
+{"risk":0.9,"price":552.025}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":3.615},
 {"dow":2,"avgExt":3.907},
 {"dow":3,"avgExt":3.895},
-{"dow":4,"avgExt":3.68},
+{"dow":4,"avgExt":3.613},
 {"dow":5,"avgExt":3.559}
 ],
 "smaTopBreakouts": [
@@ -233,6 +233,6 @@
 {"date":"2019-12-05","prevTop":32.72},
 {"date":"2026-01-26","prevTop":211.38}
 ],
-"cyclePeaks": ["2017-02-27","2018-09-14","2021-11-29","2024-03-07"],
+"cyclePeaks": ["2017-02-27","2018-09-14","2021-11-29","2024-03-07","2026-10-06"],
 "cycleBottoms": ["2018-04-02","2018-12-24","2022-10-14","2025-04-08"]
 }
