@@ -1,7 +1,7 @@
 {
   "asset": "BTC",
   "quote": "USD",
-  "updatedAt": "2026-11-09T07:02:11.906Z",
+  "updatedAt": "2026-11-10T07:38:59.691Z",
   "rows": [
     {"date":"2010-08-18","open":0.07,"high":0.07,"low":0.07,"close":0.07,"volumeUsd":0},
     {"date":"2010-08-19","open":0.07,"high":0.07,"low":0.07,"close":0.07,"volumeUsd":0},
@@ -5929,6 +5929,7 @@
     {"date":"2026-11-05","open":80413,"high":80413,"low":80413,"close":80413,"volumeUsd":0},
     {"date":"2026-11-06","open":75988.3,"high":75988.3,"low":75988.3,"close":75988.3,"volumeUsd":0},
     {"date":"2026-11-07","open":75744.59,"high":75744.59,"low":75744.59,"close":75744.59,"volumeUsd":0},
-    {"date":"2026-11-08","open":75746.54,"high":75746.54,"low":75746.54,"close":75746.54,"volumeUsd":0}
+    {"date":"2026-11-08","open":75746.54,"high":75746.54,"low":75746.54,"close":75746.54,"volumeUsd":0},
+    {"date":"2026-11-09","open":74707.15,"high":74707.15,"low":74707.15,"close":74707.15,"volumeUsd":0}
   ]
 }
