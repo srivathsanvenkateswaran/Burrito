@@ -1,7 +1,7 @@
 {
   "asset": "SMCI",
   "quote": "USD",
-  "updatedAt": "2026-11-13T07:07:31.512Z",
+  "updatedAt": "2026-11-14T06:56:44.826Z",
   "rows": [
     {"date":"2016-09-14","open":2.133,"high":2.163,"low":2.103,"close":2.145,"volumeUsd":4443689.25,"volume":2071650},
     {"date":"2016-09-15","open":2.146,"high":2.209,"low":2.145,"close":2.193,"volumeUsd":5846538,"volume":2666000},
@@ -2558,6 +2558,7 @@
     {"date":"2026-11-09","open":28.12,"high":29.73,"low":27.18,"close":28.6,"volumeUsd":1196271934,"volume":41827690},
     {"date":"2026-11-10","open":27.965,"high":28.876,"low":27.13,"close":27.79,"volumeUsd":1280043527,"volume":46061300},
     {"date":"2026-11-11","open":29.62,"high":31.19,"low":29.12,"close":30.43,"volumeUsd":1303956234.3,"volume":42851010},
-    {"date":"2026-11-12","open":27.28,"high":29,"low":25.7,"close":26.99,"volumeUsd":3110975360,"volume":115264000}
+    {"date":"2026-11-12","open":27.28,"high":29,"low":25.7,"close":26.99,"volumeUsd":3110975360,"volume":115264000},
+    {"date":"2026-11-13","open":27.085,"high":27.3,"low":25.89,"close":26.865,"volumeUsd":1224187543.8,"volume":45568120}
   ]
 }
