@@ -1,14 +1,14 @@
 {
 "benford": [
-{"digit":1,"actual":44.3153,"expected":30.103},
-{"digit":2,"actual":15.2076,"expected":17.6091},
-{"digit":3,"actual":9.52672,"expected":12.4939},
-{"digit":4,"actual":10.6354,"expected":9.691},
-{"digit":5,"actual":3.53238,"expected":7.91812},
-{"digit":6,"actual":3.61648,"expected":6.69468},
-{"digit":7,"actual":2.56136,"expected":5.79919},
-{"digit":8,"actual":3.79234,"expected":5.11525},
-{"digit":9,"actual":6.81245,"expected":4.57575}
+{"digit":1,"actual":44.3119,"expected":30.103},
+{"digit":2,"actual":15.2064,"expected":17.6091},
+{"digit":3,"actual":9.52599,"expected":12.4939},
+{"digit":4,"actual":10.6346,"expected":9.691},
+{"digit":5,"actual":3.53211,"expected":7.91812},
+{"digit":6,"actual":3.61621,"expected":6.69468},
+{"digit":7,"actual":2.56881,"expected":5.79919},
+{"digit":8,"actual":3.79205,"expected":5.11525},
+{"digit":9,"actual":6.81193,"expected":4.57575}
 ],
 "milestoneLevels": [100,200,500,1000,2000,5000],
 "milestones": [
@@ -349,7 +349,7 @@
 {"year":2026,"quarter":1,"pct":-4.6},
 {"year":2026,"quarter":2,"pct":14.9},
 {"year":2026,"quarter":3,"pct":2},
-{"year":2026,"quarter":4,"pct":-4.1}
+{"year":2026,"quarter":4,"pct":-4.3}
 ],
 "avgDaily": [
 {"day":1,"avg":0.191},
@@ -385,20 +385,20 @@
 {"day":31,"avg":0.098}
 ],
 "riskLevels": [
-{"risk":0.1,"price":2868.54},
-{"risk":0.2,"price":3427.31},
-{"risk":0.3,"price":3856.08},
-{"risk":0.4,"price":4151.37},
-{"risk":0.5,"price":4469.28},
-{"risk":0.6,"price":4898.42},
-{"risk":0.7,"price":5368.77},
-{"risk":0.8,"price":6167.13},
-{"risk":0.9,"price":7124.68}
+{"risk":0.1,"price":2868.9},
+{"risk":0.2,"price":3427.76},
+{"risk":0.3,"price":3856.6},
+{"risk":0.4,"price":4151.95},
+{"risk":0.5,"price":4469.93},
+{"risk":0.6,"price":4899.15},
+{"risk":0.7,"price":5369.59},
+{"risk":0.8,"price":6168.09},
+{"risk":0.9,"price":7125.76}
 ],
 "dcaWeekday": [
 {"dow":1,"avgExt":0.792},
 {"dow":2,"avgExt":0.824},
-{"dow":3,"avgExt":0.84},
+{"dow":3,"avgExt":0.838},
 {"dow":4,"avgExt":0.816},
 {"dow":5,"avgExt":0.802}
 ],
